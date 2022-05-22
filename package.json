@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/Gopalatius/KLENIK-Kepoin-Fakultas-Teknik-Universitas-Indonesia/issues"
   },
-  "homepage": "https://github.com/Gopalatius/KLENIK-Kepoin-Fakultas-Teknik-Universitas-Indonesia#readme"
+  "homepage": "https://github.com/Gopalatius/KLENIK-Kepoin-Fakultas-Teknik-Universitas-Indonesia#readme",
+  "dependencies": {
+    "alert": "^5.0.10",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "jquery": "^3.6.0",
+    "nodemon": "^2.0.16",
+    "pg": "^8.7.3"
+  }
 }
