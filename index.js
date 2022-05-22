@@ -38,12 +38,11 @@ app.use(
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     temp = req.session;
-    if (!temp.role) {
-        //jika user terdaftar maka akan masuk ke halaman admin
-        return res.redirect("/main");
+    if (temp.role) {
+        //jika user terdaftar maka akan masuk ke halaman menu
+        return res.redirect("/menu");
     } else {
         //login / register page
-        temp.visits = 1;
         res.end(
             `<html>
                   <head>
@@ -102,7 +101,7 @@ router.get("/", (req, res) => {
     }
 });
 
-router.get("/main", (req, res) => {
+router.get("/menu", (req, res) => {
     temp = req.session;
     if (temp == NULL){
         alert("HARAM MENGAKSES INI")
