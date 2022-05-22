@@ -38,7 +38,7 @@ app.use(
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     temp = req.session;
-    if (temp.role) {
+    if (!temp.role) {
         //jika user terdaftar maka akan masuk ke halaman admin
         return res.redirect("/main");
     } else {
