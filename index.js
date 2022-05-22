@@ -11,12 +11,12 @@ const bcrypt = require("bcrypt");
 
 //Insiasi koneksi ke database
 const db = new Client({
-    host: "naufal-sbd.postgres.database.azure.com",
+    host: "mraihanazhari-sbd.postgres.database.azure.com",
     port: 5432,
-    database: "naufal_9",
-    user: "naufal_sbd",
+    database: "klenik",
+    user: "kel_6",
     password:
-        "r0ZGRJllVnc%V3plCHD9tS0rva!VXTsWJvL4OsUIVLFpCpHKtMp&gubpbwa!gZKbyU*cKoPz24Gh*Ci@fmqa#9pqKP2MMcHtX^YSE8Q5aiVNRgoPWQE*vKFiFhO3%9tp",
+        "3#&1j[(mq4SUKWe9HpjXy9hB.H!z[LJ(4HxI|%UX[t&hxcatb*|yto{QzJl;><5vmbkf1c/y[^-?r(x>wB_7V8b4<KelwSn@=]ON4.{thO7=>pJxC#skqv1PMCtXa97v",
     ssl: true,
 });
 
