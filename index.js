@@ -38,9 +38,9 @@ app.use(
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     temp = req.session;
-    if (temp.role = '') {
+    if (temp.role) {
         //jika user terdaftar maka akan masuk ke halaman admin
-        return res.redirect("/admin");
+        return res.redirect("/main");
     } else {
         //login / register page
         temp.visits = 1;
@@ -100,6 +100,10 @@ router.get("/", (req, res) => {
               </html>`
         );
     }
+});
+router.get("/main", (req, res) => {
+    temp = req.session;
+    if (temp == NULL)
 });
 app.use("/", router);
 app.listen(process.env.PORT || 6969, () => {
