@@ -106,6 +106,22 @@ router.get("/menu", (req, res) => {
     if (!temp){
         alert("HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!")
         return res.redirect('/')
+    }else{
+        res.end(
+            `<!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                    <title>Document</title>
+                </head>
+                <body>
+                    <h1>Muka anda macam Keeper Of The Light</h1>
+            
+                </body>
+            </html>`
+        )
     }
 });
 
