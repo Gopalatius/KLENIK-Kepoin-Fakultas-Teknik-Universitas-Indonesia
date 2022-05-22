@@ -103,8 +103,8 @@ router.get("/", (req, res) => {
 
 router.get("/menu", (req, res) => {
     temp = req.session;
-    if (temp == NULL){
-        alert("HARAM MENGAKSES INI")
+    if (!temp){
+        alert("HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!")
         return res.redirect('/')
     }
 });
