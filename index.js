@@ -107,6 +107,7 @@ router.get("/menu", (req, res) => {
         alert("HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!")
         return res.redirect('/')
     }else{
+        alert("HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!")
         res.end(
             `<!DOCTYPE html>
             <html lang="en">
@@ -122,6 +123,7 @@ router.get("/menu", (req, res) => {
                 </body>
             </html>`
         )
+        return res.redirect('/')
     }
 });
 
