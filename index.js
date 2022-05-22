@@ -40,3 +40,5 @@ app.use("/", router);
 app.listen(process.env.PORT || 6969, () => {
     console.log(`App Started on PORT ${process.env.PORT || 6969}`);
 });
+
+// asede botol sama loe semua
