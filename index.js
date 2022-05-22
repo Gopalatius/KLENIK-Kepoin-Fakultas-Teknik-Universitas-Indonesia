@@ -16,7 +16,27 @@ const db = new Client({
     database: "naufal_9",
     user: "naufal_sbd",
     password:
-      "r0ZGRJllVnc%V3plCHD9tS0rva!VXTsWJvL4OsUIVLFpCpHKtMp&gubpbwa!gZKbyU*cKoPz24Gh*Ci@fmqa#9pqKP2MMcHtX^YSE8Q5aiVNRgoPWQE*vKFiFhO3%9tp",
+        "r0ZGRJllVnc%V3plCHD9tS0rva!VXTsWJvL4OsUIVLFpCpHKtMp&gubpbwa!gZKbyU*cKoPz24Gh*Ci@fmqa#9pqKP2MMcHtX^YSE8Q5aiVNRgoPWQE*vKFiFhO3%9tp",
     ssl: true,
-  });
-  
+});
+
+//middleware (session)
+app.use(
+    session({
+        secret: "ini contoh secret",
+        saveUninitialized: false,
+        resave: false,
+    })
+);
+//body parser
+app.use(bodyParser.json());
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
+
+app.use("/", router);
+app.listen(process.env.PORT || 6969, () => {
+    console.log(`App Started on PORT ${process.env.PORT || 6969}`);
+});
