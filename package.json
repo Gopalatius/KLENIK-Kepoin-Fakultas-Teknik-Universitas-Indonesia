@@ -1,0 +1,19 @@
+{
+  "name": "klenik",
+  "version": "1.0.0",
+  "description": "proyek klenik",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gopalatius/KLENIK-Kepoin-Fakultas-Teknik-Universitas-Indonesia.git"
+  },
+  "author": "raihan, anjani, naufal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gopalatius/KLENIK-Kepoin-Fakultas-Teknik-Universitas-Indonesia/issues"
+  },
+  "homepage": "https://github.com/Gopalatius/KLENIK-Kepoin-Fakultas-Teknik-Universitas-Indonesia#readme"
+}
