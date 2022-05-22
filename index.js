@@ -39,13 +39,13 @@ app.use(
 router.get("/", (req, res) => {
     temp = req.session;
     if (temp.role = '') {
-      //jika user terdaftar maka akan masuk ke halaman admin
-      return res.redirect("/admin");
+        //jika user terdaftar maka akan masuk ke halaman admin
+        return res.redirect("/admin");
     } else {
-      //login / register page
-      temp.visits = 1;
-      res.end(
-        `<html>
+        //login / register page
+        temp.visits = 1;
+        res.end(
+            `<html>
                   <head>
                       <title>Modul 9 - SBD</title>
                   </head>
@@ -98,9 +98,9 @@ router.get("/", (req, res) => {
                       });
                   </script>
               </html>`
-      );
+        );
     }
-  });
+});
 app.use("/", router);
 app.listen(process.env.PORT || 6969, () => {
     console.log(`App Started on PORT ${process.env.PORT || 6969}`);
