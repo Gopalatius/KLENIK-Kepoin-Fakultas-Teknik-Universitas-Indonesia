@@ -38,6 +38,7 @@ app.use(
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     temp = req.session;
+    
     if (temp.role) {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
@@ -103,11 +104,11 @@ router.get("/", (req, res) => {
 
 router.get("/menu", (req, res) => {
     temp = req.session;
-    if (!temp){
-        alert("HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!")
-        return res.redirect('/')
-    }else{
-        alert("HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!")
+    if (!temp) {
+        alert('HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!');
+        return res.redirect("/");
+    } else {
+       
         res.end(
             `<!DOCTYPE html>
             <html lang="en">
@@ -117,13 +118,18 @@ router.get("/menu", (req, res) => {
                     <meta http-equiv="X-UA-Compatible" content="ie=edge">
                     <title>Document</title>
                 </head>
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <script>
+                    alert('HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!');
+                    
+                 </script>
                 <body>
                     <h1>Muka anda macam Keeper Of The Light</h1>
             
                 </body>
             </html>`
-        )
-        return res.redirect('/')
+        );
+        
     }
 });
 
