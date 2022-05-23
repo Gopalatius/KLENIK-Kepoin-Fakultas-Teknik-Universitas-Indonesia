@@ -103,7 +103,6 @@ router.post('/getjurusan', (req, res) => {
         res.write( // table header
            `<table id=najur>
                 <tr>
-                    <th>ID Jurusan</th>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
                     <th>Contoh Kurikulum<th>
@@ -114,11 +113,10 @@ router.post('/getjurusan', (req, res) => {
             res.write(
                 `
                 <tr> 
-                <td>${row['idjur']}</td>
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
-                <td>kurikulum</td>
-                <td>karir</td>
+                <td><button class="bkar" id="${row['idjur']}">Karir</button></td>
+                <td><button class="bkar" id="${row['idjur']}">Karir</button></td>
                 </tr>
                 `
             );
@@ -137,7 +135,6 @@ router.get('/ttgjurusan', (req, res) => {
            `<h1> Tentang Jurusan </h1>
            <table id=najur>
                 <tr>
-                    <th>ID Jurusan </th>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
                     <th>Contoh Kurikulum<th>
