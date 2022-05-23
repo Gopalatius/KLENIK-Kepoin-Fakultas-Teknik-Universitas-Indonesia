@@ -171,12 +171,36 @@ router.post('/getjurusan', (req, res) => {
                 <tr> 
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
-                <!--
-                <td><button class="bkur" href = "http://localhost:6969/" id="${row['idjur']}">Kurikulum</button></td>
-                <td><button class="bkar" id="${row['idjur']}">Karir</button></td>
-                -->
-                <td><a href="http://localhost:6969/" id="${row['idjur']}">Kurikulum</a></td>
-                <td><button class="bkar" id="${row['idjur']}">Karir</button></td>
+                <td><a href="http://localhost:6969/ttgjurusan/kurikulum" id="${row['idjur']}">Kurikulum</a></td>
+                <td><a href="http://localhost:6969/" id="${row['idjur']}">Karir</a></td>
+                `
+            );
+        }
+        res.end(`</table></body>`)
+    });
+});
+
+router.post('/getkurikulum', (req, res) => {
+    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+    //mendapatkan data dari database
+    db.query(query, (err, results) => {
+        if(err){
+            console.log(err)
+            return
+        }
+        res.status(200)
+        res.write( // table header
+           `
+            <table id=takur>
+                <tr>
+                    <th>Mata Kuliah</th>
+                </tr>`
+        )
+        for (row of results.rows) { // tampilin isi table
+            res.write(
+                `
+                <tr> 
+                <td>${row['nakur']}</td>
                 </tr>
                 `
             );
@@ -213,6 +237,36 @@ router.get('/ttgjurusan', (req, res) => {
             </script>
         </html>`);
 
+
+});
+
+router.get('/ttgjurusan/kurikulum', (req, res) => {
+    temp = req.session;
+    console.log(temp)
+    res.write(`<html>
+    <head>
+        <title>Klenik</title>
+    </head>
+    <body style="background-color: #29C5F6; text-align: center;">`);
+    res.write( // table header
+       `<h1> Kurikulum </h1>
+       <table id=takur>
+            <tr>
+                <th>Mata Kuliah<th>
+            </tr>`
+    )
+    res.end(`</table></body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            $.post('/getkurikulum', { idjur: 7 }, function(data) {
+                console.log(data);
+                $("#takur").html(data);
+            });
+        });
+        </script>
+    </html>`);
+    
 
 });
 
