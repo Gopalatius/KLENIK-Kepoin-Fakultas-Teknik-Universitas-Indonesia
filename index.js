@@ -134,9 +134,8 @@ router.get("/menu", (req, res) => {
     }
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
-///router 5: melakukan pengambilan data dari database
 router.post('/getjurusan', (req, res) => {
-    const query = "SELECT nama FROM jurusan"; // query ambil data
+    const query = "SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);"; // query ambil data
     //mendapatkan data dari database
     db.query(query, (err, results) => {
         if(err){
@@ -147,14 +146,22 @@ router.post('/getjurusan', (req, res) => {
         res.write( // table header
            `<table id=najur>
                 <tr>
+                    <th>ID Jurusan</th>
                     <th>Nama Jurusan</th>
+                    <th>Nama Departemen</th>
+                    <th>Contoh Kurikulum<th>
+                    <th>Prospek Karir<th>
                 </tr>`
         )
         for (row of results.rows) { // tampilin isi table
             res.write(
                 `
                 <tr> 
-                <td>${row['nama']}</td>
+                <td>${row['idjur']}</td>
+                <td>${row['namjur']}</td>
+                <td>${row['nadept']}</td>
+                <td>kurikulum</td>
+                <td>karir</td>
                 </tr>
                 `
             );
@@ -163,8 +170,6 @@ router.post('/getjurusan', (req, res) => {
     });
 });
 
- 
-// Router 6: merupakan tampilan data ketika login berhasil dilakukan
 router.get('/ttgjurusan', (req, res) => {
         res.write(`<html>
         <head>
@@ -172,9 +177,14 @@ router.get('/ttgjurusan', (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`);
         res.write( // table header
-           `<table id=najur>
+           `<h1> Tentang Jurusan </h1>
+           <table id=najur>
                 <tr>
+                    <th>ID Jurusan </th>
                     <th>Nama Jurusan</th>
+                    <th>Nama Departemen</th>
+                    <th>Contoh Kurikulum<th>
+                    <th>Prospek Karir<th>
                 </tr>`
         )
         res.end(`</table></body>
