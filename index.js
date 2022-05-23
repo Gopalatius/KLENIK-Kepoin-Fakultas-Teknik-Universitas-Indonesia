@@ -71,7 +71,7 @@ router.get("/register", (req, res) => {
                 res.writeHead(404)
                 alert('File tidak ditemukan!')
             } else {
-                res.write(data)
+                return res.end(data)
             }
         })
 
@@ -80,23 +80,19 @@ router.get("/register", (req, res) => {
 router.post("/register", (req, res) => {
     temp = req.session;
     temp.username = req.body.username;
-    temp.password = req.body.pass;
+    temp.password = req.body.password;
     temp.role = req.body.role;
 
-    const salt = bcrypt.genSaltSync();
-    const hashed_password = bcrypt.hashSync(req.body.pass, salt)
-    const query = `INSERT INTO user_web (user,password,role,reg_time) VALUES 
-     ('${temp.username}','${hashed_password}','${role}',now());`
+    const hashed_password = bcrypt.hashSync(req.body.password,10)
+    const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
+     ('${temp.username}','${hashed_password}','${temp.role}',now());`
 
     db.query(query, (err, results) => {
         if (err) {
             console.log(err)
-            alert('Registrasi gagal')
             return
         }
-        res.send('Insert username dan password berhasil')
         console.log('Berhasil memasukkan username dan password')
-        alert('Registrasi berhasil')
         res.write(`<html>
       <head>
           <title>Berhasil registrasi</title>
