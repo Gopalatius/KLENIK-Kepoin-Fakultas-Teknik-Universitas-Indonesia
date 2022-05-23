@@ -212,12 +212,8 @@ router.post('/getkurikulum', (req, res) => {
 });
 
 router.get('/ttgjurusan', (req, res) => {
-<<<<<<< HEAD
     temp = req.session;
         res.write(`<html>
-=======
-    res.write(`<html>
->>>>>>> 062fc4f6acbfefe4b627e27a20685352397aa505
         <head>
             <title>Klenik</title>
         </head>
