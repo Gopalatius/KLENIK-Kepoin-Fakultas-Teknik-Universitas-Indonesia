@@ -8,6 +8,7 @@ const app = express();
 const router = express.Router();
 const { Client } = require("pg");
 const bcrypt = require("bcrypt");
+const { rows } = require("pg/lib/defaults");
 
 //Insiasi koneksi ke database
 const db = new Client({
@@ -133,59 +134,62 @@ router.get("/menu", (req, res) => {
     }
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
-//router 3: melakukan register akun
+///router 5: melakukan pengambilan data dari database
 router.post('/getjurusan', (req, res) => {
-
-    const query = "SELECT nama FROM jurusan";
-
+    const query = "SELECT nama FROM jurusan"; // query ambil data
+    //mendapatkan data dari database
     db.query(query, (err, results) => {
         if(err){
             console.log(err)
             return
         }
-        res.send(results.rows)
+        res.status(200)
+        res.write( // table header
+           `<table id=najur>
+                <tr>
+                    <th>Nama Jurusan</th>
+                </tr>`
+        )
+        for (row of results.rows) { // tampilin isi table
+            res.write(
+                `
+                <tr> 
+                <td>${row['nama']}</td>
+                </tr>
+                `
+            );
+        }
+        res.end(`</table></body>`)
     });
 });
 
-//Menu jurusan
+ 
+// Router 6: merupakan tampilan data ketika login berhasil dilakukan
+router.get('/ttgjurusan', (req, res) => {
+        res.write(`<html>
+        <head>
+            <title>Klenik</title>
+        </head>
+        <body style="background-color: #29C5F6; text-align: center;">`);
+        res.write( // table header
+           `<table id=najur>
+                <tr>
+                    <th>Nama Jurusan</th>
+                </tr>`
+        )
+        res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $.post('/getjurusan', { }, function(data) {
+                    console.log(data);
+                    $("#najur").html(data);
+                });
+            });
+            </script>
+        </html>`);
+        
 
-router.get("/jurusan", (req, res) => {
-    res.write( `<html>
-    <head>
-        <title>Klenik</title>
-    </head>
-    <style>
-        #test {
-        width:100%;
-        height:100%;
-        }
-        table {
-            margin: 0 auto; /* or margin: 0 auto 0 auto */
-        }
-    </style>
-    <body style="background-color: #29C5F6; text-align: center;">`);
-    res.write(
-        `<h1> Tentang Jurusan </h1>
-        <h2> List Jurusan</h2>
-        <table class="center">
-            <tr>
-              <th>Nama Jurusan</th>
-            </tr>`
-    );
-    res.end(
-        `</table>
-            </body>
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-                  <script>
-                      jQuery(document).ready(function($) {
-                          $.post('/getjurusan',{ }, function(data)) {
-                              console.log(data)
-                              $("#jurusan").html(jurusan)
-                          });
-                      });
-                  </script>
-        </html>`
-        );
 });
 
 
