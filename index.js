@@ -10,6 +10,10 @@ const { Client } = require("pg");
 const bcrypt = require("bcrypt");
 const { rows } = require("pg/lib/defaults");
 
+//inisiasi fs untuk impor html
+var fs = require('fs');
+const { response } = require("express");
+
 //Insiasi koneksi ke database
 const db = new Client({
     host: "mraihanazhari-sbd.postgres.database.azure.com",
@@ -44,62 +48,15 @@ router.get("/", (req, res) => {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
     } else {
-        //login / register page
-        res.end(
-            `<html>
-                  <head>
-                      <title>Modul 9 - SBD</title>
-                  </head>
-                  <body style="background-color: F8CB2E; text-align: center;">
-                      <h1> Pusat Data GamingNetlab </h1>
-                      <h2> Login </h2>
-                      Username:
-                      <input type="text" id="username" /><br />
-                      Password :
-                      <input type="password" id="password" /><br />
-                      <input type="button" value="Submit" id="submits" />
-  
-                      <h2> Register </h2>
-                      Username:
-                      <input type="text" id="usernames" /><br />
-                      Password :
-                      <input type="password" id="passwords" /><br />
-                      <input type="button" value="Submit" id="register" />
-                      <h3> Modul 9 SBD </h3>
-                  </body>
-                  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-                  <script>
-                      jQuery(document).ready(function($) {
-                          var username, pass;
-                          $('#submits').click(function() {
-                              username = $('#username').val();
-                              pass = $('#password').val();
-                              
-                              $.post('/login', { username: username, pass: pass }, function(data) {
-                                  if (data === 'done') {
-                                      window.location.href = '/admin';
-                                      window.alert('Login Sukses');
-                                  }
-                                  else if (data === 'fail'){
-                                      window.alert('Login Gagal');
-                                  }
-                              });
-                          });
-                          $('#register').click(function() {
-                              username = $('#usernames').val();
-                              pass = $('#passwords').val();
-                              
-                              $.post('/register', { username: username, pass: pass }, function(data) {
-                                  if (data === 'done') {
-                                      window.location.href = '/admin';
-                                      window.alert('Registrasi Sukses');
-                                  }
-                              });
-                          });
-                      });
-                  </script>
-              </html>`
-        );
+        fs.readFile('./main.html',null,function(error,data){
+            if (error){
+                res.writeHead(404)
+                alert('File tidak ditemukan!')
+            }else{
+                return res.end(data)
+            }
+        })
+       
     }
 });
 
