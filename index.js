@@ -115,7 +115,11 @@ router.post('/getjurusan', (req, res) => {
                 <tr> 
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
+                <!--
                 <td><button class="bkur" href = "http://localhost:6969/" id="${row['idjur']}">Kurikulum</button></td>
+                <td><button class="bkar" id="${row['idjur']}">Karir</button></td>
+                -->
+                <td><a href="http://localhost:6969/" id="${row['idjur']}">Kurikulum</a></td>
                 <td><button class="bkar" id="${row['idjur']}">Karir</button></td>
                 </tr>
                 `
