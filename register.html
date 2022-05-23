@@ -21,9 +21,10 @@
     <label for="nonmahasiswa">Nonmahasiswa</label><br><br> 
     <input type="button" value="Submit" id="submits" />
   </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script>
     jQuery(document).ready(function($) {
-        var username, pass;
+        var username, pass, role, mahasiswa, nonmahasiswa;
         // $('#submits').click(function() {
         //     username = $('#username').val();
         //     pass = $('#password').val();
@@ -38,11 +39,19 @@
         //         }
         //     });
         // });
-        $('#register').click(function() {
-            username = $('#usernames').val();
-            pass = $('#passwords').val();
-            
-            $.post('/register', { username: username, pass: pass }, function(data) {
+        $('#submits').click(function() {
+            console.log('berhasil terklik')
+            username = document.getElementById('username')
+            pass = document.getElementById('password')
+            mahasiswa = document.getElementById('mahasiswa')
+            nonmahasiswa = document.getElementById('nonmahasiswa')
+            if(mahasiswa.checked==true){
+                role = mahasiswa.value
+
+            }else if(nonmahasiswa.checked==true){
+                role = nonmahasiswa.value
+            }
+            $.post('/register', { username: username, pass: pass, role: role }, function(data) {
                 if (data === 'done') {
                     window.location.href = '/menu';
                     window.alert('Registrasi Sukses');

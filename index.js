@@ -43,60 +43,61 @@ app.use(
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     temp = req.session;
-    
+
     if (temp.role) {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
     } else {
-        fs.readFile('./login.html',null,function(error,data){
-            if (error){
+        fs.readFile('./login.html', null, function (error, data) {
+            if (error) {
                 res.writeHead(404)
                 alert('File tidak ditemukan!')
-            }else{
+            } else {
                 return res.end(data)
             }
         })
-       
+
     }
 });
 router.get("/register", (req, res) => {
     temp = req.session;
-    
+
     if (temp.role) {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
     } else {
-        fs.readFile('./register.html',null,function(error,data){
-            if (error){
+        fs.readFile('./register.html', null, function (error, data) {
+            if (error) {
                 res.writeHead(404)
                 alert('File tidak ditemukan!')
-            }else{
+            } else {
                 res.write(data)
             }
         })
-       
+
     }
 });
 router.post("/register", (req, res) => {
     temp = req.session;
     temp.username = req.body.username;
     temp.password = req.body.pass;
+    temp.role = req.body.role;
+
     const salt = bcrypt.genSaltSync();
-    const hashed_password = bcrypt.hashSync(req.body.pass,salt)
-    const query = `INSERT INTO user_web (id,user,password) VALUES 
-     ('${temp.username}','${hashed_password}',false);`
-    
+    const hashed_password = bcrypt.hashSync(req.body.pass, salt)
+    const query = `INSERT INTO user_web (user,password,role,reg_time) VALUES 
+     ('${temp.username}','${hashed_password}','${role}',now());`
+
     db.query(query, (err, results) => {
-      if(err){
-          console.log(err)
-          alert('Registrasi gagal')
-          return
-      }
-      
-      res.send('Insert username dan password berhasil')
-      console.log('Berhasil memasukkan username dan password')
-      alert('Registrasi berhasil')
-      res.write(`<html>
+        if (err) {
+            console.log(err)
+            alert('Registrasi gagal')
+            return
+        }
+        res.send('Insert username dan password berhasil')
+        console.log('Berhasil memasukkan username dan password')
+        alert('Registrasi berhasil')
+        res.write(`<html>
       <head>
           <title>Berhasil registrasi</title>
           <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -106,22 +107,22 @@ router.post("/register", (req, res) => {
       </head>
       `)
     });
-  
+
     res.end("done");
-  });
+});
 router.get("/menu", (req, res) => {
     temp = req.session;
     if (!temp.role) {
-        fs.readFile('./illegal_access.html',null,function(error,data){
-            if (error){
+        fs.readFile('./illegal_access.html', null, function (error, data) {
+            if (error) {
                 res.writeHead(404)
                 alert('File tidak ditemukan!')
-            }else{
+            } else {
                 return res.end(data)
             }
         })
     } else {
-       
+
         res.end(
             `<!DOCTYPE html>
             <html lang="en">
@@ -142,7 +143,7 @@ router.get("/menu", (req, res) => {
                 </body>
             </html>`
         );
-        
+
     }
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
@@ -151,13 +152,13 @@ router.post('/getjurusan', (req, res) => {
     //mendapatkan data dari database
     temp = req.session;
     db.query(query, (err, results) => {
-        if(err){
+        if (err) {
             console.log(err)
             return
         }
         res.status(200)
         res.write( // table header
-           `<table id=najur>
+            `<table id=najur>
                 <tr>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
@@ -211,14 +212,18 @@ router.post('/getkurikulum', (req, res) => {
 });
 
 router.get('/ttgjurusan', (req, res) => {
+<<<<<<< HEAD
     temp = req.session;
         res.write(`<html>
+=======
+    res.write(`<html>
+>>>>>>> 062fc4f6acbfefe4b627e27a20685352397aa505
         <head>
             <title>Klenik</title>
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`);
-        res.write( // table header
-           `<h1> Tentang Jurusan </h1>
+    res.write( // table header
+        `<h1> Tentang Jurusan </h1>
            <table id=najur>
                 <tr>
                     <th>Nama Jurusan</th>
@@ -226,8 +231,8 @@ router.get('/ttgjurusan', (req, res) => {
                     <th>Contoh Kurikulum<th>
                     <th>Prospek Karir<th>
                 </tr>`
-        )
-        res.end(`</table></body>
+    )
+    res.end(`</table></body>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
@@ -238,7 +243,7 @@ router.get('/ttgjurusan', (req, res) => {
             });
             </script>
         </html>`);
-        
+
 
 });
 
@@ -275,8 +280,8 @@ router.get('/ttgjurusan/kurikulum', (req, res) => {
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------
-db.connect((err)=>{
-    if(err){
+db.connect((err) => {
+    if (err) {
         console.log(err)
         return
     }
