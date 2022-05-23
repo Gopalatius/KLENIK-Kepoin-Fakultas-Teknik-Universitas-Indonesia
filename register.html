@@ -14,8 +14,12 @@
     <input type="text" id="username" /><br />
     Password :
     <input type="password" id="password" /><br />
+    Role: 
+    <input type="radio" id="mahasiswa" name="role" value="mahasiswa">
+    <label for="mahasiswa">Mahasiswa</label>
+    <input type="radio" id="nonmahasiswa" name="role" value="non-mahasiswa">
+    <label for="nonmahasiswa">Nonmahasiswa</label><br><br> 
     <input type="button" value="Submit" id="submits" />
-
   </body>
   <script>
     jQuery(document).ready(function($) {
@@ -40,7 +44,7 @@
             
             $.post('/register', { username: username, pass: pass }, function(data) {
                 if (data === 'done') {
-                    window.location.href = '/admin';
+                    window.location.href = '/menu';
                     window.alert('Registrasi Sukses');
                 }
             });
