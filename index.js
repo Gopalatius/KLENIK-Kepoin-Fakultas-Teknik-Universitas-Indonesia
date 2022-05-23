@@ -134,7 +134,7 @@ router.get("/menu", (req, res) => {
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 //router 3: melakukan register akun
-router.post('/getdata', (req, res) => {
+router.post('/getjurusan', (req, res) => {
 
     const query = "SELECT nama FROM jurusan";
 
@@ -143,14 +143,12 @@ router.post('/getdata', (req, res) => {
             console.log(err)
             return
         }
-        results.send(results.rows)
-        console.log(results.rows);
+        res.send(results.rows)
     });
-    
-    res.end('done');
 });
 
 //Menu jurusan
+
 router.get("/jurusan", (req, res) => {
     res.write( `<html>
     <head>
@@ -180,8 +178,9 @@ router.get("/jurusan", (req, res) => {
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
                   <script>
                       jQuery(document).ready(function($) {
-                          $.post('/getdata',{ }, function(data)) {
+                          $.post('/getjurusan',{ }, function(data)) {
                               console.log(data)
+                              $("#jurusan").html(jurusan)
                           });
                       });
                   </script>
@@ -189,7 +188,15 @@ router.get("/jurusan", (req, res) => {
         );
 });
 
+
 //-----------------------------------------------------------------------------------------------------------------------------------
+db.connect((err)=>{
+    if(err){
+        console.log(err)
+        return
+    }
+    console.log('Database berhasil terkoneksi')
+})
 
 app.use("/", router);
 app.listen(process.env.PORT || 6969, () => {
