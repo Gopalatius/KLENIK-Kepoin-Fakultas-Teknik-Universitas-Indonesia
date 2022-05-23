@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>KLENIK</title>
+  </head>
+
+  <body style="background-color: 081165; text-align: center;">
+    <h1> Pusat Data GamingNetlab </h1>
+    <h2> Login </h2>
+    Username:
+    <input type="text" id="username" /><br />
+    Password :
+    <input type="password" id="password" /><br />
+    <input type="button" value="Submit" id="submits" />
+  </body>
+  <script>
+    jQuery(document).ready(function($) {
+        var username, pass;
+        $('#submits').click(function() {
+            username = $('#username').val();
+            pass = $('#password').val();
+            
+            $.post('/login', { username: username, pass: pass }, function(data) {
+                if (data === 'done') {
+                    window.location.href = '/admin';
+                    window.alert('Login Sukses');
+                }
+                else if (data === 'fail'){
+                    window.alert('Login Gagal');
+                }
+            });
+        });
+        $('#register').click(function() {
+            username = $('#usernames').val();
+            pass = $('#passwords').val();
+            
+            $.post('/register', { username: username, pass: pass }, function(data) {
+                if (data === 'done') {
+                    window.location.href = '/admin';
+                    window.alert('Registrasi Sukses');
+                }
+            });
+        });
+    });
+</script>
+</html>
