@@ -62,9 +62,15 @@ router.get("/", (req, res) => {
 
 router.get("/menu", (req, res) => {
     temp = req.session;
-    if (!temp) {
-        alert('HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!');
-        return res.redirect("/");
+    if (!temp.role) {
+        fs.readFile('./illegal_access.html',null,function(error,data){
+            if (error){
+                res.writeHead(404)
+                alert('File tidak ditemukan!')
+            }else{
+                return res.end(data)
+            }
+        })
     } else {
        
         res.end(
