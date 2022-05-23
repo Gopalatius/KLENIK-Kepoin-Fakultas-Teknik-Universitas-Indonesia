@@ -132,6 +132,64 @@ router.get("/menu", (req, res) => {
         
     }
 });
+//--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
+//router 3: melakukan register akun
+router.post('/getdata', (req, res) => {
+
+    const query = "SELECT nama FROM jurusan";
+
+    db.query(query, (err, results) => {
+        if(err){
+            console.log(err)
+            return
+        }
+        results.send(results.rows)
+        console.log(results.rows);
+    });
+    
+    res.end('done');
+});
+
+//Menu jurusan
+router.get("/jurusan", (req, res) => {
+    res.write( `<html>
+    <head>
+        <title>Klenik</title>
+    </head>
+    <style>
+        #test {
+        width:100%;
+        height:100%;
+        }
+        table {
+            margin: 0 auto; /* or margin: 0 auto 0 auto */
+        }
+    </style>
+    <body style="background-color: #29C5F6; text-align: center;">`);
+    res.write(
+        `<h1> Tentang Jurusan </h1>
+        <h2> List Jurusan</h2>
+        <table class="center">
+            <tr>
+              <th>Nama Jurusan</th>
+            </tr>`
+    );
+    res.end(
+        `</table>
+            </body>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                  <script>
+                      jQuery(document).ready(function($) {
+                          $.post('/getdata',{ }, function(data)) {
+                              console.log(data)
+                          });
+                      });
+                  </script>
+        </html>`
+        );
+});
+
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 app.use("/", router);
 app.listen(process.env.PORT || 6969, () => {
