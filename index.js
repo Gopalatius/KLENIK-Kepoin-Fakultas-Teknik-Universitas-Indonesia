@@ -131,9 +131,8 @@ router.post('/getjurusan', (req, res) => {
 });
 
 router.post('/getkurikulum', (req, res) => {
-    const query = "SELECT jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = 7);"; // query ambil data
+    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
     //mendapatkan data dari database
-    res.
     db.query(query, (err, results) => {
         if(err){
             console.log(err)
@@ -141,7 +140,7 @@ router.post('/getkurikulum', (req, res) => {
         }
         res.status(200)
         res.write( // table header
-           `<h2>${res.body.namjur}</h2>
+           `
             <table id=takur>
                 <tr>
                     <th>Mata Kuliah</th>
@@ -210,7 +209,7 @@ router.get('/ttgjurusan/kurikulum', (req, res) => {
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         jQuery(document).ready(function($) {
-            $.post('/getkurikulum', { }, function(data) {
+            $.post('/getkurikulum', { idjur: 7 }, function(data) {
                 console.log(data);
                 $("#takur").html(data);
             });

@@ -142,5 +142,5 @@ FROM jurusan
 INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id)
 INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);
 
-SELECT jurusan.jurusan_id as idjur,jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (idjur = 7);
+SELECT jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = 7);
 
