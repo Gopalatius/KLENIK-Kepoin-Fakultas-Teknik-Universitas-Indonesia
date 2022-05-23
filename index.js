@@ -146,6 +146,7 @@ router.get("/menu", (req, res) => {
 router.post('/getjurusan', (req, res) => {
     const query = "SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);"; // query ambil data
     //mendapatkan data dari database
+    temp = req.session;
     db.query(query, (err, results) => {
         if (err) {
             console.log(err)
@@ -179,6 +180,7 @@ router.post('/getjurusan', (req, res) => {
 router.post('/getkurikulum', (req, res) => {
     const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
     //mendapatkan data dari database
+    temp = req.session;
     db.query(query, (err, results) => {
         if(err){
             console.log(err)
@@ -206,7 +208,8 @@ router.post('/getkurikulum', (req, res) => {
 });
 
 router.get('/ttgjurusan', (req, res) => {
-    res.write(`<html>
+    temp = req.session;
+        res.write(`<html>
         <head>
             <title>Klenik</title>
         </head>
@@ -238,7 +241,8 @@ router.get('/ttgjurusan', (req, res) => {
 
 router.get('/ttgjurusan/kurikulum', (req, res) => {
     temp = req.session;
-    console.log(temp)
+    id = `${req.body.idjur}`;
+    console.log(id);
     res.write(`<html>
     <head>
         <title>Klenik</title>
@@ -255,7 +259,7 @@ router.get('/ttgjurusan/kurikulum', (req, res) => {
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         jQuery(document).ready(function($) {
-            $.post('/getkurikulum', { idjur: 7 }, function(data) {
+            $.post('/getkurikulum', {idjur: ${id}}, function(data) {
                 console.log(data);
                 $("#takur").html(data);
             });
