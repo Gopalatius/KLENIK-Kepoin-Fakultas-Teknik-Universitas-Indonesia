@@ -59,7 +59,56 @@ router.get("/", (req, res) => {
        
     }
 });
-
+router.get("/register", (req, res) => {
+    temp = req.session;
+    
+    if (temp.role) {
+        //jika user terdaftar maka akan masuk ke halaman menu
+        return res.redirect("/menu");
+    } else {
+        fs.readFile('./register.html',null,function(error,data){
+            if (error){
+                res.writeHead(404)
+                alert('File tidak ditemukan!')
+            }else{
+                res.write(data)
+            }
+        })
+       
+    }
+});
+router.post("/register", (req, res) => {
+    temp = req.session;
+    temp.username = req.body.username;
+    temp.password = req.body.pass;
+    const salt = bcrypt.genSaltSync();
+    const hashed_password = bcrypt.hashSync(req.body.pass,salt)
+    const query = `INSERT INTO user_web (id,user,password) VALUES 
+     ('${temp.username}','${hashed_password}',false);`
+    
+    db.query(query, (err, results) => {
+      if(err){
+          console.log(err)
+          alert('Registrasi gagal')
+          return
+      }
+      
+      res.send('Insert username dan password berhasil')
+      console.log('Berhasil memasukkan username dan password')
+      alert('Registrasi berhasil')
+      res.write(`<html>
+      <head>
+          <title>Berhasil registrasi</title>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+          <script>
+          alert("Berhasil registrasi");
+              </script>
+      </head>
+      `)
+    });
+  
+    res.end("done");
+  });
 router.get("/menu", (req, res) => {
     temp = req.session;
     if (!temp.role) {
