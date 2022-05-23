@@ -48,7 +48,7 @@ router.get("/", (req, res) => {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
     } else {
-        fs.readFile('./main.html',null,function(error,data){
+        fs.readFile('./login.html',null,function(error,data){
             if (error){
                 res.writeHead(404)
                 alert('File tidak ditemukan!')
