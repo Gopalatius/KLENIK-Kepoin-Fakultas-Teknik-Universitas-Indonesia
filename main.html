@@ -8,13 +8,14 @@
   </head>
 
   <body style="background-color: 081165; text-align: center;">
-    <h1> Pusat Data GamingNetlab </h1>
+    <h1> Masuk ke KLENIK</h1>
     <h2> Login </h2>
     Username:
     <input type="text" id="username" /><br />
     Password :
     <input type="password" id="password" /><br />
     <input type="button" value="Submit" id="submits" />
+
   </body>
   <script>
     jQuery(document).ready(function($) {
@@ -33,17 +34,17 @@
                 }
             });
         });
-        $('#register').click(function() {
-            username = $('#usernames').val();
-            pass = $('#passwords').val();
+        // $('#register').click(function() {
+        //     username = $('#usernames').val();
+        //     pass = $('#passwords').val();
             
-            $.post('/register', { username: username, pass: pass }, function(data) {
-                if (data === 'done') {
-                    window.location.href = '/admin';
-                    window.alert('Registrasi Sukses');
-                }
-            });
-        });
+        //     $.post('/register', { username: username, pass: pass }, function(data) {
+        //         if (data === 'done') {
+        //             window.location.href = '/admin';
+        //             window.alert('Registrasi Sukses');
+        //         }
+        //     });
+        // });
     });
 </script>
 </html>
