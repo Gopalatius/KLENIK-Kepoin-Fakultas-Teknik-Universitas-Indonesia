@@ -459,9 +459,10 @@ router.get('/ttgjurusan/karir', (req, res) => {
 });
 
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
-router.post("/diskusi", (req, res) => {
+//--------------------Kawasan Teritori Anjani ----------------------------------------------------------
+router.get("/diskusi", (req, res) => {
     const query =
-        "SELECT pertanyaan.pertanyaan_id as idtan, pertanyaan.text as txttanya, jawaban.text as txtjawab FROM pertanyaan INNER JOIN pertanyaan_dari ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id) INNER JOIN jawaban ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);"; // query ambil data
+        "SELECT pertanyaan.pertanyaan_id as idtanya, pertanyaan.text as txttanya, jawaban.text as txtjawab FROM pertanyaan INNER JOIN pertanyaan_dari ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id) INNER JOIN jawaban ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);"; // query ambil data
     //mendapatkan data dari database
     temp = req.session;
     db.query(query, (err, results) => {
@@ -472,12 +473,14 @@ router.post("/diskusi", (req, res) => {
         res.status(200);
         res.write(
             // table header
-            `<table id=najur>
+            `<h1> Diskusi </h1>
+			<a href="http://localhost:6969/diskusi/tanya"> Saya ingin bertanya. </a>
+			
+			<table id=idtanya>
                 <tr>
-                    <th>Nama Jurusan</th>
-                    <th>Nama Departemen</th>
-                    <th>Contoh Kurikulum<th>
-                    <th>Prospek Karir<th>
+                    <th>ID Pertanyaan</th>
+                    <th>Pertanyaan</th>
+                    <th>Jawaban<th>
                 </tr>`
         );
         for (row of results.rows) {
@@ -485,15 +488,17 @@ router.post("/diskusi", (req, res) => {
             res.write(
                 `
                 <tr> 
-                <td>${row['namjur']}</td>
-                <td>${row['nadept']}</td>
-                <td><a href="/ttgjurusan/kurikulum?idjur=${row['idjur']}" id="${row['idjur']}">Kurikulum</a></td>
-                <td><a href="/" id="${row['idjur']}">Karir</a></td>
+                <td>${row["idtanya"]}</td>
+                <td>${row["txtpertanyaan"]}</td>
+                <td>${row["txtjawab"]}</td>
                 `
             );
         }
         res.end(`</table></body>`);
     });
+});
+
+router.post("/diskusi/tanya", (req,res) => {
 });
 
 //-----------------------------------------------------------------------------------------------------------------------------------
