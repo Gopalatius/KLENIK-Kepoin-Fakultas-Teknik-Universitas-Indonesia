@@ -88,7 +88,7 @@ router.post("/login", (req, res) => {
 router.get("/register", (req, res) => {
     temp = req.session;
 
-    if (temp.role) {
+    if (req.session.authenticated) {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
     } else {
@@ -109,7 +109,7 @@ router.post("/register", (req, res) => {
     temp.password = req.body.password;
     temp.role = req.body.role;
 
-    const hashed_password = bcrypt.hashSync(req.body.password,10)
+    const hashed_password = bcrypt.hashSync(temp.password,10)
     const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
      ('${temp.username}','${hashed_password}','${temp.role}',now());`
 
