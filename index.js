@@ -84,6 +84,20 @@ router.post("/login", (req, res) => {
         }
     });
 });
+router.post("/logout", (req, res) => {
+    req.session.destroy();
+    res.write(`<html>
+      <head>
+          <title>Berhasil registrasi</title>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+          <script>
+          alert("Berhasil registrasi");
+              </script>
+      </head>
+      `);
+
+    return res.end("done");
+});
 router.get("/register", (req, res) => {
     if (req.session.authenticated) return res.redirect("/menu");
     fs.readFile("./register.html", null, function (error, data) {
@@ -116,20 +130,7 @@ router.post("/register", (req, res) => {
 
     return res.end("done");
 });
-router.post("/logout", (req, res) => {
-    req.session.destroy();
-    res.write(`<html>
-      <head>
-          <title>Berhasil registrasi</title>
-          <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-          <script>
-          alert("Berhasil registrasi");
-              </script>
-      </head>
-      `);
 
-    return res.end("done");
-});
 router.get("/menu", (req, res) => {
     const file_html = req.session.authenticated? "./menu.html" : "./illegal_access.html"
 
