@@ -36,6 +36,29 @@
             </a>
         </li>
     </ol>
+    <!--input type="button" id="logout" value="Logout" onClick="logout()"-->
+    <button id="logout">Logout</button>
   </body>
-  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+      jQuery(document).ready(function ($) {
+      
+      $("#logout").click(function () {
+        
+        $.post(
+          "/logout",
+          {  },
+          function (data) {
+            if (data) {
+              
+              window.location.href = "/";
+              window.alert("Logout Success!");
+            } else {
+              window.alert("Logout gagal. Silakan coba lagi");
+            }
+          }
+        );
+      });
+    });
+  </script>
 </html>

@@ -29,8 +29,8 @@
           "/login",
           { username: username, password: password },
           function (data) {
-            if (data === "Success") {
-              
+            if (data === "done") {
+
               window.location.href = "/menu";
               window.alert("Login sukses!");
             } else {

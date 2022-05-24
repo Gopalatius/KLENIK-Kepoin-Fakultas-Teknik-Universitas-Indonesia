@@ -87,7 +87,7 @@ router.post("/login", (req, res) => {
             if (bcrypt.compare(req.body.password,results.rows[0]['password'])){
                 req.session.authenticated = true
                 req.session.username = results.rows[0]['username']
-                return res.status(200).end("Success")
+                return res.status(200).end("done")
             }
         }
 
@@ -142,29 +142,36 @@ router.post("/register", (req, res) => {
 
     res.end("done");
 });
-router.get("/menu", (req, res) => {
-    
-    if (!req.session.authenticated) {
-        fs.readFile('./illegal_access.html', null, function (error, data) {
-            if (error) {
-                res.writeHead(404)
-                alert('File tidak ditemukan!')
-            } else {
-                return res.end(data)
-            }
-        })
-    } else {
-        fs.readFile('./menu.html', null, function (error, data) {
-            if (error) {
-                res.writeHead(404)
-                alert('File tidak ditemukan!')
-            } else {
-                return res.end(data)
-            }
-        })
-        
+router.post("/logout", (req, res) => {
+    req.session.destroy()
+    res.write(`<html>
+      <head>
+          <title>Berhasil registrasi</title>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+          <script>
+          alert("Berhasil registrasi");
+              </script>
+      </head>
+      `)
 
+    return res.end("done");
+});
+router.get("/menu", (req, res) => {
+    let file_html
+    if (!req.session.authenticated) {
+        file_html = './illegal_access.html'
+    } else {
+        file_html = './menu.html'
     }
+    fs.readFile(file_html, null, function (error, data) {
+        if (error) {
+            res.writeHead(404)
+            alert('File tidak ditemukan!')
+        } else {
+            return res.end(data)
+        }
+    })
+
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post('/getjurusan', (req, res) => {
