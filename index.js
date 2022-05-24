@@ -54,7 +54,7 @@ var saved_username = null
 exports.saved_username = saved_username
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
-    
+
 
     if (req.session.authenticated) {
         //jika user terdaftar maka akan masuk ke halaman menu
@@ -72,21 +72,21 @@ router.get("/", (req, res) => {
     }
 });
 router.post("/login", (req, res) => {
-    
-    
-    
+
+
+
     const query = `SELECT * FROM user_reg WHERE username ='${req.body.username}';`
-     
+
     db.query(query, (err, results) => {
         if (err) {
             console.log(err)
             return
         }
         //
-        if (results.rowCount === 0){
+        if (results.rowCount === 0) {
             return res.status(400).end("No Username")
-        }else{
-            if (bcrypt.compare(req.body.password,results.rows[0]['password'])){
+        } else {
+            if (bcrypt.compare(req.body.password, results.rows[0]['password'])) {
                 req.session.authenticated = true
                 req.session.user_id = results.rows[0]['user_id']
                 req.session.username = results.rows[0]['username']
@@ -96,7 +96,7 @@ router.post("/login", (req, res) => {
 
     });
 
-    
+
 });
 router.get("/register", (req, res) => {
     temp = req.session;
@@ -122,7 +122,7 @@ router.post("/register", (req, res) => {
     temp.password = req.body.password;
     temp.role = req.body.role;
 
-    const hashed_password = bcrypt.hashSync(temp.password,10)
+    const hashed_password = bcrypt.hashSync(temp.password, 10)
     const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
      ('${temp.username}','${hashed_password}','${temp.role}',now());`
 
@@ -187,7 +187,7 @@ router.post('/getjurusan', (req, res) => {
             return
         }
         res.status(200)
-        
+
         res.write( // table header
             `<table id=najur>
                 <tr>
@@ -198,7 +198,7 @@ router.post('/getjurusan', (req, res) => {
                     <th>Add Wishlist</th>
                 </tr>`
         )
-        
+
         for (row of results.rows) { // tampilin isi table
             res.write(
                 `
@@ -220,13 +220,13 @@ router.post('/getkurikulum', (req, res) => {
     //mendapatkan data dari database
     //temp = req.session;
     db.query(query, (err, results) => {
-        if(err){
+        if (err) {
             console.log(err)
             return
         }
         res.status(200)
         res.write( // table header
-           `
+            `
             <table id=takur>
                 <tr>
                     <th>Mata Kuliah</th>
@@ -247,7 +247,7 @@ router.post('/getkurikulum', (req, res) => {
 
 router.get('/ttgjurusan', (req, res) => {
     //temp = req.session;
-        res.write(`<html>
+    res.write(`<html>
         <head>
             <title>Klenik</title>
         </head>
@@ -266,7 +266,7 @@ router.get('/ttgjurusan', (req, res) => {
                     <th>Add Wishlist</th>
                 </tr>`
     )
-    
+
     res.end(`</table></body>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
@@ -295,7 +295,7 @@ router.get('/ttgjurusan/kurikulum', (req, res) => {
     <body style="background-color: #29C5F6; text-align: center;">`
     );
     res.write( // table header
-       `<h1> Kurikulum </h1>
+        `<h1> Kurikulum </h1>
        <h2>${req.query.namjur}</h2>
        <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
        <table id=takur>
@@ -314,7 +314,7 @@ router.get('/ttgjurusan/kurikulum', (req, res) => {
         });
         </script>
     </html>`);
-    
+
 
 });
 
