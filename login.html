@@ -1,54 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>KLENIK</title>
+  </head>
+  <style></style>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>KLENIK</title>
-</head>
-<style>
+  <body
+    style="
+      background-color: 081165;
+      text-align: center;
+      margin: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -moz-transform: translateX(-50%) translateY(-50%);
+      -webkit-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+    "
+  >
+    <h1>Masuk ke KLENIK</h1>
+    <h2>Login</h2>
+    Username:
+    <input type="text" id="username" /><br />
+    Password :
+    <input type="password" id="password" /><br />
+    <input type="button" value="Submit" id="submits" />
+    <p>Belum memiliki akun? <a href="/register">DAFTAR SEKARANG!</a></p>
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    jQuery(document).ready(function ($) {
+      var username, pass;
+      $("#submits").click(function () {
+        username = document.getElementById("username").value;
+        password = document.getElementById("password").value;
 
-</style>
-
-<body style="background-color: 081165; text-align: center; margin: auto;position: absolute;
-  top: 50%;
-  left: 50%;
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);">
-  <h1>Masuk ke KLENIK</h1>
-  <h2>Login</h2>
-  Username:
-  <input type="text" id="username" /><br />
-  Password :
-  <input type="password" id="password" /><br />
-  <input type="button" value="Submit" id="submits" />
-  <p>Belum memiliki akun? <a href="/register">DAFTAR SEKARANG!</a></p>
-</body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-  jQuery(document).ready(function ($) {
-    var username, pass;
-    $("#submits").click(function () {
-      username = document.getElementById("username").value;
-      password = document.getElementById("password").value;
-
-      $.post(
-        "/login",
-        { username: username, password: password },
-        function (data) {
-          if (data === "done") {
-
-            window.location.href = "/menu";
-            window.alert("Login sukses!");
-          } else {
-            window.alert("Login gagal. Silakan coba lagi");
+        $.post(
+          "/login",
+          { username: username, password: password },
+          function (data) {
+            if (data === "done") {
+              window.location.href = "/menu";
+              window.alert("Login sukses!");
+            } else {
+              window.alert("Login gagal. Silakan coba lagi");
+            }
           }
-        }
-      );
+        );
+      });
     });
-  });
-</script>
-
+  </script>
 </html>
