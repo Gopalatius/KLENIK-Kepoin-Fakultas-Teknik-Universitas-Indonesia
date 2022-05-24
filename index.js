@@ -130,7 +130,6 @@ router.post("/register", (req, res) => {
 
     return res.end("done");
 });
-
 router.get("/menu", (req, res) => {
     const file_html = req.session.authenticated? "./menu.html" : "./illegal_access.html"
 
@@ -238,7 +237,7 @@ router.post("/pejuang_ptn", (req, res) => {
         res.write(
             `</tr>`
         )
-        res.status(400).end(`</table></body>`);
+        res.status(200).end(`</table></body>`);
     });
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
