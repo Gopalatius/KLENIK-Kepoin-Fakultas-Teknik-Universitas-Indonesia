@@ -138,6 +138,43 @@ router.get("/menu", (req, res) => {
         return res.end(minify(data, minify_options));
     });
 });
+router.get("/pejuang_ptn", (req, res) => {
+    //temp = req.session;
+    res.write(`<html>
+        <head>
+            <title>Klenik</title>
+        </head>
+        <body style="background-color: #29C5F6; text-align: center;">`);
+
+    res.write(
+        // table header
+        `<h1> Tentang Jurusan </h1>
+        <a href="http://localhost:6969/menu">Kembali ke Menu</a>
+        <h2> </h2>
+           <table id=najur>
+                <tr>
+                    <th>Nama Jurusan</th>
+                    <th>Nama Departemen</th>
+                    <th>Contoh Kurikulum</th>
+                    <th>Prospek Karir</th>
+                    <th>Add Wishlist</th>
+                </tr>`
+    );
+
+    res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                var jid;
+                $.post('/getjurusan', { }, function(data) {
+                    console.log(data);
+                    $("#najur").html(data);
+                });
+                
+            });
+            </script>
+        </html>`);
+});
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post("/getjurusan", (req, res) => {
     const query =
@@ -218,7 +255,14 @@ router.get("/ttgjurusan", (req, res) => {
         <head>
             <title>Klenik</title>
         </head>
-        <body style="background-color: #29C5F6; text-align: center;">`);
+        <body style="background-color: #29C5F6;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);">`);
 
     res.write(
         // table header
