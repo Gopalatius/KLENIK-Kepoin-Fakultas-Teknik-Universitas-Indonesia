@@ -274,7 +274,7 @@ router.post("/getjurusan", (req, res) => {
                 <td>${row["nadept"]}</td>
                 <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
                 <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
-                <td><a href="http://localhost:6969/" id="${row["idjur"]}">Add</a></td>
+                <td><a href="/postwish?user_id=3&jurusan_id=${row["idjur"]}">Add</a></td>
                 `
             );
         }
@@ -346,6 +346,22 @@ router.post('/getkarir', (req, res) => {
         res.end(`</table></body>`)
     });
 });
+
+router.post('/postwish', (req, res) => {
+    const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.jurusan_id});` // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    db.query(query, (err, results) => {
+        if(err){
+            console.log(err)
+            return
+        }
+        res.send();
+        console.log(res.rows);
+        console.log("berhasil");
+    });
+});
+
 
 router.get('/ttgjurusan', (req, res) => {
     //temp = req.session;
@@ -457,6 +473,8 @@ router.get('/ttgjurusan/karir', (req, res) => {
     
 
 });
+
+
 
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.post("/diskusi", (req, res) => {
