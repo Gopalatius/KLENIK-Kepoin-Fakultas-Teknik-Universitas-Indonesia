@@ -8,7 +8,7 @@ const app = express();
 const router = express.Router();
 const { Client } = require("pg");
 const bcrypt = require("bcrypt");
-const { rows } = require("pg/lib/defaults");
+const { rows, connectionString } = require("pg/lib/defaults");
 
 //inisiasi fs untuk impor html
 var fs = require('fs');
@@ -22,7 +22,7 @@ const db = new Client({
     user: "kel_6",
     password:
         "3#&1j[(mq4SUKWe9HpjXy9hB.H!z[LJ(4HxI|%UX[t&hxcatb*|yto{QzJl;><5vmbkf1c/y[^-?r(x>wB_7V8b4<KelwSn@=]ON4.{thO7=>pJxC#skqv1PMCtXa97v",
-    ssl: true,
+    ssl: true
 });
 
 //middleware (session)
