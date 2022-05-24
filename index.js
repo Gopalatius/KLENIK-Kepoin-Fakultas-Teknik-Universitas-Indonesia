@@ -11,7 +11,7 @@ const bcrypt = require("bcrypt");
 const { rows, connectionString } = require("pg/lib/defaults");
 
 //Melakukan minify pada html
-var minify = require("html-minifier").minify;
+const minify = require("html-minifier").minify;
 const minify_options = {
     collapseBooleanAttributes: true,
     collapseWhitespace: true,
