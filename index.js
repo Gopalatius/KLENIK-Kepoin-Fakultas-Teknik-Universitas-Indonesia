@@ -160,30 +160,34 @@ router.get("/menu", (req, res) => {
 router.post('/getjurusan', (req, res) => {
     const query = "SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);"; // query ambil data
     //mendapatkan data dari database
-    temp = req.session;
+    //temp = req.session;
     db.query(query, (err, results) => {
         if (err) {
             console.log(err)
             return
         }
         res.status(200)
+        
         res.write( // table header
             `<table id=najur>
                 <tr>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
-                    <th>Contoh Kurikulum<th>
-                    <th>Prospek Karir<th>
+                    <th>Contoh Kurikulum</th>
+                    <th>Prospek Karir</th>
+                    <th>Add Wishlist</th>
                 </tr>`
         )
+        
         for (row of results.rows) { // tampilin isi table
             res.write(
                 `
                 <tr> 
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
-                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row['idjur']}" id="${row['idjur']}">Kurikulum</a></td>
+                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row['idjur']}&namjur=${row['namjur']}" id="${row['idjur']}">Kurikulum</a></td>
                 <td><a href="http://localhost:6969/" id="${row['idjur']}">Karir</a></td>
+                <td><a href="http://localhost:6969/" id="${row['idjur']}">Add</a></td>
                 `
             );
         }
@@ -194,7 +198,7 @@ router.post('/getjurusan', (req, res) => {
 router.post('/getkurikulum', (req, res) => {
     const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
     //mendapatkan data dari database
-    temp = req.session;
+    //temp = req.session;
     db.query(query, (err, results) => {
         if(err){
             console.log(err)
@@ -222,22 +226,27 @@ router.post('/getkurikulum', (req, res) => {
 });
 
 router.get('/ttgjurusan', (req, res) => {
-    temp = req.session;
+    //temp = req.session;
         res.write(`<html>
         <head>
             <title>Klenik</title>
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`);
+
     res.write( // table header
         `<h1> Tentang Jurusan </h1>
+        <a href="http://localhost:6969/menu">Kembali ke Menu</a>
+        <h2> </h2>
            <table id=najur>
                 <tr>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
-                    <th>Contoh Kurikulum<th>
-                    <th>Prospek Karir<th>
+                    <th>Contoh Kurikulum</th>
+                    <th>Prospek Karir</th>
+                    <th>Add Wishlist</th>
                 </tr>`
     )
+    
     res.end(`</table></body>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
@@ -256,16 +265,19 @@ router.get('/ttgjurusan', (req, res) => {
 });
 
 router.get('/ttgjurusan/kurikulum', (req, res) => {
-    temp = req.session;
+    //temp = req.session;
     id = `${req.query.idjur}`;
     console.log(id);
     res.write(`<html>
     <head>
         <title>Klenik</title>
     </head>
-    <body style="background-color: #29C5F6; text-align: center;">`);
+    <body style="background-color: #29C5F6; text-align: center;">`
+    );
     res.write( // table header
        `<h1> Kurikulum </h1>
+       <h2>${req.query.namjur}</h2>
+       <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
        <table id=takur>
             <tr>
                 <th>Mata Kuliah<th>
