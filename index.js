@@ -269,21 +269,12 @@ router.post("/getjurusan", (req, res) => {
             // tampilin isi table
             res.write(
                 `
-<<<<<<< HEAD
-                <tr> 
-                <td>${row['namjur']}</td>
-                <td>${row['nadept']}</td>
-                <td><a href="/ttgjurusan/kurikulum?idjur=${row['idjur']}&namjur=${row['namjur']}" id="${row['idjur']}">Kurikulum</a></td>
-                <td><a href="/ttgjurusan/karir?idjur=${row['idjur']}&namjur=${row['namjur']}" id="${row['idjur']}">Karir</a></td>
-                <td><a href="http://localhost:6969/" id="${row['idjur']}">Add</a></td>
-=======
                 <tr align="center">  
                 <td>${row["namjur"]}</td>
                 <td>${row["nadept"]}</td>
                 <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
                 <td><a href="http://localhost:6969/" id="${row["idjur"]}">Karir</a></td>
                 <td><a href="http://localhost:6969/" id="${row["idjur"]}">Add</a></td>
->>>>>>> d304976d72e6ccc0458d53b219cdb68009d00759
                 `
             );
         }
@@ -326,7 +317,6 @@ router.post("/getkurikulum", (req, res) => {
     });
 });
 
-<<<<<<< HEAD
 router.post('/getkarir', (req, res) => {
     const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
     //mendapatkan data dari database
@@ -358,9 +348,6 @@ router.post('/getkarir', (req, res) => {
 });
 
 router.get('/ttgjurusan', (req, res) => {
-=======
-router.get("/ttgjurusan", (req, res) => {
->>>>>>> d304976d72e6ccc0458d53b219cdb68009d00759
     //temp = req.session;
     res.write(`<html>
         <head>
@@ -498,17 +485,10 @@ router.post("/diskusi", (req, res) => {
             res.write(
                 `
                 <tr> 
-<<<<<<< HEAD
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
                 <td><a href="/ttgjurusan/kurikulum?idjur=${row['idjur']}" id="${row['idjur']}">Kurikulum</a></td>
                 <td><a href="/" id="${row['idjur']}">Karir</a></td>
-=======
-                <td>${row["namjur"]}</td>
-                <td>${row["nadept"]}</td>
-                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row["idjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
-                <td><a href="http://localhost:6969/" id="${row["idjur"]}">Karir</a></td>
->>>>>>> d304976d72e6ccc0458d53b219cdb68009d00759
                 `
             );
         }
