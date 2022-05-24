@@ -172,7 +172,7 @@ router.post('/getjurusan', (req, res) => {
                 <tr> 
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
-                <td><a href="http://localhost:6969/ttgjurusan/kurikulum" id="${row['idjur']}">Kurikulum</a></td>
+                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row['idjur']}" id="${row['idjur']}">Kurikulum</a></td>
                 <td><a href="http://localhost:6969/" id="${row['idjur']}">Karir</a></td>
                 `
             );
@@ -232,10 +232,12 @@ router.get('/ttgjurusan', (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
+                var jid;
                 $.post('/getjurusan', { }, function(data) {
                     console.log(data);
                     $("#najur").html(data);
                 });
+                
             });
             </script>
         </html>`);
@@ -245,7 +247,7 @@ router.get('/ttgjurusan', (req, res) => {
 
 router.get('/ttgjurusan/kurikulum', (req, res) => {
     temp = req.session;
-    id = `${req.body.idjur}`;
+    id = `${req.query.idjur}`;
     console.log(id);
     res.write(`<html>
     <head>
