@@ -459,7 +459,6 @@ router.get('/ttgjurusan/karir', (req, res) => {
 });
 
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
-//--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.get("/diskusi", (req, res) => {
     const query =
         "SELECT pertanyaan.pertanyaan_id as idtanya, pertanyaan.text as txttanya, jawaban.text as txtjawab FROM pertanyaan INNER JOIN pertanyaan_dari ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id) INNER JOIN jawaban ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);"; // query ambil data
@@ -475,7 +474,6 @@ router.get("/diskusi", (req, res) => {
             // table header
             `<h1> Diskusi </h1>
 			<a href="http://localhost:6969/diskusi/tanya"> Saya ingin bertanya. </a>
-			
 			<table id=idtanya>
                 <tr>
                     <th>ID Pertanyaan</th>
@@ -489,6 +487,7 @@ router.get("/diskusi", (req, res) => {
                 `
                 <tr> 
                 <td>${row["idtanya"]}</td>
+                <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
                 <td>${row["txtpertanyaan"]}</td>
                 <td>${row["txtjawab"]}</td>
                 `
@@ -499,6 +498,10 @@ router.get("/diskusi", (req, res) => {
 });
 
 router.post("/diskusi/tanya", (req,res) => {
+});
+
+router.get("/wishlist", (req,res)=> {
+
 });
 
 //-----------------------------------------------------------------------------------------------------------------------------------
