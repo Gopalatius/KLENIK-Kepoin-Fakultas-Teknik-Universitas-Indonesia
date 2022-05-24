@@ -42,9 +42,9 @@ app.use(
 );
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
-    
+    temp = req.session;
 
-    if (req.session.authenticated) {
+    if (temp.role) {
         //jika user terdaftar maka akan masuk ke halaman menu
         return res.redirect("/menu");
     } else {
@@ -58,32 +58,6 @@ router.get("/", (req, res) => {
         })
 
     }
-});
-router.post("/login", (req, res) => {
-    
-    
-    
-    const query = `SELECT * FROM user_reg WHERE username ='${req.body.username}';`
-     
-    db.query(query, (err, results) => {
-        if (err) {
-            console.log(err)
-            return
-        }
-        //
-        if (results.rowCount === 0){
-            return res.status(400).end("No Username")
-        }else{
-            if (bcrypt.compare(req.body.password,results.rows[0]['password'])){
-                req.session.authenticated = true
-                req.session.username = results.rows[0]['username']
-                return res.status(200).end("Success")
-            }
-        }
-
-    });
-
-    
 });
 router.get("/register", (req, res) => {
     temp = req.session;
@@ -133,8 +107,8 @@ router.post("/register", (req, res) => {
     res.end("done");
 });
 router.get("/menu", (req, res) => {
-    
-    if (!req.session.authenticated) {
+    temp = req.session;
+    if (!temp.role) {
         fs.readFile('./illegal_access.html', null, function (error, data) {
             if (error) {
                 res.writeHead(404)
@@ -144,15 +118,27 @@ router.get("/menu", (req, res) => {
             }
         })
     } else {
-        fs.readFile('./menu.html', null, function (error, data) {
-            if (error) {
-                res.writeHead(404)
-                alert('File tidak ditemukan!')
-            } else {
-                return res.end(data)
-            }
-        })
-        
+
+        res.end(
+            `<!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                    <title>Document</title>
+                </head>
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <script>
+                    alert('HARAM MENGAKSES INI KARENA ANDA BELUM LOGIN!');
+                    
+                 </script>
+                <body>
+                    <h1>Muka anda macam Keeper Of The Light</h1>
+            
+                </body>
+            </html>`
+        );
 
     }
 });
