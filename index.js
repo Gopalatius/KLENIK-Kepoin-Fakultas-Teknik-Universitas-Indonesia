@@ -332,10 +332,7 @@ router.post("/diskusi", (req, res) => {
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 db.connect((err) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
+    if (err) return console.log(err)
     console.log("Database berhasil terkoneksi");
 });
 
