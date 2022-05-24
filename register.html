@@ -27,8 +27,8 @@
         var username, password, role, mahasiswa, nonmahasiswa;
         $("#submits").click(function() {
             console.log('berhasil terklik');
-            username = document.getElementById('username');
-            password = document.getElementById('password');
+            username = document.getElementById('username').value;
+            password = document.getElementById('password').value;
             mahasiswa = document.getElementById('mahasiswa');
             nonmahasiswa = document.getElementById('nonmahasiswa');
             if(mahasiswa.checked==true){
@@ -39,8 +39,8 @@
             }
             $.post('/register', { username: username, password: password, role: role }, function(data) {
                 if (data === 'done') {
-                    window.location.href = '/menu';
-                    window.alert('Registrasi Sukses');
+                    window.location.href = '/';
+                    window.alert('Registrasi Sukses. Silakan login!');
                 }
             });
         });
