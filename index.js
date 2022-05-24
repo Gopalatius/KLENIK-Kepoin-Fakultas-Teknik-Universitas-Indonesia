@@ -50,6 +50,8 @@ app.use(
         extended: true,
     })
 );
+var saved_username = null
+exports.saved_username = saved_username
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     
@@ -86,6 +88,7 @@ router.post("/login", (req, res) => {
         }else{
             if (bcrypt.compare(req.body.password,results.rows[0]['password'])){
                 req.session.authenticated = true
+                req.session.user_id = results.rows[0]['user_id']
                 req.session.username = results.rows[0]['username']
                 return res.status(200).end("done")
             }

@@ -8,7 +8,7 @@
   </head>
 
   <body style="background-color: 081165; text-align: center">
-    <h1>Menu Pilihan</h1>
+    <div id="welcome"> </div>
     <ol>
         <li>
             <a href="/pejuang_ptn">
@@ -40,9 +40,13 @@
     <button id="logout">Logout</button>
   </body>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="./index.js"></script>
   <script>
+      const user =  document.getElementById('welcome')
+      user.innerHTML = `Selamat datang, <strong>hehe</strong>!`
+        
       jQuery(document).ready(function ($) {
-      
+    
       $("#logout").click(function () {
         
         $.post(
