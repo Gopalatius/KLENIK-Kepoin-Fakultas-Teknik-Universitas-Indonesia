@@ -25,6 +25,16 @@ const db = new Client({
     ssl: true
 });
 
+// const host = "mraihanazhari-sbd.postgres.database.azure.com"
+// const port = 5432
+// const database = "klenik"
+// const user = "kel_6"
+// const password = `3#&1j[(mq4SUKWe9HpjXy9hB.H!z[LJ(4HxI|%UX[t&hxcatb*|yto{QzJl;><5vmbkf1c/y[^-?r(x>wB_7V8b4<KelwSn@=]ON4.{thO7=>pJxC#skqv1PMCtXa97v`
+// // const connectionString = `postgresql://${user}:${password}@${host}:@${port}/@${database}?sslmode=verify-full`
+// const db = new Client({
+//    connectionString : `postgresql://${user}:${password}@${host}:@${port}/@${database}?sslmode=verify-full`
+// });
+
 //middleware (session)
 app.use(
     session({
