@@ -142,22 +142,32 @@ router.get("/pejuang_ptn", (req, res) => {
     //temp = req.session;
     res.write(`<html>
         <head>
-            <title>Klenik</title>
+            <title>Data Fakultas Teknik UI</title>
         </head>
-        <body style="background-color: #29C5F6; text-align: center;">`);
+        <body style="background-color: #29C5F6;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);">`);
 
     res.write(
         // table header
         `<h1> Tentang Jurusan </h1>
-        <a href="http://localhost:6969/menu">Kembali ke Menu</a>
+        <a href="/menu">Kembali ke Menu</a>
         <h2> </h2>
            <table id=najur>
                 <tr>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
-                    <th>Contoh Kurikulum</th>
-                    <th>Prospek Karir</th>
-                    <th>Add Wishlist</th>
+                    <th>Daya Tampung</th>
+                    <th>Kuota SNMPTN</th>
+                    <th>Kuota SBMPTN</th>
+                    <th>Kuota SIMAKUI</th>
+                    <th>Kuota PPKB</th>
+                    <th>Kuota TS</th>
                 </tr>`
     );
 
@@ -165,15 +175,70 @@ router.get("/pejuang_ptn", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                var jid;
-                $.post('/getjurusan', { }, function(data) {
-                    console.log(data);
+                $.post('/pejuang_ptn', { }, function(data) {
                     $("#najur").html(data);
                 });
                 
             });
             </script>
         </html>`);
+});
+router.post("/pejuang_ptn", (req, res) => {
+    const query =
+        `SELECT jurusan.jurusan_id as idjur,
+         jurusan.nama as namjur,
+          departemen.nama as nadept,
+          jurusan.daya_tampung as dapung,
+          jurusan.kuota_snmptn as snmptn,
+          jurusan.kuota_sbmptn as sbmptn,
+          jurusan.kuota_simakui as simakui,
+          jurusan.kuota_ppkb as ppkb,
+          jurusan.kuota_ts as ts
+           FROM jurusan 
+           INNER JOIN mewadahi
+            ON
+            (jurusan.jurusan_id = mewadahi.jurusan_id)
+            INNER JOIN departemen
+            ON 
+            (mewadahi.departemen_id = departemen.departemen_id)
+            ;`; // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    db.query(query, (err, results) => {
+        if (err) return console.log(err)
+        res.status(200).write(`<table id=najur>
+        <tr align="center">
+            <th>Nama Jurusan</th>
+            <th>Nama Departemen</th>
+            <th>Daya Tampung</th>
+            <th>Kuota SNMPTN</th>
+            <th>Kuota SBMPTN</th>
+            <th>Kuota SIMAKUI</th>
+            <th>Kuota PPKB</th>
+            <th>Kuota TS</th>
+        </tr>`);
+
+        for (row of results.rows) {
+            // tampilin isi table
+            res.write(
+                `
+                <tr align="center"> 
+                <td>${row["namjur"]}</td>
+                <td>${row["nadept"]}</td>
+                <td>${row["dapung"]}</td>
+                <td>${row["snmptn"]}</td>
+                <td>${row["sbmptn"]}</td>
+                <td>${row["simakui"]}</td>
+                <td>${row["ppkb"]}</td>
+                <td>${row["ts"]}</td>
+                `
+            );
+        }
+        res.write(
+            `</tr>`
+        )
+        res.status(400).end(`</table></body>`);
+    });
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post("/getjurusan", (req, res) => {
@@ -190,7 +255,7 @@ router.post("/getjurusan", (req, res) => {
 
         res.write(
             // table header
-            `<table id=najur>
+            `<table id=najur align="center">
                 <tr>
                     <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
@@ -204,7 +269,7 @@ router.post("/getjurusan", (req, res) => {
             // tampilin isi table
             res.write(
                 `
-                <tr> 
+                <tr align="center">  
                 <td>${row["namjur"]}</td>
                 <td>${row["nadept"]}</td>
                 <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
@@ -213,6 +278,9 @@ router.post("/getjurusan", (req, res) => {
                 `
             );
         }
+        res.write(
+            `</tr>`
+        )
         res.end(`</table></body>`);
     });
 });
