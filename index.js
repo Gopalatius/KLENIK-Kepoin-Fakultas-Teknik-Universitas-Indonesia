@@ -195,8 +195,8 @@ router.post('/getjurusan', (req, res) => {
                 <tr> 
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
-                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row['idjur']}&namjur=${row['namjur']}" id="${row['idjur']}">Kurikulum</a></td>
-                <td><a href="http://localhost:6969/" id="${row['idjur']}">Karir</a></td>
+                <td><a href="/ttgjurusan/kurikulum?idjur=${row['idjur']}&namjur=${row['namjur']}" id="${row['idjur']}">Kurikulum</a></td>
+                <td><a href="/ttgjurusan/karir?idjur=${row['idjur']}&namjur=${row['namjur']}" id="${row['idjur']}">Karir</a></td>
                 <td><a href="http://localhost:6969/" id="${row['idjur']}">Add</a></td>
                 `
             );
@@ -227,6 +227,36 @@ router.post('/getkurikulum', (req, res) => {
                 `
                 <tr> 
                 <td>${row['nakur']}</td>
+                </tr>
+                `
+            );
+        }
+        res.end(`</table></body>`)
+    });
+});
+
+router.post('/getkarir', (req, res) => {
+    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    db.query(query, (err, results) => {
+        if(err){
+            console.log(err)
+            return
+        }
+        res.status(200)
+        res.write( // table header
+           `
+            <table id=takar>
+                <tr>
+                    <th>Karir</th>
+                </tr>`
+        )
+        for (row of results.rows) { // tampilin isi table
+            res.write(
+                `
+                <tr> 
+                <td>${row['nakar']}</td>
                 </tr>
                 `
             );
@@ -308,6 +338,40 @@ router.get('/ttgjurusan/kurikulum', (req, res) => {
 
 });
 
+router.get('/ttgjurusan/karir', (req, res) => {
+    //temp = req.session;
+    id = `${req.query.idjur}`;
+    console.log(id);
+    res.write(`<html>
+    <head>
+        <title>Klenik</title>
+    </head>
+    <body style="background-color: #29C5F6; text-align: center;">`
+    );
+    res.write( // table header
+       `<h1> Prospek Karir </h1>
+       <h2>${req.query.namjur}</h2>
+       <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
+       <table id=takar>
+            <tr>
+                <th>Karir<th>
+            </tr>`
+    )
+    res.end(`</table></body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            $.post('/getkarir', {idjur: ${id}}, function(data) {
+                console.log(data);
+                $("#takar").html(data);
+            });
+        });
+        </script>
+    </html>`);
+    
+
+});
+
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.post('/diskusi', (req, res) => {
     const query = "SELECT pertanyaan.pertanyaan_id as idtan, pertanyaan.text as txttanya, jawaban.text as txtjawab FROM pertanyaan INNER JOIN pertanyaan_dari ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id) INNER JOIN jawaban ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);"; // query ambil data
@@ -334,8 +398,8 @@ router.post('/diskusi', (req, res) => {
                 <tr> 
                 <td>${row['namjur']}</td>
                 <td>${row['nadept']}</td>
-                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row['idjur']}" id="${row['idjur']}">Kurikulum</a></td>
-                <td><a href="http://localhost:6969/" id="${row['idjur']}">Karir</a></td>
+                <td><a href="/ttgjurusan/kurikulum?idjur=${row['idjur']}" id="${row['idjur']}">Kurikulum</a></td>
+                <td><a href="/" id="${row['idjur']}">Karir</a></td>
                 `
             );
         }
