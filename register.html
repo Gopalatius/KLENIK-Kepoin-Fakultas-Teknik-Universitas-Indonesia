@@ -7,43 +7,45 @@
     <title>KLENIK</title>
   </head>
 
-  <body style="background-color: 081165; text-align: center;">
-    <h1> Daftar di KLENIK</h1>
-    <h2> Register </h2>
+  <body style="background-color: 081165; text-align: center">
+    <h1>Daftar di KLENIK</h1>
+    <h2>Register</h2>
     Username:
     <input type="text" id="username" /><br />
     Password :
     <input type="password" id="password" /><br />
-    Role: 
-    <input type="radio" id="mahasiswa" name="role" value="mahasiswa">
+    Role:
+    <input type="radio" id="mahasiswa" name="role" value="mahasiswa" />
     <label for="mahasiswa">Mahasiswa</label>
-    <input type="radio" id="nonmahasiswa" name="role" value="non-mahasiswa">
-    <label for="nonmahasiswa">Nonmahasiswa</label><br><br> 
-    <input type="button" value="Submit" id="submits"/>
+    <input type="radio" id="nonmahasiswa" name="role" value="non-mahasiswa" />
+    <label for="nonmahasiswa">Nonmahasiswa</label><br /><br />
+    <input type="button" value="Submit" id="submits" />
   </body>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script>
-    jQuery(document).ready(function($) {
-        var username, password, role, mahasiswa, nonmahasiswa;
-        $("#submits").click(function() {
-            console.log('berhasil terklik');
-            username = document.getElementById('username').value;
-            password = document.getElementById('password').value;
-            mahasiswa = document.getElementById('mahasiswa');
-            nonmahasiswa = document.getElementById('nonmahasiswa');
-            if(mahasiswa.checked==true){
-                role = mahasiswa.value;
-
-            }else if(nonmahasiswa.checked==true){
-                role = nonmahasiswa.value;
+    jQuery(document).ready(function ($) {
+      var username, password, role, mahasiswa, nonmahasiswa;
+      $("#submits").click(function () {
+        username = document.getElementById("username").value;
+        password = document.getElementById("password").value;
+        mahasiswa = document.getElementById("mahasiswa");
+        nonmahasiswa = document.getElementById("nonmahasiswa");
+        if (mahasiswa.checked == true) {
+          role = mahasiswa.value;
+        } else if (nonmahasiswa.checked == true) {
+          role = nonmahasiswa.value;
+        }
+        $.post(
+          "/register",
+          { username: username, password: password, role: role },
+          function (data) {
+            if (data === "done") {
+              window.location.href = "/";
+              window.alert("Registrasi Sukses. Silakan login!");
             }
-            $.post('/register', { username: username, password: password, role: role }, function(data) {
-                if (data === 'done') {
-                    window.location.href = '/';
-                    window.alert('Registrasi Sukses. Silakan login!');
-                }
-            });
-        });
+          }
+        );
+      });
     });
-</script>
+  </script>
 </html>
