@@ -19,39 +19,25 @@
     <label for="mahasiswa">Mahasiswa</label>
     <input type="radio" id="nonmahasiswa" name="role" value="non-mahasiswa">
     <label for="nonmahasiswa">Nonmahasiswa</label><br><br> 
-    <input type="button" value="Submit" id="submits" />
+    <input type="button" value="Submit" id="submits"/>
   </body>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script>
     jQuery(document).ready(function($) {
-        var username, pass, role, mahasiswa, nonmahasiswa;
-        // $('#submits').click(function() {
-        //     username = $('#username').val();
-        //     pass = $('#password').val();
-            
-        //     $.post('/login', { username: username, pass: pass }, function(data) {
-        //         if (data === 'done') {
-        //             window.location.href = '/admin';
-        //             window.alert('Login Sukses');
-        //         }
-        //         else if (data === 'fail'){
-        //             window.alert('Login Gagal');
-        //         }
-        //     });
-        // });
-        $('#submits').click(function() {
-            console.log('berhasil terklik')
-            username = document.getElementById('username')
-            pass = document.getElementById('password')
-            mahasiswa = document.getElementById('mahasiswa')
-            nonmahasiswa = document.getElementById('nonmahasiswa')
+        var username, password, role, mahasiswa, nonmahasiswa;
+        $("#submits").click(function() {
+            console.log('berhasil terklik');
+            username = document.getElementById('username');
+            password = document.getElementById('password');
+            mahasiswa = document.getElementById('mahasiswa');
+            nonmahasiswa = document.getElementById('nonmahasiswa');
             if(mahasiswa.checked==true){
-                role = mahasiswa.value
+                role = mahasiswa.value;
 
             }else if(nonmahasiswa.checked==true){
-                role = nonmahasiswa.value
+                role = nonmahasiswa.value;
             }
-            $.post('/register', { username: username, pass: pass, role: role }, function(data) {
+            $.post('/register', { username: username, password: password, role: role }, function(data) {
                 if (data === 'done') {
                     window.location.href = '/menu';
                     window.alert('Registrasi Sukses');
