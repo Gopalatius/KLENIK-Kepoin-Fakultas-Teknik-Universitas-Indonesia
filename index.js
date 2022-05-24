@@ -141,12 +141,8 @@ router.post("/logout", (req, res) => {
     return res.end("done");
 });
 router.get("/menu", (req, res) => {
-    let file_html;
-    if (!req.session.authenticated) 
-        file_html = "./illegal_access.html";
-    else {
-        file_html = "./menu.html";
-    }
+    const file_html = req.session.authenticated? "./menu.html" : "./illegal_access.html"
+
     fs.readFile(file_html, null, function (error, data) {
         if (error) return res.status(404).end('fail');
         return res.end(minify(data, minify_options));
