@@ -272,8 +272,8 @@ router.post("/getjurusan", (req, res) => {
                 <tr align="center">  
                 <td>${row["namjur"]}</td>
                 <td>${row["nadept"]}</td>
-                <td><a href="http://localhost:6969/ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
-                <td><a href="http://localhost:6969/" id="${row["idjur"]}">Karir</a></td>
+                <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
+                <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
                 <td><a href="http://localhost:6969/" id="${row["idjur"]}">Add</a></td>
                 `
             );
