@@ -221,8 +221,8 @@ router.post("/getjurusan", (req, res) => {
             // table header
             `<table id=najur align="center">
                 <tr>
-                    <th>Nama Jurusan</th>
                     <th>Nama Departemen</th>
+                    <th>Nama Jurusan</th>
                     <th>Contoh Kurikulum</th>
                     <th>Prospek Karir</th>
                     <th>Add Wishlist</th>
@@ -234,8 +234,8 @@ router.post("/getjurusan", (req, res) => {
             res.write(
                 `
                 <tr align="center">  
-                <td>${row["namjur"]}</td>
                 <td>${row["nadept"]}</td>
+                <td>${row["namjur"]}</td>
                 <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
                 <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
                 <td><a href="/addwish?user_id=${req.session.user_id}&idjur=${row["idjur"]}">Add</a></td>
