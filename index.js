@@ -68,10 +68,9 @@ let temp;
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
     if (req.session.authenticated) return res.redirect("/menu");
-    fs.readFile("./login.html", null, function (error, data) {
+    fs.readFile("html/login.html", null, function (error, data) {
         if (error) return res.status(404).end("fail");
-        //return res.end(minify(data, minify_options));
-        return res.end(data);
+        return res.end(minify(data, minify_options));
     });
 });
 router.post("/login", (req, res) => {
@@ -108,7 +107,7 @@ router.post("/logout", (req, res) => {
 });
 router.get("/register", (req, res) => {
     if (req.session.authenticated) return res.redirect("/menu");
-    fs.readFile("./register.html", null, function (error, data) {
+    fs.readFile("html/register.html", null, function (error, data) {
         if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
@@ -141,8 +140,8 @@ router.post("/register", (req, res) => {
 });
 router.get("/menu", (req, res) => {
     const file_html = req.session.authenticated
-        ? "./menu.html"
-        : "./illegal_access.html";
+        ? "html/menu.html"
+        : "html/illegal_access.html";
 
     fs.readFile(file_html, null, function (error, data) {
         if (error) return res.status(404).end("fail");
