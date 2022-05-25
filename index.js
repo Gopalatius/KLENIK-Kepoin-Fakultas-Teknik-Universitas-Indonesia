@@ -131,7 +131,7 @@ router.get("/menu", (req, res) => {
         ? "html/menu.html"
         : "html/illegal_access.html";
 
-    fs.readFile(file_html, null, function (error, data) {
+    fs.readFile(file_html, null,  (error, data) => {
         if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
@@ -142,7 +142,7 @@ router.get("/pejuang_ptn", (req, res) => {
         ? "html/pejuang_ptn.html"
         : "html/illegal_access.html";
 
-    fs.readFile(file_html, null, function (error, data) {
+    fs.readFile(file_html, null, (error, data) => {
         if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
