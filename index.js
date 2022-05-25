@@ -204,6 +204,8 @@ router.post("/pejuang_ptn", (req, res) => {
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post("/getjurusan", (req, res) => {
+    temp = req.session.user_id;
+    console.log(temp);
     const query =
         "SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);"; // query ambil data
     //mendapatkan data dari database
@@ -236,7 +238,7 @@ router.post("/getjurusan", (req, res) => {
                 <td>${row["nadept"]}</td>
                 <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
                 <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
-                <td><a href="/addwish?user_id=3&idjur=${row["idjur"]}">Add</a></td>
+                <td><a href="/addwish?user_id=${req.session.user_id}&idjur=${row["idjur"]}">Add</a></td>
                 `
             );
         }
