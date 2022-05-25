@@ -63,7 +63,6 @@ app.use(
         extended: true,
     })
 );
-
 let temp;
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
