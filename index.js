@@ -309,22 +309,34 @@ router.post("/getkarir", (req, res) => {
 });
 
 router.get("/addwish", (req, res) => {
-    const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.idjur});`; // query ambil data
-    //mendapatkan data dari database
-    //temp = req.session;
 
-    db.query(query, (err, results) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
+    user_status = req.session.authenticated;
+    console.log(user_status);
 
-        res.send();
-        id = `${req.query.idjur}`;
-        console.log("test");
-        console.log(id);
-    });
-    res.redirect("/ttgjurusan");
+    if(user_status){
+        const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.idjur});`; // query ambil data
+        //mendapatkan data dari database
+        //temp = req.session;
+
+        db.query(query, (err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+
+            res.send();
+            id = `${req.query.idjur}`;
+            console.log("test");
+            console.log(id);
+        });
+        res.redirect("/ttgjurusan");
+    }
+    else{
+        fs.readFile("html/illegal_access.html", null, function (error, data) {
+            if (error) return res.status(404).end("fail");
+            return res.end(minify(data, minify_options));
+        });
+    }
 });
 
 router.get("/ttgjurusan", (req, res) => {
