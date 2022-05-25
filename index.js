@@ -86,7 +86,7 @@ router.post("/login", (req, res) => {
         }
     });
 });
-router.get("/get_username", (req, res) => {
+router.post("/get_username", (req, res) => {
     res.status(200).end(req.session.username);
 });
 router.post("/logout", (req, res) => {
@@ -131,7 +131,7 @@ router.get("/menu", (req, res) => {
         ? "html/menu.html"
         : "html/illegal_access.html";
 
-    fs.readFile(file_html, null, function (error, data) {
+    fs.readFile(file_html, null,  (error, data) => {
         if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
@@ -142,15 +142,15 @@ router.get("/pejuang_ptn", (req, res) => {
         ? "html/pejuang_ptn.html"
         : "html/illegal_access.html";
 
-    fs.readFile(file_html, null, function (error, data) {
+    fs.readFile(file_html, null, (error, data) => {
         if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
 });
 router.post("/pejuang_ptn", (req, res) => {
     const query = `SELECT jurusan.jurusan_id as idjur,
+         departemen.nama as nadept,
          jurusan.nama as namjur,
-          departemen.nama as nadept,
           jurusan.daya_tampung as dapung,
           jurusan.kuota_snmptn as snmptn,
           jurusan.kuota_sbmptn as sbmptn,
@@ -171,8 +171,8 @@ router.post("/pejuang_ptn", (req, res) => {
         if (err) return console.log(err);
         res.write(
             `<tr>
-            <th>Nama Jurusan</th>
             <th>Nama Departemen</th>
+            <th>Nama Jurusan</th>
             <th>Daya Tampung</th>
             <th>Kuota SNMPTN</th>
             <th>Kuota SBMPTN</th>
@@ -185,9 +185,9 @@ router.post("/pejuang_ptn", (req, res) => {
             // tampilin isi table
             res.write(
                 `
-                <tr align="center"> 
+                <tr align="center">
+                <td>${row["nadept"]}</td> 
                 <td>${row["namjur"]}</td>
-                <td>${row["nadept"]}</td>
                 <td>${row["dapung"]}</td>
                 <td>${row["snmptn"]}</td>
                 <td>${row["sbmptn"]}</td>
@@ -196,7 +196,6 @@ router.post("/pejuang_ptn", (req, res) => {
                 <td>${row["ts"]}</td>
                 `
             );
-
         }
         return res.status(200).end(`</tr>`);
         
@@ -256,9 +255,7 @@ router.post("/getkurikulum", (req, res) => {
             console.log(err);
             return;
         }
-        res.status(200);
-        res.write(
-            // table header
+        res.status(200).write(
             `
             <table id=takur>
                 <tr>

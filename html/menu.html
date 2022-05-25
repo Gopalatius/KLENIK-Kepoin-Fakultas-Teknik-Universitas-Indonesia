@@ -41,7 +41,7 @@
     <button id="logout" onclick="logout()">Logout</button>
   </body>
   <script>
-    fetch("/get_username")
+    fetch("/get_username", {method: "POST"})
       .then((res) => res.text())
       .then((username) => {
         document.getElementById(
