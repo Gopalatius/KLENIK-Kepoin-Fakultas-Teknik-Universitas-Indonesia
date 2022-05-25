@@ -35,6 +35,7 @@ const minify_options = {
 //inisiasi fs untuk impor html
 var fs = require("fs");
 const { response } = require("express");
+const { isWindows } = require("nodemon/lib/utils");
 
 //Insiasi koneksi ke database
 const db = new Client({
@@ -274,7 +275,7 @@ router.post("/getjurusan", (req, res) => {
                 <td>${row["nadept"]}</td>
                 <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
                 <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
-                <td><a href="/postwish?user_id=3&jurusan_id=${row["idjur"]}">Add</a></td>
+                <td><a href="/addwish?user_id=3&idjur=${row["idjur"]}">Add</a></td>
                 `
             );
         }
@@ -347,19 +348,23 @@ router.post('/getkarir', (req, res) => {
     });
 });
 
-router.post('/postwish', (req, res) => {
-    const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.jurusan_id});` // query ambil data
+router.get('/addwish', (req, res) => {
+    const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.idjur});` // query ambil data
     //mendapatkan data dari database
     //temp = req.session;
+    
     db.query(query, (err, results) => {
         if(err){
             console.log(err)
             return
         }
+        
         res.send();
-        console.log(res.rows);
-        console.log("berhasil");
+        id = `${req.query.idjur}`;
+        console.log("test");
+        console.log(id);
     });
+    res.redirect('/ttgjurusan');
 });
 
 
