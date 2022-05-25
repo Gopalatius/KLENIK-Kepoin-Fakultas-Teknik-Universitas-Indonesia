@@ -338,7 +338,7 @@ router.get("/addwish", (req, res) => {
     }
 });
 
-router.get("/ttgjurusan", (req, res) => {
+router.get("k/ttgjurusan", (req, res) => {
     user_status = req.session.authenticated;
     console.log(user_status);
     if(user_status){
