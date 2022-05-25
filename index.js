@@ -51,9 +51,9 @@ const db = new Client({
 //middleware (session)
 app.use(
     session({
-        secret: "ini contoh secret",
+        secret: `N65hn$W@vS&8?l%3sNpkACTc3ywItV^%8o?X%T3^birD6Cl=DjuS?-QCVkeeNmLRavpv=pKniYG33Lpj9k#+YHfbU4d*9pz5BW7YbEgt#CEWqt3VTo|b=1Y2QDc6rRPG`,
         saveUninitialized: false,
-        resave: false,
+        resave: false
     })
 );
 //body parser
@@ -110,18 +110,18 @@ router.post("/register", (req, res) => {
     const hashed_password = bcrypt.hashSync(temp.password, 10);
     const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
      ('${temp.username}','${hashed_password}','${temp.role}',now());`;
-
+    
     db.query(query, (err, results) => {
         if (err) return console.log(err);
-        res.write(`<html>
-      <head>
-          <title>Berhasil registrasi</title>
-          <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-          <script>
-          alert("Berhasil registrasi");
-              </script>
-      </head>
-      `);
+        res.write(minify(`<html>
+        <head>
+            <title>Berhasil registrasi</title>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script>
+            alert("Berhasil registrasi");
+                </script>
+        </head>
+        `,minify_options));
     });
 
     return res.end("done");
