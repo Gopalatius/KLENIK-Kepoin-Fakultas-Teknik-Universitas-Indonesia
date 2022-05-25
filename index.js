@@ -147,26 +147,28 @@ router.get("/pejuang_ptn", (req, res) => {
     });
 });
 router.post("/pejuang_ptn", (req, res) => {
-    const query = `SELECT jurusan.jurusan_id as idjur,
-         departemen.nama as nadept,
-         jurusan.nama as namjur,
-          jurusan.daya_tampung as dapung,
-          jurusan.kuota_snmptn as snmptn,
-          jurusan.kuota_sbmptn as sbmptn,
-          jurusan.kuota_simakui as simakui,
-          jurusan.kuota_ppkb as ppkb,
-          jurusan.kuota_ts as ts
-           FROM jurusan 
-           INNER JOIN mewadahi
-            ON
-            (jurusan.jurusan_id = mewadahi.jurusan_id)
-            INNER JOIN departemen
-            ON 
-            (mewadahi.departemen_id = departemen.departemen_id)
-            ;`; // query ambil data
-    //mendapatkan data dari database
-    //temp = req.session;
-    db.query(query, (err, results) => {
+    const query = 
+    `
+    SELECT 
+        jurusan.jurusan_id as idjur, 
+        departemen.nama as nadept, 
+        jurusan.nama as namjur, 
+        jurusan.daya_tampung as dapung, 
+        jurusan.kuota_snmptn as snmptn, 
+        jurusan.kuota_sbmptn as sbmptn, 
+        jurusan.kuota_simakui as simakui, 
+        jurusan.kuota_ppkb as ppkb, 
+        jurusan.kuota_ts as ts 
+    FROM 
+        jurusan 
+        INNER JOIN mewadahi ON (
+        jurusan.jurusan_id = mewadahi.jurusan_id
+        ) 
+        INNER JOIN departemen ON (
+        mewadahi.departemen_id = departemen.departemen_id
+    );
+    `
+    db.query(query.toString(), (err, results) => {
         if (err) return console.log(err);
         res.write(
             `<tr>
@@ -199,6 +201,13 @@ router.post("/pejuang_ptn", (req, res) => {
         return res.status(200).end(`</tr>`);
         //hehe
     });
+    fs.readFileSync('psql/all_jurusan.sql', (err, query) => {
+        if (err) return console.log(err)
+        
+    }); // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post("/getjurusan", (req, res) => {
@@ -338,7 +347,7 @@ router.get("/addwish", (req, res) => {
     }
 });
 
-router.get("k/ttgjurusan", (req, res) => {
+router.get("/ttgjurusan", (req, res) => {
     user_status = req.session.authenticated;
     console.log(user_status);
     if(user_status){
@@ -475,7 +484,14 @@ router.get("/ttgjurusan/karir", (req, res) => {
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.get("/diskusi", (req, res) => {
     const query =
-        "SELECT pertanyaan.pertanyaan_id as idtanya, pertanyaan.text as txttanya, jawaban.text as txtjawab FROM pertanyaan INNER JOIN pertanyaan_dari ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id) INNER JOIN jawaban ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);"; // query ambil data
+        `SELECT pertanyaan.pertanyaan_id AS idtanya,
+            pertanyaan.text AS txttanya,
+            jawaban.text AS txtjawab
+        FROM pertanyaan
+            INNER JOIN pertanyaan_dari
+                ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
+            INNER JOIN jawaban
+                ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);`; // query ambil data
     //mendapatkan data dari database
     temp = req.session;
     db.query(query, (err, results) => {
