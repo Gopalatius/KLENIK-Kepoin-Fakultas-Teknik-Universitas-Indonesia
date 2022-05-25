@@ -30,7 +30,6 @@
     fetch("/pejuang_ptn", { method: "POST" })
       .then((res) => res.text())
       .then((html) => {
-        console.log(html);
         document.getElementById("tabel").innerHTML = html;
       });
   </script>
