@@ -74,7 +74,6 @@ router.get("/", (req, res) => {
     });
 });
 router.post("/login", (req, res) => {
-    console.log(req.body.username);
     const query = `SELECT * FROM user_reg WHERE username ='${req.body.username}';`;
     db.query(query, (err, results) => {
         if (err) return console.log(err);
@@ -83,7 +82,6 @@ router.post("/login", (req, res) => {
             req.session.authenticated = true;
             req.session.user_id = results.rows[0]["user_id"];
             req.session.username = results.rows[0]["username"];
-            console.log("good");
             return res.status(200).end("done");
         }
     });
@@ -93,16 +91,6 @@ router.get("/get_username", (req, res) => {
 });
 router.post("/logout", (req, res) => {
     req.session.destroy();
-    res.write(`<html>
-      <head>
-          <title>Berhasil registrasi</title>
-          <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-          <script>
-          alert("Berhasil registrasi");
-              </script>
-      </head>
-      `);
-
     return res.end("done");
 });
 router.get("/register", (req, res) => {
@@ -150,48 +138,14 @@ router.get("/menu", (req, res) => {
 });
 router.get("/pejuang_ptn", (req, res) => {
     //temp = req.session;
-    res.write(`<html>
-        <head>
-            <title>Data Fakultas Teknik UI</title>
-        </head>
-        <body style="background-color: #29C5F6;
-        text-align: center;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -moz-transform: translateX(-50%) translateY(-50%);
-        -webkit-transform: translateX(-50%) translateY(-50%);
-        transform: translateX(-50%) translateY(-50%);">`);
+    const file_html = req.session.authenticated
+        ? "html/pejuang_ptn.html"
+        : "html/illegal_access.html";
 
-    res.write(
-        // table header
-        `<h1> Tentang Jurusan </h1>
-        <a href="/menu">Kembali ke Menu</a>
-        <h2> </h2>
-           <table id=najur>
-                <tr>
-                    <th>Nama Jurusan</th>
-                    <th>Nama Departemen</th>
-                    <th>Daya Tampung</th>
-                    <th>Kuota SNMPTN</th>
-                    <th>Kuota SBMPTN</th>
-                    <th>Kuota SIMAKUI</th>
-                    <th>Kuota PPKB</th>
-                    <th>Kuota TS</th>
-                </tr>`
-    );
-
-    res.end(`</table></body>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script>
-            jQuery(document).ready(function($) {
-                $.post('/pejuang_ptn', { }, function(data) {
-                    $("#najur").html(data);
-                });
-                
-            });
-            </script>
-        </html>`);
+    fs.readFile(file_html, null, function (error, data) {
+        if (error) return res.status(404).end("fail");
+        return res.end(minify(data, minify_options));
+    });
 });
 router.post("/pejuang_ptn", (req, res) => {
     const query = `SELECT jurusan.jurusan_id as idjur,
@@ -215,8 +169,8 @@ router.post("/pejuang_ptn", (req, res) => {
     //temp = req.session;
     db.query(query, (err, results) => {
         if (err) return console.log(err);
-        res.status(200).write(`<table id=najur>
-        <tr align="center">
+        res.write(
+            `<tr>
             <th>Nama Jurusan</th>
             <th>Nama Departemen</th>
             <th>Daya Tampung</th>
@@ -225,8 +179,8 @@ router.post("/pejuang_ptn", (req, res) => {
             <th>Kuota SIMAKUI</th>
             <th>Kuota PPKB</th>
             <th>Kuota TS</th>
-        </tr>`);
-
+        </tr>
+        `)
         for (row of results.rows) {
             // tampilin isi table
             res.write(
@@ -242,9 +196,10 @@ router.post("/pejuang_ptn", (req, res) => {
                 <td>${row["ts"]}</td>
                 `
             );
+
         }
-        res.write(`</tr>`);
-        res.status(200).end(`</table></body>`);
+        return res.status(200).end(`</tr>`);
+        
     });
 });
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
