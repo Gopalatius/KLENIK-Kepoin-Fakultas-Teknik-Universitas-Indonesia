@@ -38,7 +38,7 @@
       </li>
     </ol>
     <!--input type="button" id="logout" value="Logout" onClick="logout()"-->
-    <button id="logout">Logout</button>
+    <button id="logout" onclick="logout()">Logout</button>
   </body>
   <script>
     fetch("/get_username")
@@ -48,5 +48,15 @@
           "welcome"
         ).innerHTML = `Selamat datang, <strong>${username}</strong>!`;
       });
+    function logout() {
+      fetch("/logout", { method: "POST" })
+        .then((res) => res.text())
+        .then((done) => {
+          if (done == "done"){
+            window.alert("Berhasil logout!")
+            window.location.href = './'
+          } 
+        });
+    }
   </script>
 </html>
