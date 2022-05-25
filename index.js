@@ -30,7 +30,7 @@ const minify_options = {
     sortAttributes: true,
     sortClassName: true,
     trimCustomFragments: true,
-}
+};
 
 //inisiasi fs untuk impor html
 var fs = require("fs");
@@ -64,26 +64,33 @@ app.use(
     })
 );
 
+let temp;
 //Router 1: Menampilkan landing page (login/register)
 router.get("/", (req, res) => {
-    if (req.session.authenticated) return res.redirect("/menu")
+    if (req.session.authenticated) return res.redirect("/menu");
     fs.readFile("./login.html", null, function (error, data) {
-        if (error) return res.status(404).end('fail');
-        return res.end(minify(data, minify_options));
+        if (error) return res.status(404).end("fail");
+        //return res.end(minify(data, minify_options));
+        return res.end(data);
     });
 });
 router.post("/login", (req, res) => {
-    const query = `SELECT * FROM user_reg WHERE username ='${req.body.username}';`
+    console.log(req.body.username);
+    const query = `SELECT * FROM user_reg WHERE username ='${req.body.username}';`;
     db.query(query, (err, results) => {
-        if (err) return console.log(err)
-        if (results.rowCount === 0) return res.status(400).end("No Username")
+        if (err) return console.log(err);
+        if (results.rowCount === 0) return res.status(400).end("No Username");
         if (bcrypt.compare(req.body.password, results.rows[0]["password"])) {
             req.session.authenticated = true;
             req.session.user_id = results.rows[0]["user_id"];
             req.session.username = results.rows[0]["username"];
+            console.log("good");
             return res.status(200).end("done");
         }
     });
+});
+router.get("/get_username", (req, res) => {
+    res.status(200).end(req.session.username);
 });
 router.post("/logout", (req, res) => {
     req.session.destroy();
@@ -102,12 +109,13 @@ router.post("/logout", (req, res) => {
 router.get("/register", (req, res) => {
     if (req.session.authenticated) return res.redirect("/menu");
     fs.readFile("./register.html", null, function (error, data) {
-        if (error) return res.status(404).end('fail');
+        if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
-    
 });
 router.post("/register", (req, res) => {
+    temp = req.session;
+
     temp.username = req.body.username;
     temp.password = req.body.password;
     temp.role = req.body.role;
@@ -117,7 +125,7 @@ router.post("/register", (req, res) => {
      ('${temp.username}','${hashed_password}','${temp.role}',now());`;
 
     db.query(query, (err, results) => {
-        if (err) return console.log(err)
+        if (err) return console.log(err);
         res.write(`<html>
       <head>
           <title>Berhasil registrasi</title>
@@ -132,10 +140,12 @@ router.post("/register", (req, res) => {
     return res.end("done");
 });
 router.get("/menu", (req, res) => {
-    const file_html = req.session.authenticated? "./menu.html" : "./illegal_access.html"
+    const file_html = req.session.authenticated
+        ? "./menu.html"
+        : "./illegal_access.html";
 
     fs.readFile(file_html, null, function (error, data) {
-        if (error) return res.status(404).end('fail');
+        if (error) return res.status(404).end("fail");
         return res.end(minify(data, minify_options));
     });
 });
@@ -185,8 +195,7 @@ router.get("/pejuang_ptn", (req, res) => {
         </html>`);
 });
 router.post("/pejuang_ptn", (req, res) => {
-    const query =
-        `SELECT jurusan.jurusan_id as idjur,
+    const query = `SELECT jurusan.jurusan_id as idjur,
          jurusan.nama as namjur,
           departemen.nama as nadept,
           jurusan.daya_tampung as dapung,
@@ -206,7 +215,7 @@ router.post("/pejuang_ptn", (req, res) => {
     //mendapatkan data dari database
     //temp = req.session;
     db.query(query, (err, results) => {
-        if (err) return console.log(err)
+        if (err) return console.log(err);
         res.status(200).write(`<table id=najur>
         <tr align="center">
             <th>Nama Jurusan</th>
@@ -235,9 +244,7 @@ router.post("/pejuang_ptn", (req, res) => {
                 `
             );
         }
-        res.write(
-            `</tr>`
-        )
+        res.write(`</tr>`);
         res.status(200).end(`</table></body>`);
     });
 });
@@ -279,9 +286,7 @@ router.post("/getjurusan", (req, res) => {
                 `
             );
         }
-        res.write(
-            `</tr>`
-        )
+        res.write(`</tr>`);
         res.end(`</table></body>`);
     });
 });
@@ -318,57 +323,58 @@ router.post("/getkurikulum", (req, res) => {
     });
 });
 
-router.post('/getkarir', (req, res) => {
-    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+router.post("/getkarir", (req, res) => {
+    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});`; // query ambil data
     //mendapatkan data dari database
     //temp = req.session;
     db.query(query, (err, results) => {
-        if(err){
-            console.log(err)
-            return
+        if (err) {
+            console.log(err);
+            return;
         }
-        res.status(200)
-        res.write( // table header
-           `
+        res.status(200);
+        res.write(
+            // table header
+            `
             <table id=takar>
                 <tr>
                     <th>Karir</th>
                 </tr>`
-        )
-        for (row of results.rows) { // tampilin isi table
+        );
+        for (row of results.rows) {
+            // tampilin isi table
             res.write(
                 `
                 <tr> 
-                <td>${row['nakar']}</td>
+                <td>${row["nakar"]}</td>
                 </tr>
                 `
             );
         }
-        res.end(`</table></body>`)
+        res.end(`</table></body>`);
     });
 });
 
-router.get('/addwish', (req, res) => {
-    const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.idjur});` // query ambil data
+router.get("/addwish", (req, res) => {
+    const query = `INSERT INTO wishlist(user_id, jurusan_id) VALUES (${req.query.user_id},${req.query.idjur});`; // query ambil data
     //mendapatkan data dari database
     //temp = req.session;
-    
+
     db.query(query, (err, results) => {
-        if(err){
-            console.log(err)
-            return
+        if (err) {
+            console.log(err);
+            return;
         }
-        
+
         res.send();
         id = `${req.query.idjur}`;
         console.log("test");
         console.log(id);
     });
-    res.redirect('/ttgjurusan');
+    res.redirect("/ttgjurusan");
 });
 
-
-router.get('/ttgjurusan', (req, res) => {
+router.get("/ttgjurusan", (req, res) => {
     //temp = req.session;
     res.write(`<html>
         <head>
@@ -445,7 +451,7 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
     </html>`);
 });
 
-router.get('/ttgjurusan/karir', (req, res) => {
+router.get("/ttgjurusan/karir", (req, res) => {
     //temp = req.session;
     id = `${req.query.idjur}`;
     console.log(id);
@@ -453,17 +459,17 @@ router.get('/ttgjurusan/karir', (req, res) => {
     <head>
         <title>Klenik</title>
     </head>
-    <body style="background-color: #29C5F6; text-align: center;">`
-    );
-    res.write( // table header
-       `<h1> Prospek Karir </h1>
+    <body style="background-color: #29C5F6; text-align: center;">`);
+    res.write(
+        // table header
+        `<h1> Prospek Karir </h1>
        <h2>${req.query.namjur}</h2>
        <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
        <table id=takar>
             <tr>
                 <th>Karir<th>
             </tr>`
-    )
+    );
     res.end(`</table></body>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
@@ -475,11 +481,7 @@ router.get('/ttgjurusan/karir', (req, res) => {
         });
         </script>
     </html>`);
-    
-
 });
-
-
 
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.get("/diskusi", (req, res) => {
@@ -520,16 +522,13 @@ router.get("/diskusi", (req, res) => {
     });
 });
 
-router.post("/diskusi/tanya", (req,res) => {
-});
+router.post("/diskusi/tanya", (req, res) => { });
 
-router.get("/wishlist", (req,res)=> {
-
-});
+router.get("/wishlist", (req, res) => { });
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 db.connect((err) => {
-    if (err) return console.log(err)
+    if (err) return console.log(err);
     console.log("Database berhasil terkoneksi");
 });
 

@@ -9,7 +9,7 @@
 
   <body
     style="
-      background-color: #29C5F6;
+      background-color: #29c5f6;
       text-align: center;
       margin: auto;
       position: absolute;
@@ -31,33 +31,39 @@
     <label for="mahasiswa">Mahasiswa</label>
     <input type="radio" id="nonmahasiswa" name="role" value="non-mahasiswa" />
     <label for="nonmahasiswa">Nonmahasiswa</label><br /><br />
-    <input type="button" value="Submit" id="submits" />
+    <input type="button" value="Submit" id="submits" onclick="submits()" />
   </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
   <script>
-    jQuery(document).ready(function ($) {
-      var username, password, role, mahasiswa, nonmahasiswa;
-      $("#submits").click(function () {
-        username = document.getElementById("username").value;
-        password = document.getElementById("password").value;
-        mahasiswa = document.getElementById("mahasiswa");
-        nonmahasiswa = document.getElementById("nonmahasiswa");
-        if (mahasiswa.checked == true) {
-          role = mahasiswa.value;
-        } else if (nonmahasiswa.checked == true) {
-          role = nonmahasiswa.value;
-        }
-        $.post(
-          "/register",
-          { username: username, password: password, role: role },
-          function (data) {
-            if (data === "done") {
-              window.location.href = "/";
-              window.alert("Registrasi Sukses. Silakan login!");
-            }
+    function submits() {
+      let username, password, role, mahasiswa, nonmahasiswa;
+      username = document.getElementById("username").value;
+      password = document.getElementById("password").value;
+      mahasiswa = document.getElementById("mahasiswa");
+      nonmahasiswa = document.getElementById("nonmahasiswa");
+      if (mahasiswa.checked == true) {
+        role = mahasiswa.value;
+      } else if (nonmahasiswa.checked == true) {
+        role = nonmahasiswa.value;
+      }
+      fetch("/register", {
+        method: "POST",
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          role: role,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          if (data === "done") {
+            window.location.href = "/";
+            window.alert("Registrasi Sukses. Silakan login!");
           }
-        );
-      });
-    });
+        });
+    }
   </script>
 </html>

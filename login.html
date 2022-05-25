@@ -10,7 +10,7 @@
 
   <body
     style="
-      background-color: #29C5F6;
+      background-color: #29c5f6;
       text-align: center;
       margin: auto;
       position: absolute;
@@ -27,30 +27,32 @@
     <input type="text" id="username" /><br />
     Password :
     <input type="password" id="password" /><br />
-    <input type="button" value="Submit" id="submits" />
+    <input type="button" value="Submit" id="submits" onclick="submits()" />
     <p>Belum memiliki akun? <a href="/register">DAFTAR SEKARANG!</a></p>
   </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script>
-    jQuery(document).ready(function ($) {
-      var username, pass;
-      $("#submits").click(function () {
-        username = document.getElementById("username").value;
-        password = document.getElementById("password").value;
-
-        $.post(
-          "/login",
-          { username: username, password: password },
-          function (data) {
-            if (data === "done") {
-              window.location.href = "/menu";
-              window.alert("Login sukses!");
-            } else {
-              window.alert("Login gagal. Silakan coba lagi");
-            }
+    function submits() {
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      fetch("/login", {
+        method: "POST",
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          if (data === "done") {
+            window.location.href = "/menu";
+            window.alert("Login sukses!");
+          } else {
+            window.alert("Login gagal. Silakan coba lagi");
           }
-        );
-      });
-    });
+        });
+    }
   </script>
 </html>

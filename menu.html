@@ -9,7 +9,7 @@
 
   <body
     style="
-      background-color: #29C5F6;
+      background-color: #29c5f6;
       text-align: center;
       position: absolute;
       top: 50%;
@@ -40,23 +40,13 @@
     <!--input type="button" id="logout" value="Logout" onClick="logout()"-->
     <button id="logout">Logout</button>
   </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="./index.js"></script>
   <script>
-    const user = document.getElementById("welcome");
-    user.innerHTML = `Selamat datang, <strong>hehe</strong>!`;
-
-    jQuery(document).ready(function ($) {
-      $("#logout").click(function () {
-        $.post("/logout", {}, function (data) {
-          if (data) {
-            window.location.href = "/";
-            window.alert("Logout Success!");
-          } else {
-            window.alert("Logout gagal. Silakan coba lagi");
-          }
-        });
+    fetch("/get_username")
+      .then((res) => res.text())
+      .then((username) => {
+        document.getElementById(
+          "welcome"
+        ).innerHTML = `Selamat datang, <strong>${username}</strong>!`;
       });
-    });
   </script>
 </html>
