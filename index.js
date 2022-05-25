@@ -503,7 +503,7 @@ router.get("/diskusi", (req, res) => {
         res.write(
             // table header
             `<h1> Diskusi </h1>
-			<a href="http://localhost:6969/diskusi/tanya"> Saya ingin bertanya. </a>
+			<a href="/diskusi/tanya"> Saya ingin bertanya. </a>
 			<table id=idtanya>
                 <tr>
                     <th>ID Pertanyaan</th>
