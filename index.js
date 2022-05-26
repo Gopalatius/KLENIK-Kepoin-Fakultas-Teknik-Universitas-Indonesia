@@ -777,9 +777,7 @@ router.post("/diskusi/tanya", (req, res) => {})
 router.post("/wishlist", (req, res) => {
     id_user = req.session.user_id;
 	console.log(id_user);
-
-	if (user_status) {
-		const query =
+	const query =
             `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama, karir.nama FROM jurusan
             INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id)
             INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id)
@@ -789,29 +787,41 @@ router.post("/wishlist", (req, res) => {
 
 		db.query(query, (err, results) => {
 			if (err) {
-				console.log(err);
-				return;
+				console.log(err)
+				return
 			}
-
-			res.send();
-			id = `${req.query.idjur}`;
-			console.log("test");
-			console.log(id);
-		});
-		res.redirect("/ttgjurusan");
-	} else {
-		fs.readFile("html/illegal_access.html", null, function (error, data) {
-			if (error) return res.status(404).end("fail");
-			return res.end(minify(data, minify_options));
-		});
-	}
+			res.status(200)
+	
+			res.write(
+				// table header
+				`<table id=najur align="center">
+					<tr>
+						<th>Nama Jurusan</th>
+						<th>Nama Kurikulum</th>
+						<th>Prospek Karir</th>
+					</tr>`
+			)
+			results.rows.forEach((row) => {
+				res.write(
+					`
+					<tr align="center">
+					<td>${row["namjur"]}</td>
+					<td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
+					<td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
+					`
+				)
+			})
+	
+			res.write(`</tr>`)
+			res.status(200).end(`</table></body>`)
+		})
 });
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 db.connect((err) => {
 	if (err) return console.log(err)
 	console.log("Database berhasil terkoneksi")
-})
+});
 
 app.use("/", router)
 app.listen(process.env.PORT || 6969, () => {
