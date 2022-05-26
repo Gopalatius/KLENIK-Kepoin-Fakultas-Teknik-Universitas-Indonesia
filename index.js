@@ -774,7 +774,38 @@ router.get("/diskusi", (req, res) => {
 
 router.post("/diskusi/tanya", (req, res) => {})
 
-router.get("/wishlist", (req, res) => {})
+router.post("/wishlist", (req, res) => {
+    id_user = req.session.user_id;
+	console.log(id_user);
+
+	if (user_status) {
+		const query =
+            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama, karir.nama FROM jurusan
+            INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id)
+            INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id)
+            WHERE (wishlist.user_id = ${req.session.user_id} AND wishlist.jurusan_id = jurusan.jurusan_id);`;
+		//mendapatkan data dari database
+		//temp = req.session;
+
+		db.query(query, (err, results) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			res.send();
+			id = `${req.query.idjur}`;
+			console.log("test");
+			console.log(id);
+		});
+		res.redirect("/ttgjurusan");
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail");
+			return res.end(minify(data, minify_options));
+		});
+	}
+});
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 db.connect((err) => {
