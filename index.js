@@ -778,8 +778,7 @@ router.post("/getwishlist", (req, res) => {
     id_user = req.session.user_id;
 	console.log(id_user);
 	const query =
-            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan
-            INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`;
+            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan, wishlist WHERE (wishlist.user_id = ${req.session.user_id} AND jurusan.jurusan_id = wishlist.jurusan_id);`;
 		//mendapatkan data dari database
 		//temp = req.session;
 
