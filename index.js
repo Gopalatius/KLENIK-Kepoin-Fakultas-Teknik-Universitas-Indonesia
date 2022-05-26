@@ -508,8 +508,8 @@ router.post("/getkegjur", (req, res) => {
                 <tr align="center">  
                 <td>${row["nadept"]}</td>
                 <td>${row["namjur"]}</td>
-                <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
-                <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
+                <td><a href="organisasi_kegiatan/organisasi?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Organisasi</a></td>
+                <td><a href="organisasi_kegiatan/kegiatan?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kegiatan</a></td>
                 <td><a href="/addwish?user_id=${req.session.user_id}&idjur=${row["idjur"]}">Add</a></td>
                 `
             );
@@ -518,6 +518,40 @@ router.post("/getkegjur", (req, res) => {
         res.end(`</table></body>`);
     });
 });
+
+router.post("/getorganisasi", (req, res) => {
+    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, organisasi.nama as namor FROM jurusan INNER JOIN berisi_organisasi ON (jurusan.jurusan_id = berisi_organisasi.jurusan_id) INNER JOIN organisasi ON (berisi_organisasi.organisasi_id = organisasi.organisasi_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});`; // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        res.status(200);
+        res.write(
+            // table header
+            `
+            <table id=takor>
+                <tr>
+                    <th>Karir</th>
+                </tr>`
+        );
+        for (row of results.rows) {
+            // tampilin isi table
+            res.write(
+                `
+                <tr> 
+                <td>${row["namor"]}</td>
+                </tr>
+                `
+            );
+        }
+        res.end(`</table></body>`);
+    });
+});
+
+
 router.get("/organisasi_kegiatan", (req, res) => {
     user_status = req.session.authenticated;
     console.log(user_status);
@@ -564,6 +598,46 @@ router.get("/organisasi_kegiatan", (req, res) => {
                 </script>
             </html>`);
         }
+    else{
+        fs.readFile("html/illegal_access.html", null, function (error, data) {
+            if (error) return res.status(404).end("fail");
+            return res.end(minify(data, minify_options));
+        });
+    }
+});
+
+router.get("/organisasi_kegiatan/organisasi", (req, res) => {
+    user_status = req.session.authenticated;
+    id = `${req.query.idjur}`;
+    console.log(id);
+    if(user_status){
+        res.write(`<html>
+        <head>
+            <title>Klenik</title>
+        </head>
+        <body style="background-color: #29C5F6; text-align: center;">`);
+        res.write(
+            // table header
+            `<h1> Kurikulum </h1>
+        <h2>${req.query.namjur}</h2>
+        <a href="http://localhost:6969/organisasi_kegiatan">Kembali ke Tentang Jurusan</a>
+        <table id=takor>
+                <tr>
+                    <th>Mata Kuliah<th>
+                </tr>`
+        );
+        res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $.post('/getorganisasi', {idjur: ${id}}, function(data) {
+                    console.log(data);
+                    $("#takor").html(data);
+                });
+            });
+            </script>
+        </html>`);
+    }
     else{
         fs.readFile("html/illegal_access.html", null, function (error, data) {
             if (error) return res.status(404).end("fail");
