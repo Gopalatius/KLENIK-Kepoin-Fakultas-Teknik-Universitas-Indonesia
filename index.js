@@ -481,6 +481,105 @@ router.get("/ttgjurusan/karir", (req, res) => {
     }
 });
 
+
+//----------Page organisasi dan kegiatan AZHARI----------------------------------------------------------------------
+router.post("/getkegjur", (req, res) => {
+    id_user = req.session.user_id;
+    console.log(id_user);
+    const query =
+        "SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);"; // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        res.status(200);
+
+        res.write(
+            // table header
+            `<table id=najur align="center">
+                <tr>
+                    <th>Nama Departemen</th>
+                    <th>Nama Jurusan</th>
+                    <th>Organisasi</th>
+                    <th>Kegiatan</th>
+                    <th>Add Wishlist</th>
+                </tr>`
+        );
+
+        for (row of results.rows) {
+            // tampilin isi table
+            res.write(
+                `
+                <tr align="center">  
+                <td>${row["nadept"]}</td>
+                <td>${row["namjur"]}</td>
+                <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
+                <td><a href="ttgjurusan/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
+                <td><a href="/addwish?user_id=${req.session.user_id}&idjur=${row["idjur"]}">Add</a></td>
+                `
+            );
+        }
+        res.write(`</tr>`);
+        res.end(`</table></body>`);
+    });
+});
+router.get("/organisasi_kegiatan", (req, res) => {
+    user_status = req.session.authenticated;
+    console.log(user_status);
+    if(user_status){
+        res.write(`<html>
+            <head>
+                <title>Klenik</title>
+            </head>
+            <body style="background-color: #29C5F6;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);">`);
+
+        res.write(
+            // table header
+            `<h1> Organisasi dan Kegiatan </h1>
+            <a href="http://localhost:6969/menu">Kembali ke Menu</a>
+            <h2> </h2>
+            <table id=nakegor>
+                    <tr>
+                        <th>Nama Departemen</th>
+                        <th>Nama Jurusan</th>
+                        <th>Organisasi</th>
+                        <th>Kegiatan</th>
+                        <th>Add Wishlist</th>
+                    </tr>`
+        );
+
+        res.end(`</table></body>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script>
+                jQuery(document).ready(function($) {
+                    var jid;
+                    $.post('/getkegjur', { }, function(data) {
+                        console.log(data);
+                        $("#nakegor").html(data);
+                    });
+                    
+                });
+                </script>
+            </html>`);
+        }
+    else{
+        fs.readFile("html/illegal_access.html", null, function (error, data) {
+            if (error) return res.status(404).end("fail");
+            return res.end(minify(data, minify_options));
+        });
+    }
+});
+
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.get("/diskusi", (req, res) => {
     const query =
