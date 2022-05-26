@@ -778,7 +778,7 @@ router.post("/getwishlist", (req, res) => {
     id_user = req.session.user_id;
 	console.log(id_user);
 	const query =
-            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan, wishlist WHERE (wishlist.user_id = ${req.session.user_id} AND jurusan.jurusan_id = wishlist.jurusan_id);`;
+            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`;
 		//mendapatkan data dari database
 		//temp = req.session;
 
@@ -803,8 +803,8 @@ router.post("/getwishlist", (req, res) => {
 					`
 					<tr align="center">
 					<td>${row["namjur"]}</td>
-					<td><a href="wishlist/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
-					<td><a href="wishlist/karir?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Karir</a></td>
+					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
+					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
 					`
 				)
 			})
@@ -918,7 +918,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
 			// table header
 			`<h1> Kurikulum </h1>
             <h2>${req.query.namjur}</h2>
-            <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
+            <a href="http://localhost:6969/wishlist">Kembali ke Wishlist</a>
             <h3></h3>
             <table id=wlkur>
                 <tr>
@@ -990,7 +990,7 @@ router.get("/wishlist/karir", (req, res) => {
 			// table header
 			`<h1> Prospek Karir </h1>
             <h2>${req.query.namjur}</h2>
-            <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
+            <a href="http://localhost:6969/wishlist">Kembali ke Tentang Wishlist</a>
             <h3></h3>
             <table id=wlkar>
                 <tr>
