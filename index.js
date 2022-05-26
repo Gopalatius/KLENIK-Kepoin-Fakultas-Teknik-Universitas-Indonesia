@@ -168,20 +168,12 @@ router.post("/pejuang_ptn", (req, res) => {
         mewadahi.departemen_id = departemen.departemen_id
     );
     `
-    db.query(query.toString(), (err, results) => {
+    db.query(query, (err, results) => {
         if (err) return console.log(err);
-        res.write(
-            `<tr>
-            <th>Nama Departemen</th>
-            <th>Nama Jurusan</th>
-            <th>Daya Tampung</th>
-            <th>Kuota SNMPTN</th>
-            <th>Kuota SBMPTN</th>
-            <th>Kuota SIMAKUI</th>
-            <th>Kuota PPKB</th>
-            <th>Kuota TS</th>
-        </tr>
-        `)
+        
+        results.rows.forEach(row =>{
+            
+        })
         for (row of results.rows) {
             // tampilin isi table
             res.write(
@@ -194,11 +186,11 @@ router.post("/pejuang_ptn", (req, res) => {
                 <td>${row["sbmptn"]}</td>
                 <td>${row["simakui"]}</td>
                 <td>${row["ppkb"]}</td>
-                <td>${row["ts"]}</td>
+                <td>${row["ts"]}</td> </tr>
                 `
             );
         }
-        return res.status(200).end(`</tr>`);
+        return res.status(200).end();
         //hehe
     });
     fs.readFileSync('psql/all_jurusan.sql', (err, query) => {

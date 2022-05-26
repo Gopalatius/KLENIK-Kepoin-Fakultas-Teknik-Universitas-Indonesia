@@ -24,13 +24,25 @@
     <h1>Pejuang PTN</h1>
     <a href="/menu">Kembali ke Menu</a>
     <h2></h2>
-    <table id="tabel"></table>
+    <table id="tabel">
+        <tr>
+            <th>Nama Departemen</th>
+            <th>Nama Jurusan</th>
+            <th>Daya Tampung</th>
+            <th>Kuota SNMPTN</th>
+            <th>Kuota SBMPTN</th>
+            <th>Kuota SIMAKUI</th>
+            <th>Kuota PPKB</th>
+            <th>Kuota TS</th>
+        </tr>
+    </table>
   </body>
   <script>
     fetch("/pejuang_ptn", { method: "POST" })
       .then((res) => res.text())
       .then((html) => {
-        document.getElementById("tabel").innerHTML = html;
+        const tabel = document.getElementById("tabel")
+        tabel.insertAdjacentHTML('beforeEnd',html)
       });
   </script>
 </html>
