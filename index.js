@@ -774,7 +774,7 @@ router.get("/diskusi", (req, res) => {
 
 router.post("/diskusi/tanya", (req, res) => {})
 
-router.post("/wishlist", (req, res) => {
+router.post("/getwishlist", (req, res) => {
     id_user = req.session.user_id;
 	console.log(id_user);
 	const query =
@@ -815,7 +815,7 @@ router.post("/wishlist", (req, res) => {
 		})
 });
 
-router.get("/getwishlist", (req, res) => {
+router.get("/wishlist", (req, res) => {
 	user_status = req.session.authenticated
 	console.log(user_status)
 	if (user_status) {
@@ -857,7 +857,7 @@ router.get("/getwishlist", (req, res) => {
             <script>
                 jQuery(document).ready(function($) {
                     var jid;
-                    $.post('/wishlist', { }, function(data) {
+                    $.post('/getwishlist', { }, function(data) {
                         console.log(data);
                         $("#wishlistjur").html(data);
                     });
