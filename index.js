@@ -598,8 +598,8 @@ router.get("/diskusi", (req, res) => {
             console.log(err);
             return;
         }
-        res.status(200);
-        res.write(
+        
+        res.status(200).write(
             // table header
             `<h1> Diskusi </h1>
 			<a href="/diskusi/tanya"> Saya ingin bertanya. </a>
@@ -610,8 +610,8 @@ router.get("/diskusi", (req, res) => {
                     <th>Jawaban<th>
                 </tr>`
         );
-        for (row of results.rows) {
-            // tampilin isi table
+
+        results.rows.forEach((row) =>{
             res.write(
                 `
                 <tr> 
@@ -621,7 +621,11 @@ router.get("/diskusi", (req, res) => {
                 <td>${row["txtjawab"]}</td>
                 `
             );
-        }
+        })
+        // for (row of results.rows) {
+        //     // tampilin isi table
+            
+        // }
         res.end(`</table></body>`);
     });
 });
