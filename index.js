@@ -341,6 +341,13 @@ router.get("/ttgjurusan", (req, res) => {
 		res.write(`<html>
             <head>
                 <title>Klenik</title>
+                <style>
+                    table,
+                    th,
+                    td {
+                        border: 1px solid black;
+                    }
+                </style>
             </head>
             <body style="background-color: #29C5F6;
             text-align: center;
@@ -582,6 +589,13 @@ router.get("/organisasi_kegiatan", (req, res) => {
 		res.write(`<html>
             <head>
                 <title>Klenik</title>
+                <style>
+                    table,
+                    th,
+                    td {
+                        border: 1px solid black;
+                    }
+                </style>
             </head>
             <body style="background-color: #29C5F6;
             text-align: center;
