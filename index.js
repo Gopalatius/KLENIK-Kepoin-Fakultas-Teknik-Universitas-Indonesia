@@ -778,10 +778,8 @@ router.post("/wishlist", (req, res) => {
     id_user = req.session.user_id;
 	console.log(id_user);
 	const query =
-            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama, karir.nama FROM jurusan
-            INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id)
-            INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id)
-            WHERE (wishlist.user_id = ${req.session.user_id} AND wishlist.jurusan_id = jurusan.jurusan_id);`;
+            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan
+            INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`;
 		//mendapatkan data dari database
 		//temp = req.session;
 
@@ -794,7 +792,7 @@ router.post("/wishlist", (req, res) => {
 	
 			res.write(
 				// table header
-				`<table id=najur align="center">
+				`<table id=wishlistjur align="center">
 					<tr>
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
@@ -816,6 +814,64 @@ router.post("/wishlist", (req, res) => {
 			res.status(200).end(`</table></body>`)
 		})
 });
+
+router.get("/getwishlist", (req, res) => {
+	user_status = req.session.authenticated
+	console.log(user_status)
+	if (user_status) {
+		res.write(`<html>
+            <head>
+                <title>Klenik</title>
+                <style>
+                    table,
+                    th,
+                    td {
+                        border: 1px solid black;
+                    }
+                </style>
+            </head>
+            <body style="background-color: #29C5F6;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);">`)
+
+		res.write(
+			// table header
+			`<h1> Wishlist Anda </h1>
+            <a href="http://localhost:6969/menu">Kembali ke Menu</a>
+            <h2> </h2>
+            <table id=najur style="text-align: center">
+                    <tr>
+                        <th>Nama Jurusan</th>
+                        <th>Nama Kurikulum</th>
+                        <th>Prospek Karir</th>
+                    </tr>`
+		)
+
+		res.end(`</table></body>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script>
+                jQuery(document).ready(function($) {
+                    var jid;
+                    $.post('/wishlist', { }, function(data) {
+                        console.log(data);
+                        $("#wishlistjur").html(data);
+                    });
+                    
+                });
+                </script>
+            </html>`)
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data, minify_options))
+		})
+	}
+})
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 db.connect((err) => {
