@@ -224,9 +224,7 @@ router.post("/getjurusan", (req, res) => {
                     <th>Add Wishlist</th>
                 </tr>`
 		)
-
-		for (row of results.rows) {
-			// tampilin isi table
+		results.rows.forEach((row) => {
 			res.write(
 				`
                 <tr align="center">  
@@ -237,9 +235,10 @@ router.post("/getjurusan", (req, res) => {
                 <td><a href="/addwish?user_id=${req.session.user_id}&idjur=${row["idjur"]}">Add</a></td>
                 `
 			)
-		}
+		})
+
 		res.write(`</tr>`)
-		res.end(`</table></body>`)
+		res.status(200).end(`</table></body>`)
 	})
 })
 
@@ -259,7 +258,7 @@ router.post("/getkurikulum", (req, res) => {
                     <th style = "text-align: center">Mata Kuliah</th>
                 </tr>`
 		)
-		for (row of results.rows) {
+		results.rows.forEach((row) => {
 			// tampilin isi table
 			res.write(
 				`
@@ -268,8 +267,9 @@ router.post("/getkurikulum", (req, res) => {
                 </tr>
                 `
 			)
-		}
-		res.end(`</table></body>`)
+		})
+
+		res.status(200).end(`</table></body>`)
 	})
 })
 
@@ -282,8 +282,7 @@ router.post("/getkarir", (req, res) => {
 			console.log(err)
 			return
 		}
-		res.status(200)
-		res.write(
+		res.status(200).write(
 			// table header
 			`
             <table id=takar>
@@ -291,7 +290,8 @@ router.post("/getkarir", (req, res) => {
                     <th>Karir</th>
                 </tr>`
 		)
-		for (row of results.rows) {
+
+		results.rows.forEach((row) => {
 			// tampilin isi table
 			res.write(
 				`
@@ -300,8 +300,8 @@ router.post("/getkarir", (req, res) => {
                 </tr>
                 `
 			)
-		}
-		res.end(`</table></body>`)
+		})
+		res.status(200).end(`</table></body>`)
 	})
 })
 
@@ -317,7 +317,7 @@ router.get("/addwish", (req, res) => {
 		db.query(query, (err, results) => {
 			if (err) {
 				console.log(err)
-				return
+				return res.status(500).end()
 			}
 
 			res.send()
@@ -500,8 +500,7 @@ router.post("/getkegjur", (req, res) => {
                     <th>Add Wishlist</th>
                 </tr>`
 		)
-
-		for (row of results.rows) {
+		results.rows.forEach((row) => {
 			// tampilin isi table
 			res.write(
 				`
@@ -513,9 +512,10 @@ router.post("/getkegjur", (req, res) => {
                 <td><a href="/addwish?user_id=${req.session.user_id}&idjur=${row["idjur"]}">Add</a></td>
                 `
 			)
-		}
+		})
+
 		res.write(`</tr>`)
-		res.end(`</table></body>`)
+		res.status(200).end(`</table></body>`)
 	})
 })
 
@@ -526,10 +526,9 @@ router.post("/getorganisasi", (req, res) => {
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
-			return
+			return res.status(500).end()
 		}
-		res.status(200)
-		res.write(
+		res.status(200).write(
 			// table header
 			`
             <table id=takor>
@@ -537,7 +536,7 @@ router.post("/getorganisasi", (req, res) => {
                     <th>Karir</th>
                 </tr>`
 		)
-		for (row of results.rows) {
+		results.rows.forEach((row) => {
 			// tampilin isi table
 			res.write(
 				`
@@ -546,8 +545,9 @@ router.post("/getorganisasi", (req, res) => {
                 </tr>
                 `
 			)
-		}
-		res.end(`</table></body>`)
+		})
+
+		res.status(200).end(`</table></body>`)
 	})
 })
 
@@ -558,18 +558,16 @@ router.post("/getkegiatan", (req, res) => {
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
-			return
+			return res.status(500).end()
 		}
-		res.status(200)
-		res.write(
-			// table header
+		res.status(200).write(
 			`
             <table id=takeg>
                 <tr>
                     <th>Kegiatan</th>
                 </tr>`
 		)
-		for (row of results.rows) {
+		results.rows.forEach((row) => {
 			// tampilin isi table
 			res.write(
 				`
@@ -578,8 +576,8 @@ router.post("/getkegiatan", (req, res) => {
                 </tr>
                 `
 			)
-		}
-		res.end(`</table></body>`)
+		})
+		res.status(200).end(`</table></body>`)
 	})
 })
 
@@ -610,7 +608,7 @@ router.get("/organisasi_kegiatan", (req, res) => {
 		res.write(
 			// table header
 			`<h1> Organisasi dan Kegiatan </h1>
-            <a href="http://localhost:6969/menu">Kembali ke Menu</a>
+            <a href="/menu">Kembali ke Menu</a>
             <h2> </h2>
             <table id=nakegor>
                     <tr>
