@@ -1,69 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>KLENIK</title>
-  </head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>KLENIK</title>
+	</head>
 
-  <body
-    style="
-      background-color: #29c5f6;
-      text-align: center;
-      margin: auto;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -moz-transform: translateX(-50%) translateY(-50%);
-      -webkit-transform: translateX(-50%) translateY(-50%);
-      transform: translateX(-50%) translateY(-50%);
-    "
-  >
-    <h1>Daftar di KLENIK</h1>
-    <h2>Register</h2>
-    Username:
-    <input type="text" id="username" /><br />
-    Password :
-    <input type="password" id="password" /><br />
-    Role:
-    <input type="radio" id="mahasiswa" name="role" value="mahasiswa" />
-    <label for="mahasiswa">Mahasiswa</label>
-    <input type="radio" id="nonmahasiswa" name="role" value="non-mahasiswa" />
-    <label for="nonmahasiswa">Nonmahasiswa</label><br /><br />
-    <input type="button" value="Submit" id="submits" onclick="submits()" />
-  </body>
+	<body
+		style="
+			background-color: #29c5f6;
+			text-align: center;
+			margin: auto;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-moz-transform: translateX(-50%) translateY(-50%);
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(-50%);
+		"
+	>
+		<h1>Daftar di KLENIK</h1>
+		<h2>Register</h2>
+		Username:
+		<input type="text" id="username" /><br />
+		Password :
+		<input type="password" id="password" /><br />
+		Role:
+		<input type="radio" id="mahasiswa" name="role" value="mahasiswa" />
+		<label for="mahasiswa">Mahasiswa</label>
+		<input
+			type="radio"
+			id="nonmahasiswa"
+			name="role"
+			value="non-mahasiswa"
+		/>
+		<label for="nonmahasiswa">Nonmahasiswa</label><br /><br />
+		<input type="button" value="Submit" id="submits" onclick="submits()" />
+	</body>
 
-  <script>
-    function submits() {
-      let username, password, role, mahasiswa, nonmahasiswa;
-      username = document.getElementById("username").value;
-      password = document.getElementById("password").value;
-      mahasiswa = document.getElementById("mahasiswa");
-      nonmahasiswa = document.getElementById("nonmahasiswa");
-      if (mahasiswa.checked == true) {
-        role = mahasiswa.value;
-      } else if (nonmahasiswa.checked == true) {
-        role = nonmahasiswa.value;
-      }
-      fetch("/register", {
-        method: "POST",
-        body: JSON.stringify({
-          username: username,
-          password: password,
-          role: role,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      })
-        .then((res) => res.text())
-        .then((data) => {
-          if (data === "done") {
-            window.location.href = "/";
-            window.alert("Registrasi Sukses. Silakan login!");
-          }
-        });
-    }
-  </script>
+	<script>
+		function submits() {
+			let username, password, role, mahasiswa, nonmahasiswa;
+			username = document.getElementById("username").value;
+			password = document.getElementById("password").value;
+			mahasiswa = document.getElementById("mahasiswa");
+			nonmahasiswa = document.getElementById("nonmahasiswa");
+			if (mahasiswa.checked == true) {
+				role = mahasiswa.value;
+			} else if (nonmahasiswa.checked == true) {
+				role = nonmahasiswa.value;
+			}
+			fetch("/register", {
+				method: "POST",
+				body: JSON.stringify({
+					username: username,
+					password: password,
+					role: role,
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8",
+				},
+			})
+				.then((res) => res.text())
+				.then((data) => {
+					if (data === "done") {
+						window.location.href = "/";
+						window.alert("Registrasi Sukses. Silakan login!");
+					}
+				});
+		}
+	</script>
 </html>

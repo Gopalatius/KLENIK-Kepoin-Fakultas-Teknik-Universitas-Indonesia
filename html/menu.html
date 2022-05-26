@@ -1,62 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>KLENIK</title>
-  </head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>KLENIK</title>
+	</head>
 
-  <body
-    style="
-      background-color: #29c5f6;
-      text-align: center;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -moz-transform: translateX(-50%) translateY(-50%);
-      -webkit-transform: translateX(-50%) translateY(-50%);
-      transform: translateX(-50%) translateY(-50%);
-    "
-  >
-    <div id="welcome"></div>
-    <ol>
-      <li>
-        <a href="/pejuang_ptn"> Pejuang PTN </a>
-      </li>
-      <li>
-        <a href="/ttgjurusan"> Tentang Jurusan </a>
-      </li>
-      <li>
-        <a href="/QnA"> QnA </a>
-      </li>
-      <li>
-        <a href="/organisasi_kegiatan"> Organisasi dan Kegiatan </a>
-      </li>
-      <li>
-        <a href="/wishlist"> Wishlist </a>
-      </li>
-    </ol>
-    <!--input type="button" id="logout" value="Logout" onClick="logout()"-->
-    <button id="logout" onclick="logout()">Logout</button>
-  </body>
-  <script>
-    fetch("/get_username", {method: "POST"})
-      .then((res) => res.text())
-      .then((username) => {
-        document.getElementById(
-          "welcome"
-        ).innerHTML = `Selamat datang, <strong>${username}</strong>!`;
-      });
-    function logout() {
-      fetch("/logout", { method: "POST" })
-        .then((res) => res.text())
-        .then((done) => {
-          if (done == "done"){
-            window.alert("Berhasil logout!")
-            window.location.href = './'
-          } 
-        });
-    }
-  </script>
+	<body
+		style="
+			background-color: #29c5f6;
+			text-align: center;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-moz-transform: translateX(-50%) translateY(-50%);
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(-50%);
+		"
+	>
+		<div id="welcome"></div>
+		<ol>
+			<li>
+				<a href="/pejuang_ptn"> Pejuang PTN </a>
+			</li>
+			<li>
+			  <a href="/ttgjurusan"> Tentang Jurusan </a>
+			</li>
+			<li>
+				<a href="/diskusi"> QnA </a>
+			</li>
+			<li>
+				<a href="/organisasi_kegiatan"> Organisasi dan Kegiatan </a>
+			</li>
+			<li>
+				<a href="/wishlist"> Wishlist </a>
+			</li>
+		</ol>
+		<!--input type="button" id="logout" value="Logout" onClick="logout()"-->
+		<button id="logout" onclick="logout()">Logout</button>
+	</body>
+	<script>
+		fetch("/get_username", { method: "POST" })
+			.then((res) => res.text())
+			.then((username) => {
+				document.getElementById(
+					"welcome"
+				).innerHTML = `Selamat datang, <strong>${username}</strong>!`;
+			});
+		function logout() {
+			fetch("/logout", { method: "POST" })
+				.then((res) => res.text())
+				.then((done) => {
+					if (done == "done") {
+						window.alert("Berhasil logout!");
+						window.location.href = "./";
+					}
+				});
+		}
+	</script>
 </html>

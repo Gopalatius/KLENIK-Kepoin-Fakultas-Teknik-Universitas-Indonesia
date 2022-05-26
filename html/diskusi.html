@@ -21,14 +21,26 @@
 			transform: translateX(-50%) translateY(-50%);
 		"
 	>
-		<h1>Masuk ke KLENIK</h1>
-		<h2>Login</h2>
-		Username:
-		<input type="text" id="username" /><br />
-		Password :
-		<input type="password" id="password" /><br />
-		<input type="button" value="Submit" id="submits" onclick="submits()" />
-		<p>Belum memiliki akun? <a href="/register">DAFTAR SEKARANG!</a></p>
+		<h1>Diskusi</h1>
+		<a href="/diskusi/tanya"> Ingin bertanya?</a> <br /><br />
+		<section id="list-pertanyaan">
+			<h2><strong>1. </strong>username</h2>
+			<details>
+				<summary>Q: Judul</summary>
+				<p>"wadefuk nibba?"</p>
+			</details>
+			<p>
+				terjawab <a>0</a> kali.
+				<a href="/diskusi/jawab">Ingin menjawab?</a>
+			</p>
+
+			<h2><strong>2. </strong>username</h2>
+			<details>
+				<summary>Q: Judul</summary>
+				<p>"wadefuk nibba?"</p>
+			</details>
+			<p>terjawab <a>0</a> kali</p>
+		</section>
 	</body>
 	<script>
 		function submits() {
