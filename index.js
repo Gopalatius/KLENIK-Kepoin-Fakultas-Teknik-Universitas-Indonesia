@@ -408,10 +408,10 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
 		res.write(
 			// table header
 			`<h1> Kurikulum </h1>
-        <h2>${req.query.namjur}</h2>
-        <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
-        <h3></h3>
-        <table id=takur>
+            <h2>${req.query.namjur}</h2>
+            <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
+            <h3></h3>
+            <table id=takur>
                 <tr>
                     <th>Mata Kuliah<th>
                 </tr>`
