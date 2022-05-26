@@ -542,6 +542,38 @@ router.post("/getorganisasi", (req, res) => {
     });
 });
 
+router.post("/getkegiatan", (req, res) => {
+    const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kegiatan.nama as nakeg FROM jurusan INNER JOIN berkegiatan ON (jurusan.jurusan_id = berkegiatan.jurusan_id) INNER JOIN kegiatan ON (berkegiatan.kegiatan_id = kegiatan.kegiatan_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});`; // query ambil data
+    //mendapatkan data dari database
+    //temp = req.session;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        res.status(200);
+        res.write(
+            // table header
+            `
+            <table id=takeg>
+                <tr>
+                    <th>Kegiatan</th>
+                </tr>`
+        );
+        for (row of results.rows) {
+            // tampilin isi table
+            res.write(
+                `
+                <tr> 
+                <td>${row["nakeg"]}</td>
+                </tr>
+                `
+            );
+        }
+        res.end(`</table></body>`);
+    });
+});
+
 
 router.get("/organisasi_kegiatan", (req, res) => {
 	user_status = req.session.authenticated;
@@ -608,12 +640,12 @@ router.get("/organisasi_kegiatan/organisasi", (req, res) => {
         <body style="background-color: #29C5F6; text-align: center;">`);
         res.write(
             // table header
-            `<h1> Kurikulum </h1>
+            `<h1> Organisasi </h1>
         <h2>${req.query.namjur}</h2>
         <a href="http://localhost:6969/organisasi_kegiatan">Kembali ke Tentang Jurusan</a>
         <table id=takor>
                 <tr>
-                    <th>Mata Kuliah<th>
+                    <th>Organisasi<th>
                 </tr>`
         );
         res.end(`</table></body>
@@ -623,6 +655,46 @@ router.get("/organisasi_kegiatan/organisasi", (req, res) => {
                 $.post('/getorganisasi', {idjur: ${id}}, function(data) {
                     console.log(data);
                     $("#takor").html(data);
+                });
+            });
+            </script>
+        </html>`);
+    }
+    else{
+        fs.readFile("html/illegal_access.html", null, function (error, data) {
+            if (error) return res.status(404).end("fail");
+            return res.end(minify(data, minify_options));
+        });
+    }
+});
+
+router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
+    user_status = req.session.authenticated;
+    id = `${req.query.idjur}`;
+    console.log(id);
+    if(user_status){
+        res.write(`<html>
+        <head>
+            <title>Klenik</title>
+        </head>
+        <body style="background-color: #29C5F6; text-align: center;">`);
+        res.write(
+            // table header
+            `<h1> Kegiatan </h1>
+        <h2>${req.query.namjur}</h2>
+        <a href="http://localhost:6969/organisasi_kegiatan">Kembali ke Tentang Jurusan</a>
+        <table id=takeg>
+                <tr>
+                    <th>Kegiatan<th>
+                </tr>`
+        );
+        res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $.post('/getkegiatan', {idjur: ${id}}, function(data) {
+                    console.log(data);
+                    $("#takeg").html(data);
                 });
             });
             </script>
