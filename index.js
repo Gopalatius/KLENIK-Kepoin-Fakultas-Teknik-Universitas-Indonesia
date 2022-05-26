@@ -256,7 +256,7 @@ router.post("/getkurikulum", (req, res) => {
 			`
             <table id=takur>
                 <tr>
-                    <th>Mata Kuliah</th>
+                    <th style="text-align: center">Mata Kuliah</th>
                 </tr>`
 		);
 		for (row of results.rows) {
@@ -264,7 +264,7 @@ router.post("/getkurikulum", (req, res) => {
 			res.write(
 				`
                 <tr> 
-                <td>${row["nakur"]}</td>
+                <td style="text-align: center">${row["nakur"]}</td>
                 </tr>
                 `
 			);
@@ -363,7 +363,7 @@ router.get("/ttgjurusan", (req, res) => {
 			`<h1> Tentang Jurusan </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> </h2>
-            <table id=najur>
+            <table id=najur style="text-align: center">
                     <tr>
                         <th>Nama Jurusan</th>
                         <th>Nama Departemen</th>
@@ -402,16 +402,24 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
 		res.write(`<html>
         <head>
             <title>Klenik</title>
+            <link rel="stylesheet" src="css/middle_list.css">
         </head>
-        <body style="background-color: #29C5F6; text-align: center;">`);
+        <body style="background-color: #29C5F6; 
+            text-align: center;
+            position: absolute;
+            left: 50%;
+            -moz-transform: translateX(-50%);
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);">`);
 		res.write(
 			// table header
 			`<h1> Kurikulum </h1>
         <h2>${req.query.namjur}</h2>
         <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
-        <table id=takur>
+        <h3></h3>
+        <table id=takur style="text-align: center">
                 <tr>
-                    <th>Mata Kuliah<th>
+                    <th style="text-align: center">Mata Kuliah<th>
                 </tr>`
 		);
 		res.end(`</table></body>
