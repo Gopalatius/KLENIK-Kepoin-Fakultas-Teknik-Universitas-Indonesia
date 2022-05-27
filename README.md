@@ -17,9 +17,11 @@ slide:
 
 ## Ini program ngapain?
 
-- Adadeh
-- VSCode :heart: 
-- I use tabs. :cat: 
+- Menampilkan tabel data mengenai Jurusan pada FT UI beserta Departemen yang menaunginya, daya tampung, kuota SNMPTN, SBMPTN, SIMAK UI, PPKB dan kuota TS
+- Menampilkan tabel data mengenai Jurusan pada FT UI beserta Kurikulum atau Mata Kuliah yang akan dipelajari serta Prospek Karir-nya
+- User dapat menambahkan suatu jurusan sebagai jurusan yang ingin mereka ambil atau Wishlist 
+- Terdapat forum diskusi dimana user dapat bertanya maupun menjawab serta membaca diskusi/thread yang ada
+- User dapat melihat kembali Jurusan yang ingin mereka ambil pada laman Wishlist serta melihat mata kuliah yang akan dipelajari serta prospek karirnya
 
 ---
 
