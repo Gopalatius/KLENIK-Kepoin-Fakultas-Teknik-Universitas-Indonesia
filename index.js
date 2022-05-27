@@ -71,17 +71,23 @@ router.get("/", (req, res) => {
 		if (error) return res.status(404).end("fail")
 		return res.end(minify(data, minify_options))
 	})
+	
 })
 router.post("/login", (req, res) => {
-	const query = `SELECT * FROM user_reg WHERE username ='${req.body.username}';`
+	const query = `SELECT user_id, username, password, role
+	FROM user_reg
+	WHERE username ='${req.body.username}';`
 	db.query(query, (err, results) => {
-		if (err) return console.log(err)
+		if (err) return res.status(500).end("Database Failed")
 		if (results.rowCount === 0) return res.status(400).end("No Username")
 		if (bcrypt.compare(req.body.password, results.rows[0]["password"])) {
 			req.session.authenticated = true
 			req.session.user_id = results.rows[0]["user_id"]
 			req.session.username = results.rows[0]["username"]
+			req.session.role = results.rows[0]["role"]
 			return res.status(200).end("done")
+		}else{
+			res.status(400).end("Wrong password")
 		}
 	})
 })
@@ -90,7 +96,7 @@ router.post("/get_username", (req, res) => {
 })
 router.post("/logout", (req, res) => {
 	req.session.destroy()
-	return res.end("done")
+	return res.status(200).end("done")
 })
 router.get("/register", (req, res) => {
 	if (req.session.authenticated) return res.redirect("/menu")

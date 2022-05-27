@@ -23,48 +23,50 @@
 	>
 		<h1>Diskusi</h1>
 		<a href="/diskusi/tanya"> Ingin bertanya?</a> <br /><br />
-		<section id="list-pertanyaan">
-			<h2><strong>1. </strong>username</h2>
+		<section id="list_pertanyaan">
+			<h2>
+				<strong data-pertanyaan-id="">1. </strong>Question (<i>role</i>)
+			</h2>
 			<details>
-				<summary>Q: Judul</summary>
+				<summary>by: username</summary>
 				<p>"wadefuk nibba?"</p>
 			</details>
 			<p>
-				terjawab <a>0</a> kali.
-				<a href="/diskusi/jawab">Ingin menjawab?</a>
+				terjawab <a data-jumlah-jawaban="" id="jawabCount1">0</a> kali.
+				<input
+					type="button"
+					value="Lihat jawaban?"
+					onclick="window.location.href='/diskusi/jawab'"
+				/>
 			</p>
-
-			<h2><strong>2. </strong>username</h2>
-			<details>
-				<summary>Q: Judul</summary>
-				<p>"wadefuk nibba?"</p>
-			</details>
-			<p>terjawab <a>0</a> kali</p>
 		</section>
 	</body>
 	<script>
-		function submits() {
-			let username = document.getElementById("username").value;
-			let password = document.getElementById("password").value;
-			fetch("/login", {
-				method: "POST",
-				body: JSON.stringify({
-					username: username,
-					password: password,
-				}),
-				headers: {
-					"Content-type": "application/json; charset=UTF-8",
-				},
+		const list = document.querySelector("$list_pertanyaan")
+		fetch("/get_all_pertanyaan", { method: "POST" })
+			.then((res) => res.json())
+			.then((data) => {
+				let count = 1
+				data.array.forEach((row) => {
+					const htmlString = `
+					<h2>
+						<strong data-pertanyaan-id="${row.pertanyaan_id}">${count}. </strong
+						>${row.judul} (<i>${row.role}</i>)
+					</h2>
+					<details>
+						<summary>by: ${row.username}</summary>
+						<p>"${row.text}"</p>
+					</details>
+					<p>
+						terjawab
+						<a data-jumlah-jawaban="${row.jumlah_jawaban}" id="count${count}"
+							>${row.jumlah_jawaban}</a
+						>
+						kali.
+						<input type="button" value="Lihat jawaban?" onclick="window.location.href= '/tanya/${row.pertanyaan_id}" />
+					</p>`
+				})
 			})
-				.then((res) => res.text())
-				.then((data) => {
-					if (data === "done") {
-						window.location.href = "/menu";
-						window.alert("Login sukses!");
-					} else {
-						window.alert("Login gagal. Silakan coba lagi");
-					}
-				});
-		}
 	</script>
 </html>
+
