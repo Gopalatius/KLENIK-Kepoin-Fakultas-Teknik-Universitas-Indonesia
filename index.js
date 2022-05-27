@@ -731,51 +731,12 @@ router.get("/diskusi", (req, res) => {
 		if (err) return console.log(err)
 		return res.status(200).end(minify(data, minify_options))
 	})
-	// const query =
-	//     `SELECT pertanyaan.pertanyaan_id AS idtanya,
-	//         pertanyaan.text AS txttanya,
-	//         jawaban.text AS txtjawab
-	//     FROM pertanyaan
-	//         INNER JOIN pertanyaan_dari
-	//             ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
-	//         INNER JOIN jawaban
-	//             ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id);`; // query ambil data
-	// //mendapatkan data dari database
-	// temp = req.session;
-	// db.query(query, (err, results) => {
-	//     if (err) {
-	//         console.log(err);
-	//         return;
-	//     }
-
-	//     res.status(200).write(
-	//         // table header
-	//         `
-	// 		<table id=idtanya>
-	//             <tr>
-	//                 <th>ID Pertanyaan</th>
-	//                 <th>Pertanyaan</th>
-	//                 <th>Jawaban<th>
-	//             </tr>`
-	//     );
-
-	//     results.rows.forEach((row) =>{
-	//         res.write(
-	//             `
-	//             <tr>
-	//             <td>${row["idtanya"]}</td>
-	//             <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kurikulum</a></td>
-	//             <td>${row["txtpertanyaan"]}</td>
-	//             <td>${row["txtjawab"]}</td>
-	//             `
-	//         );
-	//     })
-	//     // for (row of results.rows) {
-	//     //     // tampilin isi table
-
-	//     // }
-	//     res.end(`</table></body>`);
-	// });
+})
+router.get("/diskusi", (req, res) => {
+	fs.readFile("html/tanya.html", null, (err, data) => {
+		if (err) return console.log(err)
+		return res.status(200).end(minify(data, minify_options))
+	})
 })
 
 router.post("/diskusi/tanya", (req, res) => {})
