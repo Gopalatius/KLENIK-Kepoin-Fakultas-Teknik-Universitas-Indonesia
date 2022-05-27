@@ -810,7 +810,7 @@ router.get("/wishlist", (req, res) => {
 			`<h1> Wishlist Anda </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> </h2>
-            <table id=najur style="text-align: center">
+            <table id=wishlistjur style="text-align: center">
                     <tr>
                         <th>Nama Jurusan</th>
                         <th>Nama Kurikulum</th>
