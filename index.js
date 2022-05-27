@@ -730,6 +730,41 @@ router.get("/diskusi", (req, res) => {
 		return res.status(200).end(minify(data, minify_options))
 	})
 })
+router.post("/diskusi", (req, res) => {
+	const query = `
+		SELECT
+			pertanyaan.pertanyaan_id,
+			pertanyaan.judul,
+			user_reg.role,
+			user_reg.username,
+			pertanyaan.text,
+			COUNT(pertanyaan_dari.jawaban_id) AS "jumlah_jawaban"
+		FROM
+			pertanyaan
+			INNER JOIN
+				bertanya
+					ON (pertanyaan.pertanyaan_id = bertanya.pertanyaan_id)
+			INNER JOIN
+				user_reg
+					ON (user_reg.user_id = bertanya.user_id)
+			LEFT OUTER JOIN
+				pertanyaan_dari
+					ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
+		GROUP BY
+			pertanyaan.pertanyaan_id,
+			pertanyaan_dari.jawaban_id,
+			user_reg.role,
+			user_reg.username
+		ORDER BY
+			submit_time DESC;
+	`
+	db.query(query, (err, results) => {
+		if (err) return console.log(err)
+		res.status(200)
+		.json(results.rows)
+		.end()
+	})
+})
 router.get("/diskusi/tanya", (req, res) => {
 	fs.readFile("html/tanya.html", null, (err, data) => {
 		if (err) return console.log(err)

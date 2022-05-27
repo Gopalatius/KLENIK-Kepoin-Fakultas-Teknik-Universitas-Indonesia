@@ -34,8 +34,8 @@
 	</body>
 	<script>
         function submit(){
-            const judul = document.querySelector('$judul').textContent
-            const pertanyaan = document.querySelector('$pertanyaan').textContent
+            const judul = document.querySelector('#judul').value
+            const pertanyaan = document.querySelector('#pertanyaan').value
             if (judul === "") return alert('Judul tidak boleh kosong')
             if (pertanyaan === "") return alert('Pertanyaan tidak boleh kosong')
             fetch("/diskusi/tanya", {

@@ -37,13 +37,13 @@
 		</section>
 	</body>
 	<script>
-		const list = document.querySelector("$list_pertanyaan")
-		fetch("/get_all_pertanyaan", { method: "POST" })
+		const list = document.querySelector("#list_pertanyaan")
+		fetch("/diskusi", { method: "POST" })
 			.then((res) => res.json())
 			.then((data) => {
 				let count = 1
 				let htmlString = ""
-				data.array.forEach((row) => {
+				data.forEach((row) => {
 					 htmlString += `
 					<h2>
 						<strong data-pertanyaan-id="${row.pertanyaan_id}">${count}. </strong
@@ -59,10 +59,11 @@
 							>${row.jumlah_jawaban}</a
 						>
 						kali.
-						<input type="button" value="Lihat jawaban?" onclick="window.location.href= '/tanya/${row.pertanyaan_id}" />
+						<input type="button" value="Lihat jawaban?" onclick="window.location.href='/tanya/${row.pertanyaan_id}'" />
 					</p>`
 					count++
 				})
+				//pertanyaan_id, judul, role, username, text,jumlah jawaban
 				list.insertAdjacentHTML('beforeEnd',htmlString)
 			})
 	</script>
