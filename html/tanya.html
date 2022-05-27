@@ -6,10 +6,8 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<title>KLENIK</title>
 	</head>
-	<style></style>
-
-	<body
-		style="
+	<style>
+		body {
 			background-color: #29c5f6;
 			text-align: center;
 			margin: auto;
@@ -19,12 +17,46 @@
 			-moz-transform: translateX(-50%) translateY(-50%);
 			-webkit-transform: translateX(-50%) translateY(-50%);
 			transform: translateX(-50%) translateY(-50%);
-		"
-	>
-		
+		}
+	</style>
+	<body>
+		<h1>Input pertanyaan</h1>
+		<section>
+			<h3>Judul</h3>
+			<textarea id="judul" rows="1" cols="100"></textarea>
+		</section>
+		<section>
+			<h3>Pertanyaan</h3>
+			<textarea id="pertanyaan" rows="10" cols="100"></textarea>
+		</section>
+        </br>
+        <input type="button" value="Submit" onclick="submit()">
 	</body>
 	<script>
-		
-	</script>
+        function submit(){
+            const judul = document.querySelector('$judul').textContent
+            const pertanyaan = document.querySelector('$pertanyaan').textContent
+            if (judul === "") return alert('Judul tidak boleh kosong')
+            if (pertanyaan === "") return alert('Pertanyaan tidak boleh kosong')
+            fetch("/diskusi/tanya", {
+				method: "POST",
+				body: JSON.stringify({
+					judul: judul,
+					pertanyaan: pertanyaan
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8",
+				}
+			})
+            .then(res => res.text())
+            .then(data => {
+                if (data === "done"){
+                    window.location.href = '/diskusi'
+                    alert('Pertanyaan berhasil tersubmit')
+                }else{
+                    alert('Pertanyaan gagal tersubmit')
+                }
+            })
+        }
+    </script>
 </html>
-

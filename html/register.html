@@ -41,22 +41,22 @@
 
 	<script>
 		function submits() {
-			let username, password, role, mahasiswa, nonmahasiswa;
-			username = document.getElementById("username").value;
-			password = document.getElementById("password").value;
-			mahasiswa = document.getElementById("mahasiswa");
-			nonmahasiswa = document.getElementById("nonmahasiswa");
+			let username, password, role, mahasiswa, nonmahasiswa
+			username = document.getElementById("username").value
+			password = document.getElementById("password").value
+			mahasiswa = document.getElementById("mahasiswa")
+			nonmahasiswa = document.getElementById("nonmahasiswa")
 			if (mahasiswa.checked == true) {
-				role = mahasiswa.value;
+				role = mahasiswa.value
 			} else if (nonmahasiswa.checked == true) {
-				role = nonmahasiswa.value;
+				role = nonmahasiswa.value
 			}
 			fetch("/register", {
 				method: "POST",
 				body: JSON.stringify({
 					username: username,
 					password: password,
-					role: role,
+					role: role
 				}),
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
@@ -65,10 +65,12 @@
 				.then((res) => res.text())
 				.then((data) => {
 					if (data === "done") {
-						window.location.href = "/";
-						window.alert("Registrasi Sukses. Silakan login!");
+						window.location.href = "/"
+						window.alert("Registrasi Sukses. Silakan login!")
+					}else{
+						window.alert("Registrasi Gagal! Silakan coba lagi!")
 					}
-				});
+				})
 		}
 	</script>
 </html>

@@ -108,13 +108,11 @@ router.get("/register", (req, res) => {
 router.post("/register", (req, res) => {
 	temp = req.session
 
-	temp.username = req.body.username
-	temp.password = req.body.password
-	temp.role = req.body.role
-
-	const hashed_password = bcrypt.hashSync(temp.password, 10)
+	
+	const now = Date.now()
+	const hashed_password = bcrypt.hashSync(req.body.password, 10)
 	const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
-     ('${temp.username}','${hashed_password}','${temp.role}',now());`
+     ('${req.body.username}','${hashed_password}','${req.body.role}',${now});`
 
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
@@ -732,14 +730,59 @@ router.get("/diskusi", (req, res) => {
 		return res.status(200).end(minify(data, minify_options))
 	})
 })
-router.get("/diskusi", (req, res) => {
+router.get("/diskusi/tanya", (req, res) => {
 	fs.readFile("html/tanya.html", null, (err, data) => {
 		if (err) return console.log(err)
 		return res.status(200).end(minify(data, minify_options))
 	})
 })
 
-router.post("/diskusi/tanya", (req, res) => {})
+router.post("/diskusi/tanya", (req, res) => {
+	const now = Date.now()
+	let query = `
+		INSERT INTO pertanyaan
+			(
+				judul,
+				text,
+				submit_time
+			)
+		VALUES
+			(
+				'${req.body.judul}', '${req.body.pertanyaan}', ${now}
+			);
+	`
+	db.query(query, (err, results) => {
+		if (err) return console.log(err)
+
+		query = `
+			SELECT
+				pertanyaan_id
+			FROM
+				pertanyaan
+			WHERE
+				submit_time = ${now};
+			`
+		db.query(query, (err, results) => {
+			if (err) return console.log(err)
+			query = `
+				INSERT INTO bertanya
+					(
+						user_id,
+						pertanyaan_id
+					)
+				VALUES
+					(
+						'${req.session.user_id}', '${results.rows[0]['pertanyaan_id']}'
+					);
+			`
+			db.query(query, (err, results) =>{
+				if (err) return console.log(err)
+				res.status(200).end('done')
+			})
+		})
+	})
+	
+})
 
 router.post("/getwishlist", (req, res) => {
     id_user = req.session.user_id;
