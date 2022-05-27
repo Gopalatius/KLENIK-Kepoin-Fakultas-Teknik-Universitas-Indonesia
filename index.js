@@ -735,6 +735,7 @@ router.get("/diskusi", (req, res) => {
 		if (err) return console.log(err)
 		return res.status(200).end(minify(data, minify_options))
 	})
+	
 })
 router.post("/diskusi", (req, res) => {
 	const query = `
@@ -777,6 +778,18 @@ router.get("/diskusi/tanya", (req, res) => {
 		if (err) return console.log(err)
 		return res.status(200).end(minify(data, minify_options))
 	})
+})
+router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
+	fs.readFile("html/tanya.html", null, (err, data) => {
+		if (err) return console.log(err)
+		return res.status(200).end(minify(data, minify_options))
+	})
+})
+router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
+	let query = 
+	`
+	
+	`
 })
 
 router.post("/diskusi/tanya", (req, res) => {

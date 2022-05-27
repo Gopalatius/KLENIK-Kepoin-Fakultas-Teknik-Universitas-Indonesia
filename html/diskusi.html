@@ -22,7 +22,7 @@
 		"
 	>
 		<h1>Diskusi</h1>
-		<a href="http://localhost:6969/menu">Kembali ke Menu</a>
+		<a href="/menu">Kembali ke Menu</a> </br> </br>
 		<a href="/diskusi/tanya"> Ingin bertanya?</a> <br /><br />
 		<section id="list_pertanyaan">
 			<!--
@@ -72,7 +72,7 @@
 							>${row.jumlah_jawaban}</a
 						>
 						kali.
-						<input type="button" value="Lihat jawaban?" onclick="window.location.href='/tanya/${row.pertanyaan_id}'" />
+						<input type="button" value="Lihat jawaban?" onclick="window.location.href='diskusi/jawab/${row.pertanyaan_id}'" />
 					</p>`
 					count++
 				})
