@@ -25,14 +25,26 @@
 		<a href="/diskusi/tanya"> Ingin bertanya?</a> <br /><br />
 		<section id="list_pertanyaan">
 			<!--
-			<h2>
-				<strong data-pertanyaan-id="">1. </strong>Question (<i>role</i>)
-			</h2>
-			<details>
-				<summary>by: username</summary>
-				<p>"Ini pertanyaannya?"</p>
-			</details>
-			nanti munculnya kurleb kek gini
+				<h2>
+					<strong data-pertanyaan-id="${row.pertanyaan_id}">${count}. </strong
+					>${row.judul} (<i>${row.role}</i>)
+				</h2>
+				<details>
+					<summary>by: ${row.username}</summary>
+					<p>"${row.text}"</p>
+				</details>
+				<p>
+					terjawab
+					<a data-jumlah-jawaban="${row.jumlah_jawaban}" id="count${count}"
+						>${row.jumlah_jawaban}</a
+					>
+					kali.
+					<input
+						type="button"
+						value="Lihat jawaban?"
+						onclick="window.location.href='/jawab/${row.pertanyaan_id}'"
+					/>
+				</p>
 			-->
 		</section>
 	</body>
@@ -44,7 +56,7 @@
 				let count = 1
 				let htmlString = ""
 				data.forEach((row) => {
-					 htmlString += `
+					htmlString += `
 					<h2>
 						<strong data-pertanyaan-id="${row.pertanyaan_id}">${count}. </strong
 						>${row.judul} (<i>${row.role}</i>)
@@ -64,7 +76,7 @@
 					count++
 				})
 				//pertanyaan_id, judul, role, username, text,jumlah jawaban
-				list.insertAdjacentHTML('beforeEnd',htmlString)
+				list.insertAdjacentHTML("beforeEnd", htmlString)
 			})
 	</script>
 </html>

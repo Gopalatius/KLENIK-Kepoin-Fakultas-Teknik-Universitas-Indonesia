@@ -80,15 +80,21 @@ router.post("/login", (req, res) => {
 	db.query(query, (err, results) => {
 		if (err) return res.status(500).end("Database Failed")
 		if (results.rowCount === 0) return res.status(400).end("No Username")
-		if (bcrypt.compare(req.body.password, results.rows[0]["password"])) {
-			req.session.authenticated = true
-			req.session.user_id = results.rows[0]["user_id"]
-			req.session.username = results.rows[0]["username"]
-			req.session.role = results.rows[0]["role"]
-			return res.status(200).end("done")
-		}else{
-			res.status(400).end("Wrong password")
-		}
+		bcrypt.compare(req.body.password, results.rows[0]["password"])
+		.then((match,noMatch) => {
+			if (!match) return res.status(400).end('Wrong Password')
+			else{
+				console.log(req.body.password)
+				console.log(results.rows[0]['password'])
+				console.log('masuk sini berarti berhasil')
+				req.session.authenticated = true
+				req.session.user_id = results.rows[0]["user_id"]
+				req.session.username = results.rows[0]["username"]
+				req.session.role = results.rows[0]["role"]
+				return res.status(200).end("done")
+			}
+			
+		})
 	})
 })
 router.post("/get_username", (req, res) => {
@@ -765,6 +771,7 @@ router.post("/diskusi", (req, res) => {
 		.end()
 	})
 })
+//ini ganti komentar
 router.get("/diskusi/tanya", (req, res) => {
 	fs.readFile("html/tanya.html", null, (err, data) => {
 		if (err) return console.log(err)
