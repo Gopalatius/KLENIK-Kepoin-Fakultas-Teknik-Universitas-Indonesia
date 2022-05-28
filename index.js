@@ -170,12 +170,8 @@ router.post("/pejuang_ptn", (req, res) => {
         jurusan.kuota_ts as ts 
     FROM 
         jurusan 
-        INNER JOIN mewadahi ON (
-        jurusan.jurusan_id = mewadahi.jurusan_id
-        ) 
-        INNER JOIN departemen ON (
-        mewadahi.departemen_id = departemen.departemen_id
-    );
+        NATURAL JOIN mewadahi 
+        NATURAL JOIN departemen;
     `
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
@@ -208,7 +204,7 @@ router.post("/getjurusan", (req, res) => {
 	id_user = req.session.user_id
 	console.log(id_user)
 	const query =
-		"SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);" // query ambil data
+		"SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan NATURAL JOIN mewadahi NATURAL JOIN departemen;" // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -248,7 +244,7 @@ router.post("/getjurusan", (req, res) => {
 })
 
 router.post("/getkurikulum", (req, res) => {
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan NATURAL JOIN punya_kurikulum NATURAL JOIN kurikulum WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -279,7 +275,7 @@ router.post("/getkurikulum", (req, res) => {
 })
 
 router.post("/getkarir", (req, res) => {
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan NATURAL JOIN berprospek  NATURAL JOIN karir  WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -484,7 +480,7 @@ router.post("/getkegjur", (req, res) => {
 	id_user = req.session.user_id
 	console.log(id_user)
 	const query =
-		"SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan INNER JOIN mewadahi ON (jurusan.jurusan_id = mewadahi.jurusan_id) INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);" // query ambil data
+		"SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, departemen.nama as nadept FROM jurusan NATURAL JOIN mewadahi NATURAL JOIN departemen;" // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -525,7 +521,7 @@ router.post("/getkegjur", (req, res) => {
 })
 
 router.post("/getorganisasi", (req, res) => {
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, organisasi.nama as namor FROM jurusan INNER JOIN berisi_organisasi ON (jurusan.jurusan_id = berisi_organisasi.jurusan_id) INNER JOIN organisasi ON (berisi_organisasi.organisasi_id = organisasi.organisasi_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, organisasi.nama as namor FROM jurusan NATURAL JOIN berisi_organisasi NATURAL JOIN organisasi WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -557,7 +553,7 @@ router.post("/getorganisasi", (req, res) => {
 })
 
 router.post("/getkegiatan", (req, res) => {
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kegiatan.nama as nakeg FROM jurusan INNER JOIN berkegiatan ON (jurusan.jurusan_id = berkegiatan.jurusan_id) INNER JOIN kegiatan ON (berkegiatan.kegiatan_id = kegiatan.kegiatan_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kegiatan.nama as nakeg FROM jurusan NATURAL JOIN berkegiatan NATURAL JOIN kegiatan ON  WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -733,31 +729,21 @@ router.get("/diskusi", (req, res) => {
 })
 router.post("/diskusi", (req, res) => {
 	const query = `
-		SELECT
-			pertanyaan.pertanyaan_id,
-			pertanyaan.judul,
-			user_reg.role,
-			user_reg.username,
-			pertanyaan.text,
-			COUNT(pertanyaan_dari.jawaban_id) AS "jumlah_jawaban"
-		FROM
-			pertanyaan
-			INNER JOIN
-				bertanya
-					ON (pertanyaan.pertanyaan_id = bertanya.pertanyaan_id)
-			INNER JOIN
-				user_reg
-					ON (user_reg.user_id = bertanya.user_id)
-			LEFT OUTER JOIN
-				pertanyaan_dari
-					ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
-		GROUP BY
-			pertanyaan.pertanyaan_id,
-			pertanyaan_dari.jawaban_id,
+	SELECT pertanyaan.pertanyaan_id,
+		pertanyaan.judul,
+		user_reg.role,
+		user_reg.username,
+		pertanyaan.text,
+		COUNT(pertanyaan_dari.jawaban_id) AS jumlah_jawaban
+	FROM pertanyaan
+		NATURAL JOIN bertanya
+		NATURAL JOIN user_reg
+		LEFT OUTER JOIN pertanyaan_dari
+			ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
+	GROUP BY pertanyaan.pertanyaan_id,
 			user_reg.role,
 			user_reg.username
-		ORDER BY
-			submit_time DESC;
+	ORDER BY pertanyaan.submit_time DESC;
 	`
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
@@ -791,12 +777,10 @@ router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 		jawaban.submit_time    jawaban_submit_time
 	FROM
 		user_reg           penanya
-		INNER JOIN
+		NATURAL JOIN
 			bertanya
-				ON (penanya.user_id = bertanya.user_id)
-		INNER JOIN
+		NATURAL JOIN
 			pertanyaan
-				ON (bertanya.pertanyaan_id = pertanyaan.pertanyaan_id)
 		LEFT OUTER JOIN
 			pertanyaan_dari
 				ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
@@ -905,7 +889,7 @@ router.post("/diskusi/tanya", (req, res) => {
 router.post("/getwishlist", (req, res) => {
 	id_user = req.session.user_id
 	console.log(id_user)
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan NATURAL JOIN wishlist WHERE (wishlist.user_id = ${req.session.user_id});`
 	//mendapatkan data dari database
 	//temp = req.session;
 
@@ -1003,7 +987,7 @@ router.get("/wishlist", (req, res) => {
 })
 
 router.post("/getwlkurikulum", (req, res) => {
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan NATURAL JOIN punya_kurikulum  NATURAL JOIN kurikulum  WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -1075,7 +1059,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
 })
 
 router.post("/getwlkarir", (req, res) => {
-	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan NATURAL JOIN berprospek NATURAL JOIN karir  WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
