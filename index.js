@@ -923,6 +923,7 @@ router.post("/getwishlist", (req, res) => {
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
 						<th>Prospek Karir</th>
+						<th>Delete</th>
 					</tr>`
 		)
 		results.rows.forEach((row) => {
@@ -932,6 +933,7 @@ router.post("/getwishlist", (req, res) => {
 					<td>${row["namjur"]}</td>
 					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
 					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
+					<td><a href="delwish?idjur=${row["wljurid"]}">Delete<a></td>
 					`
 			)
 		})
@@ -975,6 +977,7 @@ router.get("/wishlist", (req, res) => {
                         <th>Nama Jurusan</th>
                         <th>Nama Kurikulum</th>
                         <th>Prospek Karir</th>
+						<th>Delete</th>
                     </tr>`
 		)
 
@@ -1135,6 +1138,35 @@ router.get("/wishlist/karir", (req, res) => {
             });
             </script>
         </html>`)
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data, minify_options))
+		})
+	}
+})
+
+router.get("/delwish", (req,res) => {
+	user_status = req.session.authenticated
+	console.log(user_status)
+
+	if (user_status) {
+		const query = `DELETE FROM wishlist WHERE (jurusan_id = ${req.query.idjur});` // query ambil data
+		//mendapatkan data dari database
+		//temp = req.session;
+
+		db.query(query, (err, results) => {
+			if (err) {
+				console.log(err)
+				return res.status(500).end()
+			}
+
+			res.send()
+			id = `${req.query.idjur}`
+			console.log("test")
+			console.log(id)
+		})
+		res.redirect("/wishlist")
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
