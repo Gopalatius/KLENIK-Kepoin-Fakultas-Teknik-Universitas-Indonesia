@@ -7,7 +7,7 @@ const bodyParser = require("body-parser")
 //initialize the app as an express app
 const app = express()
 const router = express.Router()
-const { Client } = require("pg")
+const db = require('./db')
 const bcrypt = require("bcrypt")
 const { rows, connectionString, user } = require("pg/lib/defaults")
 
@@ -34,20 +34,10 @@ const minify_options = {
 }
 
 //inisiasi fs untuk impor html
-var fs = require("fs")
+const fs = require("fs")
 const { response } = require("express")
 const { isWindows } = require("nodemon/lib/utils")
 
-//Insiasi koneksi ke database
-const db = new Client({
-	host: "mraihanazhari-sbd.postgres.database.azure.com",
-	port: 5432,
-	database: "klenik",
-	user: "kel_6",
-	password:
-		"3#&1j[(mq4SUKWe9HpjXy9hB.H!z[LJ(4HxI|%UX[t&hxcatb*|yto{QzJl;><5vmbkf1c/y[^-?r(x>wB_7V8b4<KelwSn@=]ON4.{thO7=>pJxC#skqv1PMCtXa97v",
-	ssl: true,
-})
 
 //middleware (session)
 app.use(
@@ -1280,10 +1270,7 @@ router.get("/delwish", (req,res) => {
 })
 
 //-----------------------------------------------------------------------------------------------------------------------------------
-db.connect((err) => {
-	if (err) return console.log(err)
-	console.log("Database berhasil terkoneksi")
-})
+
 
 app.use("/", router)
 app.listen(process.env.PORT || 6969, () => {
