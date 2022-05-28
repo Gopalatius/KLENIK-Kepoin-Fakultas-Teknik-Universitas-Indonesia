@@ -763,8 +763,18 @@ router.post("/getcomp", (req, res) => {
 			)
 		})
 
-		res.write(`</tr>`)
-		res.status(200).end(`</table></body>`)
+		res.write(`</tr>
+		<input type="button" value="Compare" id="compares" />`)
+		res.status(200).end(`</table></body>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <script>
+                    jQuery(document).ready(function($) {
+                        var username, pass;
+                        $('#compares').click(function() {
+                            console.log("tes");
+                        });
+					});
+					</script>`)
 	})
 })
 
@@ -813,6 +823,10 @@ router.get("/compare", (req, res) => {
                         console.log(data);
                         $("#compjur").html(data);
                     });
+
+					$('#compares').click(function() {
+						console.log("tes");
+					});
                     
                 });
                 </script>
