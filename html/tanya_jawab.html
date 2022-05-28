@@ -22,64 +22,47 @@
 		"
 	>
 		<h1 >Pertanyaan oleh <i id="user_role_penanya">username (role)</i></h1>
-		<a href="/diskusi/tanya">Kembali ke diskusi</a> </br> </br>
+		<a href="/diskusi">Kembali ke diskusi</a> </br> </br>
 		
 		<section id="tanya_jawab">
-				<h2>
-					${judul}
-				</h2>
-				<p>${text}</p>
-                <a>Terakhir disunting pada ${tanggal}</a>
-				</br>
-					<input
-						type="button"
-						value="Ingin menjawab?"
-						onclick="jawab()"
-					/>
-				 </br></br></br>
-                <strong>1. JAWABAN oleh <i>username (role)</i></strong>
-				<p>${text}</p>
-                <a>Terakhir disunting pada ${tanggal}</a>
-                </br></br>
+				
 		</section>
 	</body>
 	<script>
         const list = document.querySelector('#tanya_jawab')
-		let global_data
 		fetch(window.location.href, { method: "POST" })
 			.then((res) => res.json())
 			.then((data) => {
 				global_data = data
                 const user_role_penanya = document.querySelector("#user_role_penanya")
                 user_role_penanya.textContent = `${data[0].username_penanya} (${data[0].role_penanya})`
-
+				const tanggal = new Date(parseInt(data[0].pertanyaan_submit_time))
                 const tanya_jawab = document.querySelector('#tanya_jawab')
                 let htmlString = `
 				<h2>
-					${data[0].judul}
+					${data[0].judul_pertanyaan}
 				</h2>
-				<p>${data[0].text_pertanyaan}</p>
-				<a>Terakhir disunting pada ${Date(data[0].pertanyaan_submit_time).toString()}</a>
+				<p>"${data[0].text_pertanyaan}"</p>
+				<a>Terakhir disunting pada <i>${tanggal.toLocaleString()}</i></a>
 				</br>
-				<p id="berubah"
-					<input
-						type="button"
-						value="Ingin menjawab?"
-						onclick="jawab()"
-					/>
-				</p>
+				<section id="berubah">
+				<input type="button" value="Ingin Menjawab?" onclick="jawab()">
+				</section>
 				</br></br></br>
                 `
 				let count = 1
-				
+				console.log(data[0].pertanyaan_submit_time)
 				data.forEach((row) => {
+					if (row.username_penjawab == null || row.username_penjawab == "") return;
+					const tanggal = new Date(parseInt(row.jawaban_submit_time))
 					htmlString += `
-					<strong>${count}. JAWABAN oleh <i>${row.username_penjawab} (row.role_penjawab)</i></strong>
-					<p>${row.text_jawaban}</p>
-					<a>Terakhir disunting pada ${row.jawaban_submit_time}</a>
+					<strong>${count}. JAWABAN oleh <i>${row.username_penjawab} (${row.role_penjawab})</i></strong>
+					<p>"${row.text_jawaban}"</p>
+					<a>Terakhir disunting pada <i>${tanggal.toLocaleString()}</i></a>
 					</br></br>
 					`
 					count++
+					console.log(row.jawaban_submit_time)
 				})
 				//pertanyaan_id, judul, role, username, text,jumlah jawaban
 				tanya_jawab.insertAdjacentHTML("beforeEnd", htmlString)
@@ -87,30 +70,26 @@
 		function jawab(){
 			const jawaban_baru = document.querySelector('#berubah')
 			jawaban_baru.innerHTML = `
-			<textarea id="jawab" rows="1" cols="100"></textarea> </br>
-			<input type="button" value="cancel" onclick="cancelJawab()'" />
-			<input type="button" value="cancel" onclick="submits()'" />
+			<textarea id="jawab" rows="10" cols="100"></textarea> </br>
+			<input type="button" value="cancel" onclick="cancelJawab()" />
+			<input type="button" value="submit" onclick="submits()" />
 			`
 		}
 		function cancelJawab(){
 			const jawaban_baru = document.querySelector('#berubah')
 			jawaban_baru.innerHTML = `
-			<input
-						type="button"
-						value="Ingin menjawab?"
-						onclick="jawab()"
-					/>
+			<input type="button" value="Ingin Menjawab?" onclick="jawab()">
 			`
 		}
 		function submits(){
 			const jawaban = document.querySelector('#jawab').value
-			if (value === "") return alert('Jawaban tidak boleh kosong!')
-			fetch("/diskusi/jawab/menjawab", {
+			if (jawaban === "") return alert('Jawaban tidak boleh kosong!')
+			const pertanyaan_id = window.location.href.split('/').pop()
+			fetch("/diskusi/jawab", {
 				method: "POST",
 				body: JSON.stringify({
 					jawaban: jawaban,
-					pertanyaan_id: global_data[0].pertanyaan_id,
-					submit_time: Date.now()
+					pertanyaan_id: pertanyaan_id
 				}),
 				headers: {
 					"Content-type": "application/json; charset=UTF-8",
@@ -119,7 +98,7 @@
             .then(res => res.text())
             .then(data => {
                 if (data === "done"){
-                    window.location.href = `/diskusi/tanya/${global_data[0].pertanyaan_id}`
+                    window.location.href = `/diskusi/jawab/${pertanyaan_id}`
                     alert('Pertanyaan berhasil tersubmit')
                 }else{
                     alert('Pertanyaan gagal tersubmit')

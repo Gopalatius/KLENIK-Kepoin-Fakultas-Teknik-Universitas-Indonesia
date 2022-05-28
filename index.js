@@ -71,7 +71,6 @@ router.get("/", (req, res) => {
 		if (error) return res.status(404).end("fail")
 		return res.end(minify(data, minify_options))
 	})
-	
 })
 router.post("/login", (req, res) => {
 	const query = `SELECT user_id, username, password, role
@@ -80,21 +79,18 @@ router.post("/login", (req, res) => {
 	db.query(query, (err, results) => {
 		if (err) return res.status(500).end("Database Failed")
 		if (results.rowCount === 0) return res.status(400).end("No Username")
-		bcrypt.compare(req.body.password, results.rows[0]["password"])
-		.then((match,noMatch) => {
-			if (!match) return res.status(400).end('Wrong Password')
-			else{
-				console.log(req.body.password)
-				console.log(results.rows[0]['password'])
-				console.log('masuk sini berarti berhasil')
-				req.session.authenticated = true
-				req.session.user_id = results.rows[0]["user_id"]
-				req.session.username = results.rows[0]["username"]
-				req.session.role = results.rows[0]["role"]
-				return res.status(200).end("done")
-			}
-			
-		})
+		bcrypt
+			.compare(req.body.password, results.rows[0]["password"])
+			.then((match, noMatch) => {
+				if (!match) return res.status(400).end("Wrong Password")
+				else {
+					req.session.authenticated = true
+					req.session.user_id = results.rows[0].user_id
+					req.session.username = results.rows[0].username
+					req.session.role = results.rows[0].role
+					return res.status(200).end("done")
+				}
+			})
 	})
 })
 router.post("/get_username", (req, res) => {
@@ -114,7 +110,6 @@ router.get("/register", (req, res) => {
 router.post("/register", (req, res) => {
 	temp = req.session
 
-	
 	const now = Date.now()
 	const hashed_password = bcrypt.hashSync(req.body.password, 10)
 	const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
@@ -735,7 +730,6 @@ router.get("/diskusi", (req, res) => {
 		if (err) return console.log(err)
 		return res.status(200).end(minify(data, minify_options))
 	})
-	
 })
 router.post("/diskusi", (req, res) => {
 	const query = `
@@ -767,9 +761,7 @@ router.post("/diskusi", (req, res) => {
 	`
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
-		res.status(200)
-		.json(results.rows)
-		.end()
+		res.status(200).json(results.rows).end()
 	})
 })
 //ini ganti komentar
@@ -780,18 +772,101 @@ router.get("/diskusi/tanya", (req, res) => {
 	})
 })
 router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
-	fs.readFile("html/tanya.html", null, (err, data) => {
+	fs.readFile("html/tanya_jawab.html", null, (err, data) => {
 		if (err) return console.log(err)
 		return res.status(200).end(minify(data, minify_options))
 	})
 })
 router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
-	let query = 
+	const query = `
+	SELECT
+		penanya.username       username_penanya,
+		penanya.role           role_penanya,
+		pertanyaan.judul       judul_pertanyaan,
+		pertanyaan.text        text_pertanyaan,
+		pertanyaan.submit_time pertanyaan_submit_time,
+		penjawab.username      username_penjawab,
+		penjawab.role          role_penjawab,
+		jawaban.text           text_jawaban,
+		jawaban.submit_time    jawaban_submit_time
+	FROM
+		user_reg           penanya
+		INNER JOIN
+			bertanya
+				ON (penanya.user_id = bertanya.user_id)
+		INNER JOIN
+			pertanyaan
+				ON (bertanya.pertanyaan_id = pertanyaan.pertanyaan_id)
+		LEFT OUTER JOIN
+			pertanyaan_dari
+				ON (pertanyaan.pertanyaan_id = pertanyaan_dari.pertanyaan_id)
+		LEFT OUTER JOIN
+			jawaban
+				ON (pertanyaan_dari.jawaban_id = jawaban.jawaban_id)
+		LEFT OUTER JOIN
+			menjawab
+				ON (menjawab.jawaban_id = jawaban.jawaban_id)
+		LEFT OUTER JOIN
+			user_reg       penjawab
+				ON (menjawab.user_id = penjawab.user_id)
+	WHERE
+		pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};
 	`
-	
-	`
+	db.query(query, (err, results) => {
+		if (err) return console.log(err)
+		return res.status(200).json(results.rows).end()
+	})
 })
+router.post("/diskusi/jawab", (req, res) => {
+	const now = Date.now()
+	let query = `
+	INSERT INTO jawaban
+		(
+			text,
+			submit_time
+		)
+	VALUES
+		(
+			'${req.body.jawaban}', ${now}
+		)
+	RETURNING jawaban_id;
+		`
+	db.query(query, (err, results) => {
+		if (err) return console.log(err + 'query pertama')
+		query = `
+			INSERT INTO pertanyaan_dari
+				(
+					pertanyaan_id,
+					jawaban_id
+				)
+			VALUES
+				(
+					${req.body.pertanyaan_id}, ${results.rows[0].jawaban_id}
+				)
+			RETURNING jawaban_id;
+			`
+		
+		db.query(query, (err, results) => {
+			if (err) return console.log(err + 'query kedua')
+			query = `
+			INSERT INTO menjawab
+				(
+					user_id,
+					jawaban_id
+				)
+			VALUES
+				(
+					${req.session.user_id}, ${results.rows[0].jawaban_id}
+				);
 
+			`
+			db.query(query, (err, results) => {
+				if (err) return console.log(err + 'query ketiga')
+				return res.status(200).end("done")
+			})
+		})
+	})
+})
 router.post("/diskusi/tanya", (req, res) => {
 	const now = Date.now()
 	let query = `
@@ -804,22 +879,12 @@ router.post("/diskusi/tanya", (req, res) => {
 		VALUES
 			(
 				'${req.body.judul}', '${req.body.pertanyaan}', ${now}
-			);
+			)
+		RETURNING pertanyaan_id;
 	`
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
-
 		query = `
-			SELECT
-				pertanyaan_id
-			FROM
-				pertanyaan
-			WHERE
-				submit_time = ${now};
-			`
-		db.query(query, (err, results) => {
-			if (err) return console.log(err)
-			query = `
 				INSERT INTO bertanya
 					(
 						user_id,
@@ -827,57 +892,54 @@ router.post("/diskusi/tanya", (req, res) => {
 					)
 				VALUES
 					(
-						'${req.session.user_id}', '${results.rows[0]['pertanyaan_id']}'
+						'${req.session.user_id}', '${results.rows[0].pertanyaan_id}'
 					);
 			`
-			db.query(query, (err, results) =>{
-				if (err) return console.log(err)
-				res.status(200).end('done')
-			})
+		db.query(query, (err, results) => {
+			if (err) return console.log(err)
+			res.status(200).end("done")
 		})
 	})
-	
 })
 
 router.post("/getwishlist", (req, res) => {
-    id_user = req.session.user_id;
-	console.log(id_user);
-	const query =
-            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`;
-		//mendapatkan data dari database
-		//temp = req.session;
+	id_user = req.session.user_id
+	console.log(id_user)
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`
+	//mendapatkan data dari database
+	//temp = req.session;
 
-		db.query(query, (err, results) => {
-			if (err) {
-				console.log(err)
-				return
-			}
-			res.status(200)
-	
-			res.write(
-				// table header
-				`<table id=wishlistjur align="center">
+	db.query(query, (err, results) => {
+		if (err) {
+			console.log(err)
+			return
+		}
+		res.status(200)
+
+		res.write(
+			// table header
+			`<table id=wishlistjur align="center">
 					<tr>
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
 						<th>Prospek Karir</th>
 					</tr>`
-			)
-			results.rows.forEach((row) => {
-				res.write(
-					`
+		)
+		results.rows.forEach((row) => {
+			res.write(
+				`
 					<tr align="center">
 					<td>${row["namjur"]}</td>
 					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
 					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
 					`
-				)
-			})
-	
-			res.write(`</tr>`)
-			res.status(200).end(`</table></body>`)
+			)
 		})
-});
+
+		res.write(`</tr>`)
+		res.status(200).end(`</table></body>`)
+	})
+})
 
 router.get("/wishlist", (req, res) => {
 	user_status = req.session.authenticated
@@ -1085,7 +1147,7 @@ router.get("/wishlist/karir", (req, res) => {
 db.connect((err) => {
 	if (err) return console.log(err)
 	console.log("Database berhasil terkoneksi")
-});
+})
 
 app.use("/", router)
 app.listen(process.env.PORT || 6969, () => {

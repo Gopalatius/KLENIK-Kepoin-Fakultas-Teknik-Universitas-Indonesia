@@ -144,3 +144,17 @@ INNER JOIN departemen ON (mewadahi.departemen_id = departemen.departemen_id);
 
 SELECT jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = 7);
 
+CREATE OR REPLACE FUNCTION update_lastmodified_column() 
+        RETURNS TRIGGER AS '
+  BEGIN
+    NEW.submit_time = (EXTRACT(EPOCH from NOW())*1000);
+    RETURN NEW;
+  END;
+' LANGUAGE 'plpgsql';
+CREATE TRIGGER update_lastmodified_modtime BEFORE UPDATE
+  ON pertanyaan FOR EACH ROW EXECUTE PROCEDURE
+  update_lastmodified_column();
+CREATE TRIGGER update_lastmodified_modtime BEFORE UPDATE
+  ON jawaban FOR EACH ROW EXECUTE PROCEDURE
+  update_lastmodified_column();
+  
