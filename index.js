@@ -747,7 +747,9 @@ router.post("/getcomp", (req, res) => {
 			`<table id=compjur align="center">
                 <tr>
 					<th>Nama Jurusan</th>
-					<th>Compare</th>
+					<th>Jurusan 1</th>
+					<th>Jurusan 2</th>
+
                 </tr>`
 		)
 		results.rows.forEach((row) => {
@@ -755,7 +757,8 @@ router.post("/getcomp", (req, res) => {
 				`
                 <tr align="center">  
                 <td>${row["namjur"]}</td>
-                <td><a href="ttgjurusan/kurikulum?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Compare</a></td>
+                <td><input type="radio" id="${row["idjur"]}" name="jur1" value="HTML">
+				<td><input type="radio" id="${row["idjur"]}" name="jur2" value="HTML">
                 `
 			)
 		})
@@ -796,8 +799,8 @@ router.get("/compare", (req, res) => {
             <h2> Silahkan pilih 2 jurusan yang ingin dibandingkan </h2>
             <table id=compjur style="text-align: center">
                     <tr>
-                        <th>Nama Jurusan</th>
-                        <th>Compare</th>
+						<th>Jurusan 1</th>
+						<th>Jurusan 2</th>
                     </tr>`
 		)
 
