@@ -389,10 +389,10 @@ router.get("/addwish", (req, res) => {
 				return res.status(500).end()
 			}
 
-			res.send()
-			id = `${req.query.idjur}`
+			return res.redirect("/ttgjurusan")
+			
 		})
-		res.redirect("/ttgjurusan")
+		
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
@@ -1216,7 +1216,7 @@ router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 							console.log(err)
 							return res.status(500).end()
 						}
-						res.redirect("/diskusi")
+						return res.redirect("/diskusi")
 					})
 				})
 			})
