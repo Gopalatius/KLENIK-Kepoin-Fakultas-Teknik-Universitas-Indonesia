@@ -1216,12 +1216,12 @@ router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 							console.log(err)
 							return res.status(500).end()
 						}
-						res.send()
+						res.redirect("/diskusi")
 					})
 				})
 			})
 		}
-		res.redirect("/diskusi")
+		
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
