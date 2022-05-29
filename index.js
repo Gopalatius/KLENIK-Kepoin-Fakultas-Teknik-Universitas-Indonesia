@@ -1386,6 +1386,8 @@ router.post("/getwishlist", (req, res) => {
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
 						<th>Prospek Karir</th>
+						<th>Organisasi</th>
+						<th>Kegiatan</th>
 						<th>Delete</th>
 					</tr>`
 		)
@@ -1396,6 +1398,8 @@ router.post("/getwishlist", (req, res) => {
 					<td>${row["namjur"]}</td>
 					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
 					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
+					<td><a href="wishlist/organisasi?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Organisasi</a></td>
+					<td><a href="wishlist/kegiatan?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kegiatan</a></td>
 					<td><a href="delwish?idjur=${row["wljurid"]}">Delete<a></td>
 					`
 			)
@@ -1438,6 +1442,8 @@ router.get("/wishlist", (req, res) => {
                         <th>Nama Jurusan</th>
                         <th>Nama Kurikulum</th>
                         <th>Prospek Karir</th>
+						<th>Organisasi</th>
+						<th>Kegiatan</th>
 						<th>Delete</th>
                     </tr>`
 		)
