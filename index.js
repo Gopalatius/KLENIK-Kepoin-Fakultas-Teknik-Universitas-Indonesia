@@ -1327,59 +1327,48 @@ router.post("/diskusi/tanya", (req, res) => {
 })
 
 router.post("/getwishlist", (req, res) => {
-	id_user = req.session.user_id
-	const query = `
-	SELECT
-		jurusan.jurusan_id  as idjur,
-		jurusan.nama        as namjur,
-		wishlist.jurusan_id as wljurid
-	FROM
-		jurusan
-		INNER JOIN
-			wishlist
-				ON (jurusan.jurusan_id = wishlist.jurusan_id)
-	WHERE
-		(wishlist.user_id = ${req.session.user_id});`
+    id_user = req.session.user_id;
+	console.log(id_user);
+	const query =
+            `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, wishlist.jurusan_id as wljurid FROM jurusan INNER JOIN wishlist ON (jurusan.jurusan_id = wishlist.jurusan_id) WHERE (wishlist.user_id = ${req.session.user_id});`;
+		//mendapatkan data dari database
+		//temp = req.session;
 
-	db.query(query, (err, results) => {
-		if (err) {
-			console.log(err)
-			return
-		}
-		res.status(200)
-
-		res.write(
-			`<table id=wishlistjur align="center">
+		db.query(query, (err, results) => {
+			if (err) {
+				console.log(err)
+				return
+			}
+			res.status(200)
+	
+			res.write(
+				// table header
+				`<table id=wishlistjur align="center">
 					<tr>
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
 						<th>Prospek Karir</th>
-						<th>Organisasi</th>
-						<th>Kegiatan</th>
-						<th>Delete</th>
 					</tr>`
-		)
-		results.rows.forEach((row) => {
-			res.write(
-				`
+			)
+			results.rows.forEach((row) => {
+				res.write(
+					`
 					<tr align="center">
 					<td>${row["namjur"]}</td>
 					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
 					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
-					<td><a href="wishlist/organisasi?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Organisasi</a></td>
-					<td><a href="wishlist/kegiatan?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kegiatan</a></td>
-					<td><a href="delwish?idjur=${row["wljurid"]}">Delete<a></td>
 					`
-			)
+				)
+			})
+	
+			res.write(`</tr>`)
+			res.status(200).end(`</table></body>`)
 		})
-
-		res.write(`</tr>`)
-		res.status(200).end(`</table></body>`)
-	})
-})
+});
 
 router.get("/wishlist", (req, res) => {
 	user_status = req.session.authenticated
+	console.log(user_status)
 	if (user_status) {
 		res.write(`<html>
             <head>
@@ -1402,6 +1391,7 @@ router.get("/wishlist", (req, res) => {
             transform: translateX(-50%) translateY(-50%);">`)
 
 		res.write(
+			// table header
 			`<h1> Wishlist Anda </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> </h2>
@@ -1410,9 +1400,6 @@ router.get("/wishlist", (req, res) => {
                         <th>Nama Jurusan</th>
                         <th>Nama Kurikulum</th>
                         <th>Prospek Karir</th>
-						<th>Organisasi</th>
-						<th>Kegiatan</th>
-						<th>Delete</th>
                     </tr>`
 		)
 
@@ -1422,6 +1409,7 @@ router.get("/wishlist", (req, res) => {
                 jQuery(document).ready(function($) {
                     var jid;
                     $.post('/getwishlist', { }, function(data) {
+                        console.log(data);
                         $("#wishlistjur").html(data);
                     });
                     
@@ -1431,27 +1419,15 @@ router.get("/wishlist", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data))
+			return res.end(minify(data, minify_options))
 		})
 	}
 })
 
 router.post("/getwlkurikulum", (req, res) => {
-	const query = `
-	SELECT
-		jurusan.jurusan_id as idjur,
-		jurusan.nama       as namjur,
-		kurikulum.nama     as nakur
-	FROM
-		jurusan
-		INNER JOIN
-			punya_kurikulum
-				ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id)
-		INNER JOIN
-			kurikulum
-				ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id)
-	WHERE
-		(jurusan.jurusan_id = ${req.body.idjur});`
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, kurikulum.nama as nakur FROM jurusan INNER JOIN punya_kurikulum ON (jurusan.jurusan_id = punya_kurikulum.jurusan_id) INNER JOIN kurikulum ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	//mendapatkan data dari database
+	//temp = req.session;
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
@@ -1482,7 +1458,8 @@ router.post("/getwlkurikulum", (req, res) => {
 router.get("/wishlist/kurikulum", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-
+	console.log(id)
+	console.log(req.query.namjur)
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -1490,6 +1467,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
+			// table header
 			`<h1> Kurikulum </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/wishlist">Kembali ke Wishlist</a>
@@ -1503,7 +1481,8 @@ router.get("/wishlist/kurikulum", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getwlkurikulum', {idjur: ${id}}, function(data) 
+                $.post('/getwlkurikulum', {idjur: ${id}}, function(data) {
+                    console.log(data);
                     $("#wlkur").html(data);
                 });
             });
@@ -1512,27 +1491,15 @@ router.get("/wishlist/kurikulum", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data))
+			return res.end(minify(data, minify_options))
 		})
 	}
 })
 
 router.post("/getwlkarir", (req, res) => {
-	const query = `
-	SELECT
-		jurusan.jurusan_id as idjur,
-		jurusan.nama       as namjur,
-		karir.nama         as nakar
-	FROM
-		jurusan
-		INNER JOIN
-			berprospek
-				ON (jurusan.jurusan_id = berprospek.jurusan_id)
-		INNER JOIN
-			karir
-				ON (berprospek.karir_id = karir.karir_id)
-	WHERE
-		(jurusan.jurusan_id = ${req.body.idjur});`
+	const query = `SELECT jurusan.jurusan_id as idjur, jurusan.nama as namjur, karir.nama as nakar FROM jurusan INNER JOIN berprospek ON (jurusan.jurusan_id = berprospek.jurusan_id) INNER JOIN karir ON (berprospek.karir_id = karir.karir_id) WHERE (jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	//mendapatkan data dari database
+	//temp = req.session;
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
@@ -1546,6 +1513,7 @@ router.post("/getwlkarir", (req, res) => {
                 </tr>`
 		)
 		results.rows.forEach((row) => {
+			// tampilin isi table
 			res.write(
 				`
                 <tr> 
@@ -1562,7 +1530,8 @@ router.post("/getwlkarir", (req, res) => {
 router.get("/wishlist/karir", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-
+	console.log(id)
+	console.log(req.query.namjur)
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -1570,6 +1539,7 @@ router.get("/wishlist/karir", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
+			// table header
 			`<h1> Prospek Karir </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/wishlist">Kembali ke Tentang Wishlist</a>
@@ -1583,7 +1553,8 @@ router.get("/wishlist/karir", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getwlkarir', {idjur: ${id}}, function(data) 
+                $.post('/getwlkarir', {idjur: ${id}}, function(data) {
+                    console.log(data);
                     $("#wlkar").html(data);
                 });
             });
@@ -1592,7 +1563,7 @@ router.get("/wishlist/karir", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data))
+			return res.end(minify(data, minify_options))
 		})
 	}
 })
