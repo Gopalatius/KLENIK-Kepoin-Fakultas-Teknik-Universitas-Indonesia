@@ -771,7 +771,7 @@ router.post("/getcomp", (req, res) => {
 router.get("/compare", (req, res) => {
 	user_status = req.session.authenticated
 	console.log(user_status)
-	if (user_status) {
+	//if (user_status) {
 		res.write(`<html>
             <head>
                 <title>Klenik</title>
@@ -821,12 +821,13 @@ router.get("/compare", (req, res) => {
                 });
                 </script>
             </html>`)
-	} else {
-		fs.readFile("html/illegal_access.html", null, function (error, data) {
-			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
-		})
-	}
+	//}
+	 //else {
+		//fs.readFile("html/illegal_access.html", null, function (error, data) {
+		//	if (error) return res.status(404).end("fail")
+		//	return res.end(minify(data, minify_options))
+		//})
+	//}
 })
 
 
