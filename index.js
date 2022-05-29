@@ -9,15 +9,12 @@ const app = express()
 const router = express.Router()
 const {db} = require('./db')
 const bcrypt = require("bcrypt")
-const { rows, connectionString, user } = require("pg/lib/defaults")
+
 
 const {minify} = require('./minify')
 
 //inisiasi fs untuk impor html
 const fs = require("fs")
-const { response } = require("express")
-const { isWindows } = require("nodemon/lib/utils")
-
 
 //middleware (session)
 app.use(
