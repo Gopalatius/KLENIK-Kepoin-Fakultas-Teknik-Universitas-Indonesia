@@ -1197,20 +1197,20 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 })
 
 
-router.get("/diskusi/ansdelete/:jawaban_submit_time/:username_penjawab", (req, res) => {
+router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 	user_status = req.session.authenticated;
 console.log(user_status);
 cek_user = req.session.username;
 
 if (user_status) {
 	const query = `
-	DELETE FROM pertanyaan_dari WHERE pertanyaan_dari.pertanyaan_id = ${req.params.pertanyaan_id};
-	DELETE FROM bertanya WHERE bertanya.pertanyaan_id = ${req.params.pertanyaan_id};
-	DELETE FROM pertanyaan WHERE pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};
+	DELETE FROM pertanyaan_dari WHERE (pertanyaan_dari.jawaban_id = ${req.params.jawaban_id});
+	DELETE FROM menjawab WHERE (jawaban_id = ${req.params.jawaban_id});
+	DELETE FROM jawaban WHERE (jawaban_id = ${req.params.jawaban_id});
 	` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
-	username = `${req.params.username}`;
+	username = `${req.params.username_penjawab}`;
 	if(username == cek_user){
 		db.query(query, (err, results) => {
 			if (err) {
@@ -1220,13 +1220,13 @@ if (user_status) {
 			
 			console.log(username)
 			res.send()
-			id = `${req.params.pertanyaan_id}`
+			id = `${req.params.jawaban_id}`
 			console.log(id)
 		})
 
 	}
 	
-	res.redirect("/diskusi/jawab/:pertanyaan_id");
+	res.redirect("/diskusi");
 
 } else {
 	fs.readFile("html/illegal_access.html", null, function (error, data) {
