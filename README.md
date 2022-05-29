@@ -1,7 +1,7 @@
 ---
 title: KLENIK (Kepoin Fakultas Teknik Universitas Indonesia)
 tags: Kepoin Fakultas Teknik Universitas Indonesia
-description: HEHEHE.
+description: Aplikasi berbasis web yang ditujukan untuk membantu mahasiswa maupun non-mahasiswa untuk mengetahui hal yang lebih banyak mengenai Fakultas Teknik Universitas Indonesia.
 ---
 
 # KLENIK!
