@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Your Profile</title>
+	</head>
+
+	<body
+		style="
+			background-color: #29c5f6;
+			text-align: center;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-moz-transform: translateX(-50%) translateY(-50%);
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(-50%);
+		"
+	>
+    <a href="/menu">Kembali ke menu</a> </br> </br>
+		<div id="profile">
+		<p>
+            Username: {ini diisi} </br>
+            Role: {ini diisi}
+        </p>
+        </div> </br>
+		<div id="ganti">
+            <button onclick="ganti('username')">Ganti username?</button>
+            </br></br>
+            <button onclick="ganti('password')">Ganti password?</button>
+        </div>
+
+	</body>
+	<script>
+		fetch("/get_profile", {method: "POST"})
+            .then(res => res.json())
+            .then(data => {
+                document.querySelector('#profile').innerHTML = `
+                <p>
+                    Username: ${data.username} </br>
+                    Role: ${data.role}
+                </p>
+                `
+            })
+        function ganti(data){
+            document.querySelector('#ganti').innerHTML = 
+            
+            `
+            <p> Input ${data} terbaru</p>
+            <input type="text" id="data_baru">
+            <p> Input password sekarang</p>
+            <input type="password" id="password_sekarang"> </br>
+            <input type="button" value="cancel" onclick="cancel()" />
+			<input type="button" value="submit" onclick="submits('${data}')" />
+            `
+
+        }
+        function cancel(){
+            document.querySelector('#ganti').innerHTML = 
+            `
+            <button onclick="ganti('username')">Ganti username?</button>
+            </br></br>
+            <button onclick="ganti('password')">Ganti password?</button>
+            `
+        }
+        function submits(data){
+            const data_baru = document.querySelector('#data_baru').value
+            const password_sekarang = document.querySelector('#password_sekarang').value
+            
+            if (data_baru === '' || password_sekarang === '')
+                return alert('Input box tidak boleh kosong!')
+            fetch("/ganti_profile", {
+				method: "PUT",
+				body: JSON.stringify({
+					password_sekarang: password_sekarang,
+                    data_baru: data_baru,
+                    tipe_data: data
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8",
+				}
+			})
+            .then(res => res.text())
+            .then(data => {
+                if (data === "done"){
+                    window.location.href = `/user_profile`
+                    alert('Profile berhasil diedit!')
+                }else{
+                    alert('Profile gagal diedit')
+                }
+            })
+        }
+	</script>
+</html>
