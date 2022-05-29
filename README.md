@@ -5,17 +5,9 @@ description: Aplikasi berbasis web yang ditujukan untuk membantu mahasiswa maupu
 ---
 
 # KLENIK!
-
-<!-- Put the link to this slide here so people can follow -->
-slide: 
-
 ---
 
-
-
----
-
-## Ini program ngapain?
+## Program ini akan:
 
 - Menampilkan tabel data mengenai Jurusan pada FT UI beserta Departemen yang menaunginya, daya tampung, kuota SNMPTN, SBMPTN, SIMAK UI, PPKB dan kuota TS
 - Menampilkan tabel data mengenai Jurusan pada FT UI beserta Kurikulum atau Mata Kuliah yang akan dipelajari serta Prospek Karir-nya
@@ -25,138 +17,13 @@ slide:
 
 ---
 
-### 70% of our users are developers. Developers :heart: GitHub.
-
----
-
-{%youtube E8Nj7RwXf0s %}
-
----
-
-### Usage flow
-
----
-
-
-```graphviz
-digraph {
-  compound=true
-  rankdir=RL
-
-  graph [ fontname="Source Sans Pro", fontsize=20 ];
-  node [ fontname="Source Sans Pro", fontsize=18];
-  edge [ fontname="Source Sans Pro", fontsize=12 ];
-
-
-  subgraph core {
-    c [label="Hackmd-it \ncore"] [shape=box]
-  }
-  
-  c -> sync [ltail=session lhead=session]
-
-  subgraph cluster1 {
-     concentrate=true
-    a [label="Text source\nGithub, Gitlab, ..."] [shape=box]
-    b [label="HackMD Editor"] [shape=box]
-    sync [label="sync" shape=plaintext ]
-    b -> sync  [dir="both"]
-    sync -> a [dir="both"]
-    label="An edit session"
-  }
-}
-```
-
----
-
-### Architecture of extension
-
----
-
-![](https://i.imgur.com/ij69tPh.png)
-
----
-
-## Content script
-
-- Bind with each page
-- Manipulate DOM
-- Add event listeners
-- Isolated JavaScript environment
-  - It doesn't break things
-
----
-
-# :fork_and_knife: 
-
----
-
-<style>
-code.blue {
-  color: #337AB7 !important;
-}
-code.orange {
-  color: #F7A004 !important;
-}
-</style>
-
-- <code class="orange">onMessage('event')</code>: Register event listener
-- <code class="blue">sendMessage('event')</code>: Trigger event
-
----
-
-# :bulb: 
-
----
-
-- Dead simple API
-- Only cares about application logic
-
----
-
-```typescript
-import * as Channeru from 'channeru'
-
-// setup channel in different page environment, once
-const channel = Channeru.create()
-```
-
----
-
-```typescript
-// in background script
-const fakeLogin = async () => true
-
-channel.answer('isLogin', async () => {
-  return await fakeLogin()
-})
-```
-
-<br>
-
-```typescript
-// in inject script
-const isLogin = await channel.callBackground('isLogin')
-console.log(isLogin) //-> true
-```
-
----
-
-# :100: :muscle: :tada:
-
----
-
-### Wrap up
-
-- Cross envornment commnication
-- A small library to solve messaging pain
-- TypeScript Rocks :tada: 
-
----
-
-### Thank you! :sheep: 
-
-You can find me on
-
-- GitHub
-- Twitter
-- or email me
+### List tabel dan deskripsinya:
+  - Tabel User = untuk menyimpan akun dari user yang berisi username, password, dan role.
+  - Tabel Pertanyaan = untuk menyimpan daftar pertanyaan dari user yang berisi pertanyaan_id, judul, text, dan timestamp.
+  - Tabel Jawaban = untuk menyimpan daftar jawaban dari user yang berisi jawaban_id, judul, text, dan timestamp.
+  - Tabel Departemen = untuk menyimpan daftar departemen di FTUI yang berisi departemen_id dan nama.
+  - Tabel Jurusan = untuk menyimpan daftar jurusan di FTUI yang berisi jurusan_id, nama, daya_tampung, kuota snmptn, sbmptn, simak ui, ppkb, dan ts.
+  - Tabel Organisasi = untuk menyimpan daftar organisasi di FTUI yang berisi organisasi_id dan nama.
+  - Tabel Kegiatan = untuk menyimpan daftar kegiatan di FTUI yang berisi kegiatan_id dan nama.
+  - Tabel Karir = untuk menyimpan daftar prospek karir dari suatu jurusan di FTUI yang berisi karir_id dan nama.
+  - Tabel Kurikulum = untuk menyimpan daftar kurikulum atau mata kuliah yang dipelajari suatu jurusan di FTUI yang berisi kurikulum_id dan nama.
