@@ -3,15 +3,13 @@ const express = require("express")
 const session = require("express-session")
 const bodyParser = require("body-parser")
 
-
 //initialize the app as an express app
 const app = express()
 const router = express.Router()
-const {db} = require('./db')
+const { db } = require("./db")
 const bcrypt = require("bcrypt")
 
-
-const {minify} = require('./minify')
+const { minify } = require("./minify")
 
 //inisiasi fs untuk impor html
 const fs = require("fs")
@@ -192,8 +190,10 @@ router.get("/user_profile", (req, res) => {
 router.post("/get_profile", (req, res) => {
 	res.json({
 		username: req.session.username,
-		role: req.session.role
-	}).status(200).end()
+		role: req.session.role,
+	})
+		.status(200)
+		.end()
 })
 //melakukan update profile
 router.put('/ganti_profile', (req, res) => {
@@ -515,7 +515,7 @@ router.post("/getkegjur", (req, res) => {
 			INNER JOIN
 				departemen
 					ON (mewadahi.departemen_id = departemen.departemen_id);
-		` 
+		`
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
@@ -568,7 +568,7 @@ router.post("/getorganisasi", (req, res) => {
 			organisasi
 				ON (berisi_organisasi.organisasi_id = organisasi.organisasi_id)
 	WHERE
-		(jurusan.jurusan_id = ${req.body.idjur});` 
+		(jurusan.jurusan_id = ${req.body.idjur});`
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
@@ -802,7 +802,7 @@ router.post("/getcompare", (req, res) => {
        ON 
        (mewadahi.departemen_id = departemen.departemen_id)
 	WHERE(jurusan.jurusan_id = ${req.body.idjur1} OR jurusan.jurusan_id = ${req.body.idjur2})
-       ;`; // query ambil data
+       ;` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
 	db.query(query, (err, results) => {
@@ -845,7 +845,7 @@ router.post("/getcompare", (req, res) => {
 		res.write(`</tr>`)
 		res.status(200).end(`</table></body>`)
 	})
-});
+})
 
 router.get("/displaycomp", (req, res) => {
     user_status = req.session.authenticated;
@@ -893,8 +893,8 @@ router.get("/displaycomp", (req, res) => {
                     <th>Kuota PPKB</th>
                     <th>Kuota TS</th>
                 </tr>`
-        );
-        res.end(`</table></body>
+		)
+		res.end(`</table></body>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
@@ -904,19 +904,14 @@ router.get("/displaycomp", (req, res) => {
                 });
             });
             </script>
-        </html>`);
-    }
-    else{
-        fs.readFile("html/illegal_access.html", null, function (error, data) {
-            if (error) return res.status(404).end("fail");
-            return res.end(minify(data, minify_options));
-        });
-    }
-});
-
-
-
-
+        </html>`)
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data, minify_options))
+		})
+	}
+})
 
 router.post("/getcomp", (req, res) => {
 	id_user = req.session.user_id
@@ -1018,8 +1013,7 @@ router.get("/compare", (req, res) => {
                 });
                 </script>
             </html>`)
-	}
-	 else {
+	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
 			return res.end(minify(data, minify_options))
@@ -1053,7 +1047,7 @@ router.post("/diskusi", (req, res) => {
 			user_reg.username
 	ORDER BY pertanyaan.submit_time DESC;
 	`
-	
+
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
 		res.status(200).json(results.rows).end()
@@ -1073,36 +1067,84 @@ router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 	})
 })
 router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
-		user_status = req.session.authenticated;
-	
-	cek_user = req.session.username;
+	user_status = req.session.authenticated
+
+	cek_user = req.session.username
+	let query = `
+	SELECT jawaban_id FROM pertanyaan_dari WHERE pertanyaan_id = ${req.params.pertanyaan_id};
+	`
+	let list_jawaban_id
 
 	if (user_status) {
-		const query = `
-		DELETE FROM pertanyaan_dari WHERE pertanyaan_dari.pertanyaan_id = ${req.params.pertanyaan_id};
-		DELETE FROM bertanya WHERE bertanya.pertanyaan_id = ${req.params.pertanyaan_id};
-		DELETE FROM pertanyaan WHERE pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};
-		` // query ambil data
-		//mendapatkan data dari database
-		//temp = req.session;
-		username = `${req.params.username}`;
-		if(username == cek_user){
-			db.query(query, (err, results) => {
-				if (err) {
-					console.log(err)
-					return res.status(500).end()
+		db.query(query, (err, results) => {
+			if (err) return res.status(500).end()
+			query = `
+						DELETE FROM bertanya WHERE bertanya.pertanyaan_id = ${req.params.pertanyaan_id};` // query ambil data
+			//mendapatkan data dari database
+			//temp = req.session;
+			username = `${req.params.username}`
+			if (username == cek_user) {
+				db.query(query, (err, results) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).end()
+					}
+					query = `
+								DELETE FROM pertanyaan WHERE pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};`
+					db.query(query, (err, results) => {
+						if (err) {
+							console.log(err)
+							return res.status(500).end()
+						}
+					})
+				})
+			}
+			if (results.rowCount === 0) return res.status(200).end()
+			list_jawaban_id = results
+			query = `
+			DELETE FROM pertanyaan_dari WHERE jawaban_id = `
+			for (let i = 0; i < list_jawaban_id.rowCount; i++) {
+				query += `${list_jawaban_id.rows[i].jawaban_id}`
+				//if last row
+				if (i + 1 == list_jawaban_id.rowCount) {
+					query += `;`
+				} else {
+					query += " OR jawaban_id = "
 				}
-				
-				
-				res.send()
-				id = `${req.params.pertanyaan_id}`
-				
+			}
+			db.query(query, (err, results) => {
+				if (err) return res.status(500).end()
+				query = `
+				DELETE FROM menjawab WHERE jawaban_id = `
+				for (let i = 0; i < list_jawaban_id.rowCount; i++) {
+					query += `${list_jawaban_id.rows[i].jawaban_id}`
+					//if last row
+					if (i + 1 == list_jawaban_id.rowCount) {
+						query += `;`
+					} else {
+						query += " OR jawaban_id = "
+					}
+				}
+				db.query(query, (err, results) => {
+					if (err) return res.status(500).end()
+					query = `
+					DELETE FROM jawaban WHERE jawaban_id = `
+					for (let i = 0; i < list_jawaban_id.rowCount; i++) {
+						query += `${list_jawaban_id.rows[i].jawaban_id}`
+						//if last row
+						if (i + 1 == list_jawaban_id.rowCount) {
+							query += `;`
+						} else {
+							query += " OR jawaban_id = "
+						}
+					}
+					db.query(query, (err, results) => {
+						if (err) return res.status(500).end()
+						return res.redirect("/diskusi")
+					})
+				})
 			})
-
-		}
-		
-		res.redirect("/diskusi");
-
+		})
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
@@ -1111,46 +1153,53 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 	}
 })
 
-
 router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
-	user_status = req.session.authenticated;
+	user_status = req.session.authenticated
 
-cek_user = req.session.username;
+	cek_user = req.session.username
 
-if (user_status) {
-	const query = `
+	if (user_status) {
+		let query = `
 	DELETE FROM pertanyaan_dari WHERE (pertanyaan_dari.jawaban_id = ${req.params.jawaban_id});
-	DELETE FROM menjawab WHERE (jawaban_id = ${req.params.jawaban_id});
-	DELETE FROM jawaban WHERE (jawaban_id = ${req.params.jawaban_id});
 	` // query ambil data
-	//mendapatkan data dari database
-	//temp = req.session;
-	username = `${req.params.username_penjawab}`;
-	if(username == cek_user){
-		db.query(query, (err, results) => {
-			if (err) {
-				console.log(err)
-				return res.status(500).end()
-			}
-			
-			
-			res.send()
-			id = `${req.params.pertanyaan_id}`
-			
+		//mendapatkan data dari database
+		//temp = req.session;
+		username = `${req.params.username_penjawab}`
+		if (username == cek_user) {
+			db.query(query, (err, results) => {
+				if (err) {
+					console.log(err)
+					return res.status(500).end()
+				}
+				query = `
+			DELETE FROM menjawab WHERE (jawaban_id = ${req.params.jawaban_id});
+			`
+				db.query(query, (err, results) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).end()
+					}
+					query = `
+				DELETE FROM jawaban WHERE (jawaban_id = ${req.params.jawaban_id});
+				`
+					db.query(query, (err, results) => {
+						if (err) {
+							console.log(err)
+							return res.status(500).end()
+						}
+						return res.redirect("/diskusi")
+					})
+				})
+			})
+		}
+		
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data))
 		})
-
 	}
-	
-	res.redirect("/diskusi");
-
-} else {
-	fs.readFile("html/illegal_access.html", null, function (error, data) {
-		if (error) return res.status(404).end("fail")
-		return res.end(minify(data))
-	})
-}
 })
-
 
 router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 	const query = `
@@ -1207,7 +1256,7 @@ router.post("/diskusi/jawab", (req, res) => {
 	RETURNING jawaban_id;
 		`
 	db.query(query, (err, results) => {
-		if (err) return console.log(err + 'query pertama')
+		if (err) return console.log(err + "query pertama")
 		query = `
 			INSERT INTO pertanyaan_dari
 				(
@@ -1220,9 +1269,9 @@ router.post("/diskusi/jawab", (req, res) => {
 				)
 			RETURNING jawaban_id;
 			`
-		
+
 		db.query(query, (err, results) => {
-			if (err) return console.log(err + 'query kedua')
+			if (err) return console.log(err + "query kedua")
 			query = `
 			INSERT INTO menjawab
 				(
@@ -1236,7 +1285,7 @@ router.post("/diskusi/jawab", (req, res) => {
 
 			`
 			db.query(query, (err, results) => {
-				if (err) return console.log(err + 'query ketiga')
+				if (err) return console.log(err + "query ketiga")
 				return res.status(200).end("done")
 			})
 		})
@@ -1291,7 +1340,6 @@ router.post("/getwishlist", (req, res) => {
 				ON (jurusan.jurusan_id = wishlist.jurusan_id)
 	WHERE
 		(wishlist.user_id = ${req.session.user_id});`
-	
 
 	db.query(query, (err, results) => {
 		if (err) {
@@ -1301,12 +1349,13 @@ router.post("/getwishlist", (req, res) => {
 		res.status(200)
 
 		res.write(
-			
 			`<table id=wishlistjur align="center">
 					<tr>
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
 						<th>Prospek Karir</th>
+						<th>Organisasi</th>
+						<th>Kegiatan</th>
 						<th>Delete</th>
 					</tr>`
 		)
@@ -1317,6 +1366,8 @@ router.post("/getwishlist", (req, res) => {
 					<td>${row["namjur"]}</td>
 					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
 					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
+					<td><a href="wishlist/organisasi?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Organisasi</a></td>
+					<td><a href="wishlist/kegiatan?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kegiatan</a></td>
 					<td><a href="delwish?idjur=${row["wljurid"]}">Delete<a></td>
 					`
 			)
@@ -1351,7 +1402,6 @@ router.get("/wishlist", (req, res) => {
             transform: translateX(-50%) translateY(-50%);">`)
 
 		res.write(
-			
 			`<h1> Wishlist Anda </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> </h2>
@@ -1360,6 +1410,8 @@ router.get("/wishlist", (req, res) => {
                         <th>Nama Jurusan</th>
                         <th>Nama Kurikulum</th>
                         <th>Prospek Karir</th>
+						<th>Organisasi</th>
+						<th>Kegiatan</th>
 						<th>Delete</th>
                     </tr>`
 		)
@@ -1399,7 +1451,7 @@ router.post("/getwlkurikulum", (req, res) => {
 			kurikulum
 				ON (punya_kurikulum.kurikulum_id = kurikulum.kurikulum_id)
 	WHERE
-		(jurusan.jurusan_id = ${req.body.idjur});` 
+		(jurusan.jurusan_id = ${req.body.idjur});`
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
@@ -1430,7 +1482,7 @@ router.post("/getwlkurikulum", (req, res) => {
 router.get("/wishlist/kurikulum", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	
+
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -1438,7 +1490,6 @@ router.get("/wishlist/kurikulum", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			
 			`<h1> Kurikulum </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/wishlist">Kembali ke Wishlist</a>
@@ -1495,7 +1546,6 @@ router.post("/getwlkarir", (req, res) => {
                 </tr>`
 		)
 		results.rows.forEach((row) => {
-			
 			res.write(
 				`
                 <tr> 
@@ -1512,7 +1562,7 @@ router.post("/getwlkarir", (req, res) => {
 router.get("/wishlist/karir", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	
+
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -1520,7 +1570,6 @@ router.get("/wishlist/karir", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			
 			`<h1> Prospek Karir </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/wishlist">Kembali ke Tentang Wishlist</a>
@@ -1548,11 +1597,11 @@ router.get("/wishlist/karir", (req, res) => {
 	}
 })
 
-router.get("/delwish", (req,res) => {
+router.get("/delwish", (req, res) => {
 	user_status = req.session.authenticated
 
 	if (user_status) {
-		const query = `DELETE FROM wishlist WHERE (jurusan_id = ${req.query.idjur});` 
+		const query = `DELETE FROM wishlist WHERE (jurusan_id = ${req.query.idjur});`
 
 		db.query(query, (err, results) => {
 			if (err) {
@@ -1562,7 +1611,6 @@ router.get("/delwish", (req,res) => {
 
 			res.send()
 			id = `${req.query.idjur}`
-			
 		})
 		res.redirect("/wishlist")
 	} else {
