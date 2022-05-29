@@ -48,7 +48,7 @@
 						<input
 						type="button"
 						value="Delete Pertanyaan"
-						onclick="window.location.href='/qdelete/${row.pertanyaan_id}'"
+						onclick="window.location.href='/qdelete/${row.pertanyaan_id}/${row.username}'"
 					/>
 				</p>
 			-->
@@ -78,7 +78,7 @@
 						>
 						kali.
 						<input type="button" value="Lihat jawaban?" onclick="window.location.href='/diskusi/jawab/${row.pertanyaan_id}'" />
-						<input type="button" value="Delete Pertanyaan" onclick="window.location.href='/diskusi/qdelete/${row.pertanyaan_id}'" />
+						<input type="button" value="Delete Pertanyaan" onclick="window.location.href='/diskusi/qdelete/${row.pertanyaan_id}/${row.username}'" />
 					</p>`
 					count++
 				})

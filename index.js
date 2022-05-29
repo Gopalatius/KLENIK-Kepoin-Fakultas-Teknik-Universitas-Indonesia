@@ -1154,9 +1154,10 @@ router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 		return res.status(200).end(minify(data))
 	})
 })
-router.get("/diskusi/qdelete/:pertanyaan_id", (req, res) => {
-		user_status = req.session.authenticated
-	console.log(user_status)
+router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
+		user_status = req.session.authenticated;
+	console.log(user_status);
+	cek_user = req.session.username;
 
 	if (user_status) {
 		const query = `
@@ -1166,20 +1167,24 @@ router.get("/diskusi/qdelete/:pertanyaan_id", (req, res) => {
 		` // query ambil data
 		//mendapatkan data dari database
 		//temp = req.session;
+		username = `${req.params.username}`;
+		if(username == cek_user){
+			db.query(query, (err, results) => {
+				if (err) {
+					console.log(err)
+					return res.status(500).end()
+				}
+				
+				console.log(username)
+				res.send()
+				id = `${req.params.pertanyaan_id}`
+				console.log(id)
+			})
 
-		db.query(query, (err, results) => {
-			if (err) {
-				console.log(err)
-				return res.status(500).end()
-			}
-
-			res.send()
-			id = `${req.params.pertanyaan_id}}`
-			console.log("test")
-			console.log(id)
-		})
-		res.redirect("/diskusi")
+		}
 		
+		res.redirect("/diskusi");
+
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
