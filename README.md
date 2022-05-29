@@ -29,8 +29,8 @@ description: Aplikasi berbasis web yang ditujukan untuk membantu mahasiswa maupu
 ---
 
 ### Contributors
-Muhammad Naufal Faza (2006577252)
-Muhammad Raihan Azhari (2006468320)
-Miranty Anjani Putri (2006468270)
+- Muhammad Naufal Faza (2006577252)
+- Muhammad Raihan Azhari (2006468320)
+- Miranty Anjani Putri (2006468270)
 
 ---
