@@ -1525,9 +1525,7 @@ router.post("/getwlkarir", (req, res) => {
 			karir
 				ON (berprospek.karir_id = karir.karir_id)
 	WHERE
-		(jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
-	//mendapatkan data dari database
-	//temp = req.session;
+		(jurusan.jurusan_id = ${req.body.idjur});`
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
@@ -1541,7 +1539,7 @@ router.post("/getwlkarir", (req, res) => {
                 </tr>`
 		)
 		results.rows.forEach((row) => {
-			// tampilin isi table
+			
 			res.write(
 				`
                 <tr> 
@@ -1598,9 +1596,7 @@ router.get("/delwish", (req,res) => {
 	user_status = req.session.authenticated
 
 	if (user_status) {
-		const query = `DELETE FROM wishlist WHERE (jurusan_id = ${req.query.idjur});` // query ambil data
-		//mendapatkan data dari database
-		//temp = req.session;
+		const query = `DELETE FROM wishlist WHERE (jurusan_id = ${req.query.idjur});` 
 
 		db.query(query, (err, results) => {
 			if (err) {
