@@ -908,7 +908,7 @@ router.get("/displaycomp", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1016,7 +1016,7 @@ router.get("/compare", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1421,7 +1421,7 @@ router.get("/wishlist", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1493,7 +1493,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1565,7 +1565,7 @@ router.get("/wishlist/karir", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
