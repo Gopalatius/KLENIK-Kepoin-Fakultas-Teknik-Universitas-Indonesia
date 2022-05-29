@@ -221,6 +221,9 @@ router.put('/ganti_profile', (req, res) => {
 	.then((match,noMatch) =>{
 		if (!match) return res.status(400).end('Wrong Password')
 		else{
+			if (req.body.tipe_data === 'password'){
+				req.body.data_baru = bcrypt.hashSync(req.body.data_baru, 10)
+			}
 			const query = `
 			UPDATE user_reg
 			SET ${req.body.tipe_data} = '${req.body.data_baru}'
@@ -1245,7 +1248,8 @@ router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 		penjawab.username      username_penjawab,
 		penjawab.role          role_penjawab,
 		jawaban.text           text_jawaban,
-		jawaban.submit_time    jawaban_submit_time
+		jawaban.submit_time    jawaban_submit_time,
+		jawaban.jawaban_id
 	FROM
 		user_reg           penanya
 		NATURAL JOIN
