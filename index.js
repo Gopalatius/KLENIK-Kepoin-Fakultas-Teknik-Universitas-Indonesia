@@ -1095,7 +1095,7 @@ router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 		return res.status(200).end(minify(data))
 	})
 })
-router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
+router.delete("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 	user_status = req.session.authenticated
 
 	cek_user = req.session.username
@@ -1169,7 +1169,7 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 					}
 					db.query(query, (err, results) => {
 						if (err) return res.status(500).end()
-						return res.redirect("/diskusi")
+						return res.status(200).end('done')
 					})
 				})
 			})
@@ -1182,7 +1182,7 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 	}
 })
 
-router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
+router.delete("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 	user_status = req.session.authenticated
 
 	cek_user = req.session.username
@@ -1216,7 +1216,7 @@ router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 							console.log(err)
 							return res.status(500).end()
 						}
-						return res.redirect("/diskusi")
+						return res.status(200).end('done')
 					})
 				})
 			})

@@ -64,7 +64,7 @@
 				let deleteButton
 				data.forEach((row) => {
 					if (row.username === row.username_sekarang){
-						deleteButton = `<input type="button" value="Delete Pertanyaan" onclick="window.location.href='/diskusi/qdelete/${row.pertanyaan_id}/${row.username}'" />`
+						deleteButton = `<input type="button" value="Delete Pertanyaan" onclick="deletePertanyaan(${row.pertanyaan_id},'${row.username}')" />`
 					}else{
 						deleteButton = `<a></a>`
 					}
@@ -91,6 +91,20 @@
 				//pertanyaan_id, judul, role, username, text,jumlah jawaban
 				list.insertAdjacentHTML("beforeEnd", htmlString)
 			})
+		function deletePertanyaan(pertanyaan_id,username){
+			fetch(`/diskusi/qdelete/${pertanyaan_id}/${username}`,
+			{method: "DELETE"})
+			.then(res => res.text())
+			.then(data => {
+				if (data === 'done'){
+					alert('Pertanyaan berhasil dihapus!')
+					window.location.reload()
+				}else{
+					alert(data)
+					alert('Pertanyaan gagal dihapus')
+				}
+			})
+		}
 	</script>
 </html>
 

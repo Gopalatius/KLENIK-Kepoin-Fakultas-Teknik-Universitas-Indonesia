@@ -55,7 +55,7 @@
 				data.forEach((row) => {
 					if (row.username_penjawab == null || row.username_penjawab == "") return;
 					if (row.username_penjawab === row.username_sekarang){
-						deleteButton = `<input type="button" value="Delete Jawaban" onclick="window.location.href='/diskusi/ansdelete/${row.jawaban_id}/${row.username_penjawab}'" />`
+						deleteButton = `<input type="button" value="Delete Jawaban" onclick="deleteJawaban(${row.jawaban_id},'${row.username_penjawab}')" />`
 					}else{
 						deleteButton = `<a></a>`
 					}
@@ -73,6 +73,19 @@
 				//pertanyaan_id, judul, role, username, text,jumlah jawaban
 				tanya_jawab.insertAdjacentHTML("beforeEnd", htmlString)
 			})
+		function deleteJawaban(jawaban_id,username_penjawab){
+			fetch(`/diskusi/ansdelete/${jawaban_id}/${username_penjawab}`,
+			{method: "DELETE"})
+			.then(res => res.text())
+			.then(data => {
+				if (data === 'done'){
+					alert('Jawaban berhasil dihapus!')
+					window.location.reload()
+				}else{
+					alert('Jawaban gagal dihapus!')
+				}
+			})
+		}
 		function jawab(){
 			const jawaban_baru = document.querySelector('#berubah')
 			jawaban_baru.innerHTML = `
