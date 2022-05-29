@@ -51,7 +51,6 @@
 				</br></br></br>
                 `
 				let count = 1
-				console.log(data[0].pertanyaan_submit_time)
 				data.forEach((row) => {
 					if (row.username_penjawab == null || row.username_penjawab == "") return;
 					const tanggal = new Date(parseInt(row.jawaban_submit_time))
@@ -64,7 +63,6 @@
 					</br></br>
 					`
 					count++
-					console.log(row.jawaban_submit_time)
 				})
 				//pertanyaan_id, judul, role, username, text,jumlah jawaban
 				tanya_jawab.insertAdjacentHTML("beforeEnd", htmlString)
