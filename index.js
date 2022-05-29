@@ -1192,6 +1192,48 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 		})
 	}
 })
+
+
+router.get("/diskusi/ansdelete/:jawaban_submit_time/:username_penjawab", (req, res) => {
+	user_status = req.session.authenticated;
+console.log(user_status);
+cek_user = req.session.username;
+
+if (user_status) {
+	const query = `
+	DELETE FROM pertanyaan_dari WHERE pertanyaan_dari.pertanyaan_id = ${req.params.pertanyaan_id};
+	DELETE FROM bertanya WHERE bertanya.pertanyaan_id = ${req.params.pertanyaan_id};
+	DELETE FROM pertanyaan WHERE pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};
+	` // query ambil data
+	//mendapatkan data dari database
+	//temp = req.session;
+	username = `${req.params.username}`;
+	if(username == cek_user){
+		db.query(query, (err, results) => {
+			if (err) {
+				console.log(err)
+				return res.status(500).end()
+			}
+			
+			console.log(username)
+			res.send()
+			id = `${req.params.pertanyaan_id}`
+			console.log(id)
+		})
+
+	}
+	
+	res.redirect("/diskusi/jawab/:pertanyaan_id");
+
+} else {
+	fs.readFile("html/illegal_access.html", null, function (error, data) {
+		if (error) return res.status(404).end("fail")
+		return res.end(minify(data))
+	})
+}
+})
+
+
 router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 	const query = `
 	SELECT
