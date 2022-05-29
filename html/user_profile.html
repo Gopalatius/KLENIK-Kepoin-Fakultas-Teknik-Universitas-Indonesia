@@ -45,11 +45,16 @@
                 `
             })
         function ganti(data){
+            let tipe
+            if (data === 'username')
+                tipe = 'text'
+            else
+                tipe = 'password'
             document.querySelector('#ganti').innerHTML = 
             
             `
             <p> Input ${data} terbaru</p>
-            <input type="text" id="data_baru">
+            <input type="${tipe}" id="data_baru">
             <p> Input password sekarang</p>
             <input type="password" id="password_sekarang"> </br>
             <input type="button" value="cancel" onclick="cancel()" />
