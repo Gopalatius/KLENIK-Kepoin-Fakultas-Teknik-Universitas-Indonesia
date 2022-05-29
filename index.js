@@ -1103,14 +1103,35 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 	SELECT jawaban_id FROM pertanyaan_dari WHERE pertanyaan_id = ${req.params.pertanyaan_id};
 	`
 	let list_jawaban_id
-	
+
 	if (user_status) {
 		db.query(query, (err, results) => {
 			if (err) return res.status(500).end()
+			query = `
+						DELETE FROM bertanya WHERE bertanya.pertanyaan_id = ${req.params.pertanyaan_id};` // query ambil data
+			//mendapatkan data dari database
+			//temp = req.session;
+			username = `${req.params.username}`
+			if (username == cek_user) {
+				db.query(query, (err, results) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).end()
+					}
+					query = `
+								DELETE FROM pertanyaan WHERE pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};`
+					db.query(query, (err, results) => {
+						if (err) {
+							console.log(err)
+							return res.status(500).end()
+						}
+					})
+				})
+			}
 			if (results.rowCount === 0) return res.status(200).end()
 			list_jawaban_id = results
 			query = `
-		DELETE FROM pertanyaan_dari WHERE jawaban_id = `
+			DELETE FROM pertanyaan_dari WHERE jawaban_id = `
 			for (let i = 0; i < list_jawaban_id.rowCount; i++) {
 				query += `${list_jawaban_id.rows[i].jawaban_id}`
 				//if last row
@@ -1121,9 +1142,9 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 				}
 			}
 			db.query(query, (err, results) => {
-				if (err) res.status(500).end()
+				if (err) return res.status(500).end()
 				query = `
-			DELETE FROM bertanya WHERE jawaban_id = `
+				DELETE FROM menjawab WHERE jawaban_id = `
 				for (let i = 0; i < list_jawaban_id.rowCount; i++) {
 					query += `${list_jawaban_id.rows[i].jawaban_id}`
 					//if last row
@@ -1134,9 +1155,9 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 					}
 				}
 				db.query(query, (err, results) => {
-					if (err) res.status(500).end()
+					if (err) return res.status(500).end()
 					query = `
-				DELETE FROM jawaban WHERE jawaban_id = `
+					DELETE FROM jawaban WHERE jawaban_id = `
 					for (let i = 0; i < list_jawaban_id.rowCount; i++) {
 						query += `${list_jawaban_id.rows[i].jawaban_id}`
 						//if last row
@@ -1147,36 +1168,12 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 						}
 					}
 					db.query(query, (err, results) => {
-						if (err) res.status(500).end()
-						query = `
-						DELETE FROM bertanya WHERE bertanya.pertanyaan_id = ${req.params.pertanyaan_id};` // query ambil data
-						//mendapatkan data dari database
-						//temp = req.session;
-						username = `${req.params.username}`
-						if (username == cek_user) {
-							db.query(query, (err, results) => {
-								if (err) {
-									console.log(err)
-									return res.status(500).end()
-								}
-								query = `
-								DELETE FROM pertanyaan WHERE pertanyaan.pertanyaan_id = ${req.params.pertanyaan_id};`
-								db.query(query, (err, results) => {
-									if (err) {
-										console.log(err)
-										return res.status(500).end()
-									}
-									
-									res.redirect("/diskusi")
-								})
-							})
-						}
-						
+						if (err) return res.status(500).end()
+						return res.redirect("/diskusi")
 					})
 				})
 			})
 		})
-		
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
