@@ -51,15 +51,21 @@
 				</br></br></br>
                 `
 				let count = 1
+				let deleteButton
 				data.forEach((row) => {
 					if (row.username_penjawab == null || row.username_penjawab == "") return;
+					if (row.username_penjawab === row.username_sekarang){
+						deleteButton = `<input type="button" value="Delete Jawaban" onclick="window.location.href='/diskusi/ansdelete/${row.jawaban_id}/${row.username_penjawab}'" />`
+					}else{
+						deleteButton = `<a></a>`
+					}
 					const tanggal = new Date(parseInt(row.jawaban_submit_time))
 					htmlString += `
 					<strong>${count}. JAWABAN oleh <i>${row.username_penjawab} (${row.role_penjawab})</i></strong>
 					<p>"${row.text_jawaban}"</p>
 					<a>Terakhir disunting pada <i>${tanggal.toLocaleString()}</i></a>
 					</br>
-					<input type="button" value="Delete Jawaban" onclick="window.location.href='/diskusi/ansdelete/${row.jawaban_id}/${row.username_penjawab}'" />
+					${deleteButton}
 					</br></br>
 					`
 					count++

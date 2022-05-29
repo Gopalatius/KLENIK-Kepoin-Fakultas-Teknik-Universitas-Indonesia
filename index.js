@@ -1208,7 +1208,8 @@ router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 		penjawab.role          role_penjawab,
 		jawaban.text           text_jawaban,
 		jawaban.submit_time    jawaban_submit_time,
-		jawaban.jawaban_id
+		jawaban.jawaban_id,
+		'${req.session.username}' username_sekarang
 	FROM
 		user_reg           penanya
 		NATURAL JOIN
