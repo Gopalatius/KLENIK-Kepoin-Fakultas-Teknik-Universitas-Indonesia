@@ -810,6 +810,146 @@ router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
 
 //-------------------------------Page compare jurusan---------------------------------------------------
 
+//------------------------------------------------------Draft--------------------------------------------------
+
+router.post("/getcompare", (req, res) => {
+    id_user = req.session.user_id
+    console.log("masuk");
+	console.log(id_user)
+    console.log(`${req.body.idjur1}`);
+    const query = `SELECT DISTINCT jurusan.jurusan_id as idjur,
+    departemen.nama as nadept,
+    jurusan.nama as namjur,
+     jurusan.daya_tampung as dapung,
+     jurusan.kuota_snmptn as snmptn,
+     jurusan.kuota_sbmptn as sbmptn,
+     jurusan.kuota_simakui as simakui,
+     jurusan.kuota_ppkb as ppkb,
+     jurusan.kuota_ts as ts
+      FROM jurusan 
+      INNER JOIN mewadahi
+       ON
+       (jurusan.jurusan_id = mewadahi.jurusan_id)
+       INNER JOIN departemen
+       ON 
+       (mewadahi.departemen_id = departemen.departemen_id)
+	WHERE(jurusan.jurusan_id = ${req.body.idjur1} OR jurusan.jurusan_id = ${req.body.idjur2})
+       ;`; // query ambil data
+	//mendapatkan data dari database
+	//temp = req.session;
+	db.query(query, (err, results) => {
+		if (err) {
+			console.log(err)
+			return
+		}
+		res.status(200)
+
+		res.write(
+			// table header
+			`<table id=tacom align="center">
+                <tr>
+                    <th>Nama Departemen</th>
+                    <th>Nama Jurusan</th>
+                    <th>Daya Tampung</th>
+                    <th>Kuota SNMPTN</th>
+                    <th>Kuota SBMPTN</th>
+                    <th>Kuota SIMAKUI</th>
+                    <th>Kuota PPKB</th>
+                    <th>Kuota TS</th>
+                </tr>`
+		)
+		results.rows.forEach((row) => {
+			res.write(
+				`
+                <tr align="center">  
+                <td>${row["nadept"]}</td> 
+                <td>${row["namjur"]}</td>
+                <td>${row["dapung"]}</td>
+                <td>${row["snmptn"]}</td>
+                <td>${row["sbmptn"]}</td>
+                <td>${row["simakui"]}</td>
+                <td>${row["ppkb"]}</td>
+                <td>${row["ts"]}</td>
+                `
+			)
+		})
+
+		res.write(`</tr>`)
+		res.status(200).end(`</table></body>`)
+	})
+});
+
+router.get("/displaycomp", (req, res) => {
+    user_status = req.session.authenticated;
+    id1 = `${req.query.idjur1}`;
+    id2 = `${req.query.idjur2}`;
+    console.log("tes");
+    console.log(id1);
+    console.log(id2);
+    if(user_status){
+        res.write(`<html>
+        
+        <head>
+            <title>Klenik</title>
+            <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+    </style>
+        </head>
+        <body style="
+        background-color: #29c5f6;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+      ">`);
+        
+        res.write(
+            // table header
+            `<h1> Compare Jurusan </h1>
+        <a href="http://localhost:6969/pejuang_PTN">Kembali Pejuang PTN</a>
+        <table id=tacom>
+                <tr>
+                    <th>Nama Departemen</th>
+                    <th>Nama Jurusan</th>
+                    <th>Daya Tampung</th>
+                    <th>Kuota SNMPTN</th>
+                    <th>Kuota SBMPTN</th>
+                    <th>Kuota SIMAKUI</th>
+                    <th>Kuota PPKB</th>
+                    <th>Kuota TS</th>
+                </tr>`
+        );
+        res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $.post('/getcompare', {idjur1: ${id1}, idjur2: ${id2}}, function(data) {
+                    console.log(data);
+                    $("#tacom").html(data);
+                });
+            });
+            </script>
+        </html>`);
+    }
+    else{
+        fs.readFile("html/illegal_access.html", null, function (error, data) {
+            if (error) return res.status(404).end("fail");
+            return res.end(minify(data, minify_options));
+        });
+    }
+});
+
+
+
+
+
 router.post("/getcomp", (req, res) => {
 	id_user = req.session.user_id
 	console.log(id_user)
@@ -848,8 +988,8 @@ router.post("/getcomp", (req, res) => {
 				`
                 <tr align="center">  
                 <td>${row["namjur"]}</td>
-                <td><input type="radio" id="${row["idjur"]}" name="jur1" value="HTML">
-				<td><input type="radio" id="${row["idjur"]}" name="jur2" value="HTML">
+                <td><input type="radio" id="jur1" name="jur1" value="${row["idjur"]}">
+				<td><input type="radio" id="jur2" name="jur2" value="${row["idjur"]}">
                 `
 			)
 		})
@@ -860,9 +1000,11 @@ router.post("/getcomp", (req, res) => {
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
                 <script>
                     jQuery(document).ready(function($) {
-                        var username, pass;
+                        var jurusan1, jurusan2;
                         $('#compares').click(function() {
-                            console.log("tes");
+                            jurusan1 = $("input[name='jur1']:checked").val();
+                            jurusan2 = $("input[name='jur2']:checked").val();
+                            window.location.href = "/displaycomp?idjur1=" + jurusan1 + "&idjur2=" + jurusan2;
                         });
 					});
 					</script>`)
@@ -872,7 +1014,7 @@ router.post("/getcomp", (req, res) => {
 router.get("/compare", (req, res) => {
 	user_status = req.session.authenticated
 	console.log(user_status)
-	//if (user_status) {
+	if (user_status) {
 		res.write(`<html>
             <head>
                 <title>Klenik</title>
@@ -914,23 +1056,18 @@ router.get("/compare", (req, res) => {
                         console.log(data);
                         $("#compjur").html(data);
                     });
-
-					$('#compares').click(function() {
-						console.log("tes");
-					});
                     
                 });
                 </script>
             </html>`)
-	//}
-	 //else {
-		//fs.readFile("html/illegal_access.html", null, function (error, data) {
-		//	if (error) return res.status(404).end("fail")
-		//	return res.end(minify(data, minify_options))
-		//})
-	//}
+	}
+	 else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data, minify_options))
+		})
+	}
 })
-
 
 //--------------------Kawasan Teritori Anjani ----------------------------------------------------------
 router.get("/diskusi", (req, res) => {
