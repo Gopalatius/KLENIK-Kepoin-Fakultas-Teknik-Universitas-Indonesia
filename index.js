@@ -170,7 +170,8 @@ router.post("/pejuang_ptn", (req, res) => {
         ) 
         INNER JOIN departemen ON (
         mewadahi.departemen_id = departemen.departemen_id
-    );
+    )
+	ORDER BY (nadept);
     `
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
@@ -214,7 +215,8 @@ router.post("/getjurusan", (req, res) => {
 				ON (jurusan.jurusan_id = mewadahi.jurusan_id)
 		INNER JOIN
 			departemen
-				ON (mewadahi.departemen_id = departemen.departemen_id);
+				ON (mewadahi.departemen_id = departemen.departemen_id)
+				ORDER BY (nadept);
 	` // query ambil data
 	//mendapatkan data dari database
 	//temp = req.session;
@@ -965,7 +967,8 @@ router.post("/getcomp", (req, res) => {
 				ON (jurusan.jurusan_id = mewadahi.jurusan_id)
 		INNER JOIN
 			departemen
-				ON (mewadahi.departemen_id = departemen.departemen_id);` 
+				ON (mewadahi.departemen_id = departemen.departemen_id)
+				ORDER BY (nadept);` 
 	db.query(query, (err, results) => {
 		if (err) {
 			console.log(err)
