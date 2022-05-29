@@ -9,36 +9,12 @@ const app = express()
 const router = express.Router()
 const {db} = require('./db')
 const bcrypt = require("bcrypt")
-const { rows, connectionString, user } = require("pg/lib/defaults")
 
-//Melakukan minify pada html
-// const minify = require("html-minifier").minify
-// const minify_options = {
-// 	collapseBooleanAttributes: true,
-// 	collapseWhitespace: true,
-// 	decodeEntities: true,
-// 	html5: true,
-// 	minifyCSS: true,
-// 	minifyJS: true,
-// 	removeAttributeQuotes: true,
-// 	removeComments: true,
-// 	removeEmptyAttributes: true,
-// 	removeOptionalTags: true,
-// 	removeRedundantAttributes: true,
-// 	removeScriptTypeAttributes: true,
-// 	removeStyleLinkTypeAttributes: true,
-// 	removeTagWhitespace: true,
-// 	sortAttributes: true,
-// 	sortClassName: true,
-// 	trimCustomFragments: true,
-// }
+
 const {minify} = require('./minify')
 
 //inisiasi fs untuk impor html
 const fs = require("fs")
-const { response } = require("express")
-const { isWindows } = require("nodemon/lib/utils")
-
 
 //middleware (session)
 app.use(
@@ -244,7 +220,6 @@ router.put('/ganti_profile', (req, res) => {
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post("/getjurusan", (req, res) => {
 	id_user = req.session.user_id
-	console.log(id_user)
 	const query = `
 	SELECT
 		jurusan.jurusan_id AS idjur,
@@ -393,7 +368,6 @@ router.post("/getkarir", (req, res) => {
 
 router.get("/addwish", (req, res) => {
 	user_status = req.session.authenticated
-	console.log(user_status)
 
 	if (user_status) {
 		const query = `
@@ -418,8 +392,7 @@ router.get("/addwish", (req, res) => {
 
 			res.send()
 			id = `${req.query.idjur}`
-			console.log("test")
-			console.log(id)
+			
 		})
 		res.redirect("/ttgjurusan")
 		
@@ -433,7 +406,6 @@ router.get("/addwish", (req, res) => {
 
 router.get("/ttgjurusan", (req, res) => {
 	user_status = req.session.authenticated
-	console.log(user_status)
 	if (user_status) {
 		res.write(`<html>
             <head>
@@ -476,7 +448,6 @@ router.get("/ttgjurusan", (req, res) => {
                 jQuery(document).ready(function($) {
                     var jid;
                     $.post('/getjurusan', { }, function(data) {
-                        console.log(data);
                         $("#najur").html(data);
                     });
                     
@@ -494,8 +465,7 @@ router.get("/ttgjurusan", (req, res) => {
 router.get("/ttgjurusan/kurikulum", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	console.log(id)
-	console.log(req.query.namjur)
+	
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -517,8 +487,7 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getkurikulum', {idjur: ${id}}, function(data) {
-                    console.log(data);
+                $.post('/getkurikulum', {idjur: ${id}}, function(data) 
                     $("#takur").html(data);
                 });
             });
@@ -535,7 +504,7 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
 router.get("/ttgjurusan/karir", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	console.log(id)
+	
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -556,8 +525,7 @@ router.get("/ttgjurusan/karir", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getkarir', {idjur: ${id}}, function(data) {
-                    console.log(data);
+                $.post('/getkarir', {idjur: ${id}}, function(data) 
                     $("#takar").html(data);
                 });
             });
@@ -574,7 +542,6 @@ router.get("/ttgjurusan/karir", (req, res) => {
 //----------Page organisasi dan kegiatan AZHARI----------------------------------------------------------------------
 router.post("/getkegjur", (req, res) => {
 	id_user = req.session.user_id
-	console.log(id_user)
 	const query = `
 		SELECT
 			jurusan.jurusan_id as idjur,
@@ -716,7 +683,6 @@ router.post("/getkegiatan", (req, res) => {
 
 router.get("/organisasi_kegiatan", (req, res) => {
 	user_status = req.session.authenticated
-	console.log(user_status)
 	if (user_status) {
 		res.write(`<html>
             <head>
@@ -759,7 +725,6 @@ router.get("/organisasi_kegiatan", (req, res) => {
                 jQuery(document).ready(function($) {
                     var jid;
                     $.post('/getkegjur', { }, function(data) {
-                        console.log(data);
                         $("#nakegor").html(data);
                     });
                     
@@ -777,7 +742,7 @@ router.get("/organisasi_kegiatan", (req, res) => {
 router.get("/organisasi_kegiatan/organisasi", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	console.log(id)
+	
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -798,8 +763,7 @@ router.get("/organisasi_kegiatan/organisasi", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getorganisasi', {idjur: ${id}}, function(data) {
-                    console.log(data);
+                $.post('/getorganisasi', {idjur: ${id}}, function(data) 
                     $("#takor").html(data);
                 });
             });
@@ -816,7 +780,7 @@ router.get("/organisasi_kegiatan/organisasi", (req, res) => {
 router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	console.log(id)
+	
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -837,8 +801,7 @@ router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getkegiatan', {idjur: ${id}}, function(data) {
-                    console.log(data);
+                $.post('/getkegiatan', {idjur: ${id}}, function(data) 
                     $("#takeg").html(data);
                 });
             });
@@ -858,9 +821,7 @@ router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
 
 router.post("/getcompare", (req, res) => {
     id_user = req.session.user_id
-    console.log("masuk");
-	console.log(id_user)
-    console.log(`${req.body.idjur1}`);
+    
     const query = `SELECT DISTINCT jurusan.jurusan_id as idjur,
     departemen.nama as nadept,
     jurusan.nama as namjur,
@@ -927,9 +888,7 @@ router.get("/displaycomp", (req, res) => {
     user_status = req.session.authenticated;
     id1 = `${req.query.idjur1}`;
     id2 = `${req.query.idjur2}`;
-    console.log("tes");
-    console.log(id1);
-    console.log(id2);
+   
     if(user_status){
         res.write(`<html>
         
@@ -974,8 +933,7 @@ router.get("/displaycomp", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getcompare', {idjur1: ${id1}, idjur2: ${id2}}, function(data) {
-                    console.log(data);
+                $.post('/getcompare', {idjur1: ${id1}, idjur2: ${id2}}, function(data) 
                     $("#tacom").html(data);
                 });
             });
@@ -996,7 +954,6 @@ router.get("/displaycomp", (req, res) => {
 
 router.post("/getcomp", (req, res) => {
 	id_user = req.session.user_id
-	console.log(id_user)
 	const query = `
 	SELECT
 		jurusan.jurusan_id as idjur,
@@ -1058,7 +1015,7 @@ router.post("/getcomp", (req, res) => {
 
 router.get("/compare", (req, res) => {
 	user_status = req.session.authenticated
-	console.log(user_status)
+	
 	if (user_status) {
 		res.write(`<html>
             <head>
@@ -1098,7 +1055,7 @@ router.get("/compare", (req, res) => {
                 jQuery(document).ready(function($) {
                     var jid;
                     $.post('/getcomp', { }, function(data) {
-                        console.log(data);
+                        
                         $("#compjur").html(data);
                     });
                     
@@ -1159,7 +1116,7 @@ router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 })
 router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 		user_status = req.session.authenticated;
-	console.log(user_status);
+	
 	cek_user = req.session.username;
 
 	if (user_status) {
@@ -1178,10 +1135,10 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 					return res.status(500).end()
 				}
 				
-				console.log(username)
+				
 				res.send()
 				id = `${req.params.pertanyaan_id}`
-				console.log(id)
+				
 			})
 
 		}
@@ -1199,7 +1156,7 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 
 router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 	user_status = req.session.authenticated;
-console.log(user_status);
+
 cek_user = req.session.username;
 
 if (user_status) {
@@ -1218,10 +1175,15 @@ if (user_status) {
 				return res.status(500).end()
 			}
 			
-			console.log(username)
+			
 			res.send()
+<<<<<<< HEAD
 			id = `${req.params.jawaban_id}`
 			console.log(id)
+=======
+			id = `${req.params.pertanyaan_id}`
+			
+>>>>>>> 58f853b6ea05c9b0e185aaadb879f304a190680f
 		})
 
 	}
@@ -1363,7 +1325,6 @@ router.post("/diskusi/tanya", (req, res) => {
 
 router.post("/getwishlist", (req, res) => {
 	id_user = req.session.user_id
-	console.log(id_user)
 	const query = `
 	SELECT
 		jurusan.jurusan_id  as idjur,
@@ -1414,7 +1375,6 @@ router.post("/getwishlist", (req, res) => {
 
 router.get("/wishlist", (req, res) => {
 	user_status = req.session.authenticated
-	console.log(user_status)
 	if (user_status) {
 		res.write(`<html>
             <head>
@@ -1456,7 +1416,6 @@ router.get("/wishlist", (req, res) => {
                 jQuery(document).ready(function($) {
                     var jid;
                     $.post('/getwishlist', { }, function(data) {
-                        console.log(data);
                         $("#wishlistjur").html(data);
                     });
                     
@@ -1517,8 +1476,7 @@ router.post("/getwlkurikulum", (req, res) => {
 router.get("/wishlist/kurikulum", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	console.log(id)
-	console.log(req.query.namjur)
+	
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -1540,8 +1498,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getwlkurikulum', {idjur: ${id}}, function(data) {
-                    console.log(data);
+                $.post('/getwlkurikulum', {idjur: ${id}}, function(data) 
                     $("#wlkur").html(data);
                 });
             });
@@ -1603,8 +1560,7 @@ router.post("/getwlkarir", (req, res) => {
 router.get("/wishlist/karir", (req, res) => {
 	user_status = req.session.authenticated
 	id = `${req.query.idjur}`
-	console.log(id)
-	console.log(req.query.namjur)
+	
 	if (user_status) {
 		res.write(`<html>
         <head>
@@ -1626,8 +1582,7 @@ router.get("/wishlist/karir", (req, res) => {
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             jQuery(document).ready(function($) {
-                $.post('/getwlkarir', {idjur: ${id}}, function(data) {
-                    console.log(data);
+                $.post('/getwlkarir', {idjur: ${id}}, function(data) 
                     $("#wlkar").html(data);
                 });
             });
@@ -1643,7 +1598,6 @@ router.get("/wishlist/karir", (req, res) => {
 
 router.get("/delwish", (req,res) => {
 	user_status = req.session.authenticated
-	console.log(user_status)
 
 	if (user_status) {
 		const query = `DELETE FROM wishlist WHERE (jurusan_id = ${req.query.idjur});` // query ambil data
@@ -1658,8 +1612,7 @@ router.get("/delwish", (req,res) => {
 
 			res.send()
 			id = `${req.query.idjur}`
-			console.log("test")
-			console.log(id)
+			
 		})
 		res.redirect("/wishlist")
 	} else {
