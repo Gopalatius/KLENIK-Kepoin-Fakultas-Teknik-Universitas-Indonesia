@@ -7,31 +7,32 @@ const bodyParser = require("body-parser")
 //initialize the app as an express app
 const app = express()
 const router = express.Router()
-const db = require('./db')
+const {db} = require('./db')
 const bcrypt = require("bcrypt")
 const { rows, connectionString, user } = require("pg/lib/defaults")
 
 //Melakukan minify pada html
-const minify = require("html-minifier").minify
-const minify_options = {
-	collapseBooleanAttributes: true,
-	collapseWhitespace: true,
-	decodeEntities: true,
-	html5: true,
-	minifyCSS: true,
-	minifyJS: true,
-	removeAttributeQuotes: true,
-	removeComments: true,
-	removeEmptyAttributes: true,
-	removeOptionalTags: true,
-	removeRedundantAttributes: true,
-	removeScriptTypeAttributes: true,
-	removeStyleLinkTypeAttributes: true,
-	removeTagWhitespace: true,
-	sortAttributes: true,
-	sortClassName: true,
-	trimCustomFragments: true,
-}
+// const minify = require("html-minifier").minify
+// const minify_options = {
+// 	collapseBooleanAttributes: true,
+// 	collapseWhitespace: true,
+// 	decodeEntities: true,
+// 	html5: true,
+// 	minifyCSS: true,
+// 	minifyJS: true,
+// 	removeAttributeQuotes: true,
+// 	removeComments: true,
+// 	removeEmptyAttributes: true,
+// 	removeOptionalTags: true,
+// 	removeRedundantAttributes: true,
+// 	removeScriptTypeAttributes: true,
+// 	removeStyleLinkTypeAttributes: true,
+// 	removeTagWhitespace: true,
+// 	sortAttributes: true,
+// 	sortClassName: true,
+// 	trimCustomFragments: true,
+// }
+const {minify} = require('./minify')
 
 //inisiasi fs untuk impor html
 const fs = require("fs")
@@ -60,13 +61,21 @@ router.get("/", (req, res) => {
 	if (req.session.authenticated) return res.redirect("/menu")
 	fs.readFile("html/login.html", null, function (error, data) {
 		if (error) return res.status(404).end("fail")
-		return res.end(minify(data, minify_options))
+		return res.end(minify(data))
 	})
 })
 router.post("/login", (req, res) => {
-	const query = `SELECT user_id, username, password, role
-	FROM user_reg
-	WHERE username ='${req.body.username}';`
+	const query = `
+	SELECT
+		user_id,
+		username,
+		password,
+		role
+	FROM
+		user_reg
+	WHERE
+		username = '${req.body.username}';
+	`
 	db.query(query, (err, results) => {
 		if (err) return res.status(500).end("Database Failed")
 		if (results.rowCount === 0) return res.status(400).end("No Username")
@@ -95,7 +104,7 @@ router.get("/register", (req, res) => {
 	if (req.session.authenticated) return res.redirect("/menu")
 	fs.readFile("html/register.html", null, function (error, data) {
 		if (error) return res.status(404).end("fail")
-		return res.end(minify(data, minify_options))
+		return res.end(minify(data))
 	})
 })
 router.post("/register", (req, res) => {
@@ -103,28 +112,23 @@ router.post("/register", (req, res) => {
 
 	const now = Date.now()
 	const hashed_password = bcrypt.hashSync(req.body.password, 10)
-	const query = `INSERT INTO user_reg (username,password,role,reg_time) VALUES 
-     ('${req.body.username}','${hashed_password}','${req.body.role}',${now});`
-
+	const query = `
+	INSERT INTO user_reg
+		(
+			username,
+			password,
+			role,
+			reg_time
+		)
+	VALUES
+		(
+			'${req.body.username}', '${hashed_password}', '${req.body.role}', ${now}
+		);
+	`
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
-		res.write(
-			minify(
-				`<html>
-        <head>
-            <title>Berhasil registrasi</title>
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <script>
-            alert("Berhasil registrasi");
-                </script>
-        </head>
-        `,
-				minify_options
-			)
-		)
+		return res.status(200).end("done")
 	})
-
-	return res.end("done")
 })
 router.get("/menu", (req, res) => {
 	const file_html = req.session.authenticated
@@ -133,7 +137,7 @@ router.get("/menu", (req, res) => {
 
 	fs.readFile(file_html, null, (error, data) => {
 		if (error) return res.status(404).end("fail")
-		return res.end(minify(data, minify_options))
+		return res.end(minify(data))
 	})
 })
 router.get("/pejuang_ptn", (req, res) => {
@@ -144,7 +148,7 @@ router.get("/pejuang_ptn", (req, res) => {
 
 	fs.readFile(file_html, null, (error, data) => {
 		if (error) return res.status(404).end("fail")
-		return res.end(minify(data, minify_options))
+		return res.end(minify(data))
 	})
 })
 router.post("/pejuang_ptn", (req, res) => {
@@ -326,7 +330,7 @@ router.get("/addwish", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -386,7 +390,7 @@ router.get("/ttgjurusan", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -427,7 +431,7 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -466,7 +470,7 @@ router.get("/ttgjurusan/karir", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -633,7 +637,7 @@ router.get("/organisasi_kegiatan", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -672,7 +676,7 @@ router.get("/organisasi_kegiatan/organisasi", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -711,7 +715,7 @@ router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -824,7 +828,7 @@ router.get("/compare", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -834,7 +838,7 @@ router.get("/compare", (req, res) => {
 router.get("/diskusi", (req, res) => {
 	fs.readFile("html/diskusi.html", null, (err, data) => {
 		if (err) return console.log(err)
-		return res.status(200).end(minify(data, minify_options))
+		return res.status(200).end(minify(data))
 	})
 })
 router.post("/diskusi", (req, res) => {
@@ -864,13 +868,13 @@ router.post("/diskusi", (req, res) => {
 router.get("/diskusi/tanya", (req, res) => {
 	fs.readFile("html/tanya.html", null, (err, data) => {
 		if (err) return console.log(err)
-		return res.status(200).end(minify(data, minify_options))
+		return res.status(200).end(minify(data))
 	})
 })
 router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 	fs.readFile("html/tanya_jawab.html", null, (err, data) => {
 		if (err) return console.log(err)
-		return res.status(200).end(minify(data, minify_options))
+		return res.status(200).end(minify(data))
 	})
 })
 router.post("/diskusi/jawab/:pertanyaan_id", (req, res) => {
@@ -1091,7 +1095,7 @@ router.get("/wishlist", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1163,7 +1167,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1235,7 +1239,7 @@ router.get("/wishlist/karir", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1264,14 +1268,12 @@ router.get("/delwish", (req,res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
 
 //-----------------------------------------------------------------------------------------------------------------------------------
-
-
 app.use("/", router)
 app.listen(process.env.PORT || 6969, () => {
 	console.log(`App Started on PORT ${process.env.PORT || 6969}`)
