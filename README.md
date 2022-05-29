@@ -1,7 +1,7 @@
 ---
 title: KLENIK (Kepoin Fakultas Teknik Universitas Indonesia)
 tags: Kepoin Fakultas Teknik Universitas Indonesia
-description: HEHEHE.
+description: Website berisikan informasi mengenai Fakultas Teknik Universitas Indonesia beserta forum diskusi terbuka antara mahasiswa dan masyarakat umum.
 ---
 
 # KLENIK!
@@ -15,13 +15,14 @@ slide:
 
 ---
 
-## Ini program ngapain?
+## Fitur-fitur program:
 
 - Menampilkan tabel data mengenai Jurusan pada FT UI beserta Departemen yang menaunginya, daya tampung, kuota SNMPTN, SBMPTN, SIMAK UI, PPKB dan kuota TS
 - Menampilkan tabel data mengenai Jurusan pada FT UI beserta Kurikulum atau Mata Kuliah yang akan dipelajari serta Prospek Karir-nya
 - User dapat menambahkan suatu jurusan sebagai jurusan yang ingin mereka ambil atau Wishlist 
 - Terdapat forum diskusi dimana user dapat bertanya maupun menjawab serta membaca diskusi/thread yang ada
 - User dapat melihat kembali Jurusan yang ingin mereka ambil pada laman Wishlist serta melihat mata kuliah yang akan dipelajari serta prospek karirnya
+- User dapat membandingkan daya tampung jurusan untuk mengetahui peluang masuk ke jurusan tersebut
 
 ---
 
@@ -150,6 +151,15 @@ console.log(isLogin) //-> true
 - Cross envornment commnication
 - A small library to solve messaging pain
 - TypeScript Rocks :tada: 
+
+---
+
+## Referensi Database
+
+- https://simak.ui.ac.id/reguler.html
+- https://simak.ui.ac.id/paralel.html
+- https://simak.ui.ac.id/kelas-internasional.html
+- Kestari BEM FTUI 2022
 
 ---
 
