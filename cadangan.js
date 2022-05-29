@@ -908,7 +908,7 @@ router.get("/displaycomp", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1016,7 +1016,7 @@ router.get("/compare", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1066,7 +1066,7 @@ router.get("/diskusi/jawab/:pertanyaan_id", (req, res) => {
 		return res.status(200).end(minify(data))
 	})
 })
-router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
+router.delete("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 	user_status = req.session.authenticated
 
 	cek_user = req.session.username
@@ -1140,7 +1140,7 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 					}
 					db.query(query, (err, results) => {
 						if (err) return res.status(500).end()
-						return res.redirect("/diskusi")
+						return res.status(200).end('done')
 					})
 				})
 			})
@@ -1153,7 +1153,7 @@ router.get("/diskusi/qdelete/:pertanyaan_id/:username", (req, res) => {
 	}
 })
 
-router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
+router.delete("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 	user_status = req.session.authenticated
 
 	cek_user = req.session.username
@@ -1187,7 +1187,7 @@ router.get("/diskusi/ansdelete/:jawaban_id/:username_penjawab", (req, res) => {
 							console.log(err)
 							return res.status(500).end()
 						}
-						return res.redirect("/diskusi")
+						return res.status(200).end('done')
 					})
 				})
 			})
@@ -1348,6 +1348,9 @@ router.post("/getwishlist", (req, res) => {
 						<th>Nama Jurusan</th>
 						<th>Nama Kurikulum</th>
 						<th>Prospek Karir</th>
+                        <th>Kegiatan</th>
+                        <th>Organisasi</th>
+						<th>Delete</th>
 					</tr>`
 			)
 			results.rows.forEach((row) => {
@@ -1357,6 +1360,9 @@ router.post("/getwishlist", (req, res) => {
 					<td>${row["namjur"]}</td>
 					<td><a href="wishlist/kurikulum?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Kurikulum</a></td>
 					<td><a href="wishlist/karir?idjur=${row["wljurid"]}&namjur=${row["namjur"]}" id="${row["wljurid"]}">Karir</a></td>
+                    <td><a href="wishlist/organisasi?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Organisasi</a></td>
+                    <td><a href="wishlist/kegiatan?idjur=${row["idjur"]}&namjur=${row["namjur"]}" id="${row["idjur"]}">Kegiatan</a></td>
+					<td><a href="delwish?idjur=${row["wljurid"]}">Delete<a></td>
 					`
 				)
 			})
@@ -1419,7 +1425,7 @@ router.get("/wishlist", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1491,7 +1497,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
 		})
 	}
 })
@@ -1563,7 +1569,173 @@ router.get("/wishlist/karir", (req, res) => {
 	} else {
 		fs.readFile("html/illegal_access.html", null, function (error, data) {
 			if (error) return res.status(404).end("fail")
-			return res.end(minify(data, minify_options))
+			return res.end(minify(data))
+		})
+	}
+})
+
+router.post("/getwlorganisasi", (req, res) => {
+	const query = `
+	SELECT
+		jurusan.jurusan_id as idjur,
+		jurusan.nama       as namjur,
+		organisasi.nama    as namor
+	FROM
+		jurusan
+		INNER JOIN
+			berisi_organisasi
+				ON (jurusan.jurusan_id = berisi_organisasi.jurusan_id)
+		INNER JOIN
+			organisasi
+				ON (berisi_organisasi.organisasi_id = organisasi.organisasi_id)
+	WHERE
+		(jurusan.jurusan_id = ${req.body.idjur});`
+	db.query(query, (err, results) => {
+		if (err) {
+			console.log(err)
+			return res.status(500).end()
+		}
+		res.status(200).write(
+			// table header
+			`
+            <table id=takor>
+                <tr>
+                    <th>Organisasi</th>
+                </tr>`
+		)
+		results.rows.forEach((row) => {
+			// tampilin isi table
+			res.write(
+				`
+                <tr> 
+                <td>${row["namor"]}</td>
+                </tr>
+                `
+			)
+		})
+
+		res.status(200).end(`</table></body>`)
+	})
+})
+
+router.post("/getwlkegiatan", (req, res) => {
+	const query = `
+	SELECT
+		jurusan.jurusan_id as idjur,
+		jurusan.nama       as namjur,
+		kegiatan.nama      as nakeg
+	FROM
+		jurusan
+		INNER JOIN
+			berkegiatan
+				ON (jurusan.jurusan_id = berkegiatan.jurusan_id)
+		INNER JOIN
+			kegiatan
+				ON (berkegiatan.kegiatan_id = kegiatan.kegiatan_id)
+	WHERE
+		(jurusan.jurusan_id = ${req.body.idjur});` // query ambil data
+	//mendapatkan data dari database
+	//temp = req.session;
+	db.query(query, (err, results) => {
+		if (err) {
+			console.log(err)
+			return res.status(500).end()
+		}
+		res.status(200).write(
+			`
+            <table id=takeg>
+                <tr>
+                    <th>Kegiatan</th>
+                </tr>`
+		)
+		results.rows.forEach((row) => {
+			// tampilin isi table
+			res.write(
+				`
+                <tr> 
+                <td>${row["nakeg"]}</td>
+                </tr>
+                `
+			)
+		})
+		res.status(200).end(`</table></body>`)
+	})
+})
+
+router.get("/wishlist/organisasi", (req, res) => {
+	user_status = req.session.authenticated
+	id = `${req.query.idjur}`
+	console.log(id)
+	if (user_status) {
+		res.write(`<html>
+        <head>
+            <title>Klenik</title>
+        </head>
+        <body style="background-color: #29C5F6; text-align: center;">`)
+		res.write(
+			// table header
+			`<h1> Organisasi </h1>
+        <h2>${req.query.namjur}</h2>
+        <a href="http://localhost:6969/wishlist">Kembali ke Wishlist</a>
+        <table id=takor>
+                <tr>
+                    <th>Organisasi<th>
+                </tr>`
+		)
+		res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $.post('/getorganisasi', {idjur: ${id}}, function(data) {
+                    console.log(data);
+                    $("#takor").html(data);
+                });
+            });
+            </script>
+        </html>`)
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data))
+		})
+	}
+})
+
+router.get("/wishlist/kegiatan", (req, res) => {
+	user_status = req.session.authenticated
+	id = `${req.query.idjur}`
+	console.log(id)
+	if (user_status) {
+		res.write(`<html>
+        <head>
+            <title>Klenik</title>
+        </head>
+        <body style="background-color: #29C5F6; text-align: center;">`)
+		res.write(
+			// table header
+			`<h1> Kegiatan </h1>
+        <h2>${req.query.namjur}</h2>
+        <a href="http://localhost:6969/wishlist">Kembali ke Wishlist</a>
+        <table id=takeg>
+                <tr>
+                    <th>Kegiatan<th>
+                </tr>`
+		)
+		res.end(`</table></body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $.post('/getkegiatan', {idjur: ${id}}, function(data) {
+                    console.log(data);
+                    $("#takeg").html(data);
+                });
+            });
+            </script>
+        </html>`)
+	} else {
+		fs.readFile("html/illegal_access.html", null, function (error, data) {
+			if (error) return res.status(404).end("fail")
+			return res.end(minify(data))
 		})
 	}
 })
