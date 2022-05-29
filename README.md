@@ -27,3 +27,10 @@ description: Aplikasi berbasis web yang ditujukan untuk membantu mahasiswa maupu
   - Tabel Kurikulum = untuk menyimpan daftar kurikulum atau mata kuliah yang dipelajari suatu jurusan di FTUI yang berisi kurikulum_id dan nama.
   - Tabel Kurikulum = untuk menyimpan daftar kurikulum atau mata kuliah yang dipelajari suatu jurusan di FTUI yang berisi kurikulum_id dan nama.
 ---
+
+### Contributors
+Muhammad Naufal Faza (2006577252)
+Muhammad Raihan Azhari (2006468320)
+Miranty Anjani Putri (2006468270)
+
+---
