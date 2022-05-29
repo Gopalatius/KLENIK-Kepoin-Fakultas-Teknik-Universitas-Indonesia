@@ -1085,6 +1085,7 @@ router.post("/diskusi", (req, res) => {
 		user_reg.role,
 		user_reg.username,
 		pertanyaan.text,
+		'${req.session.username}' AS username_sekarang,
 		COUNT(pertanyaan_dari.jawaban_id) AS jumlah_jawaban
 	FROM pertanyaan
 		NATURAL JOIN bertanya
@@ -1096,6 +1097,7 @@ router.post("/diskusi", (req, res) => {
 			user_reg.username
 	ORDER BY pertanyaan.submit_time DESC;
 	`
+	
 	db.query(query, (err, results) => {
 		if (err) return console.log(err)
 		res.status(200).json(results.rows).end()

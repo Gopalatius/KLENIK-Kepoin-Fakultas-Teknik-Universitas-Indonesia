@@ -61,7 +61,13 @@
 			.then((data) => {
 				let count = 1
 				let htmlString = ""
+				let deleteButton
 				data.forEach((row) => {
+					if (row.username === row.username_sekarang){
+						deleteButton = `<input type="button" value="Delete Pertanyaan" onclick="window.location.href='/diskusi/qdelete/${row.pertanyaan_id}/${row.username}'" />`
+					}else{
+						deleteButton = `<a></a>`
+					}
 					htmlString += `
 					<h2>
 						<strong data-pertanyaan-id="${row.pertanyaan_id}">${count}. </strong
@@ -78,7 +84,7 @@
 						>
 						kali.
 						<input type="button" value="Lihat jawaban?" onclick="window.location.href='/diskusi/jawab/${row.pertanyaan_id}'" />
-						<input type="button" value="Delete Pertanyaan" onclick="window.location.href='/diskusi/qdelete/${row.pertanyaan_id}/${row.username}'" />
+						${deleteButton}
 					</p>`
 					count++
 				})
