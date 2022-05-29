@@ -245,7 +245,7 @@ router.post("/getjurusan", (req, res) => {
 		res.status(200)
 
 		res.write(
-			// table header
+			
 			`<table id=najur align="center">
                 <tr>
                     <th>Nama Departemen</th>
@@ -344,7 +344,7 @@ router.post("/getkarir", (req, res) => {
 			return
 		}
 		res.status(200).write(
-			// table header
+			
 			`
             <table id=takar>
                 <tr>
@@ -428,7 +428,7 @@ router.get("/ttgjurusan", (req, res) => {
             transform: translateX(-50%) translateY(-50%);">`)
 
 		res.write(
-			// table header
+			
 			`<h1> Tentang Jurusan </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> </h2>
@@ -473,7 +473,7 @@ router.get("/ttgjurusan/kurikulum", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			// table header
+			
 			`<h1> Kurikulum </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
@@ -512,7 +512,7 @@ router.get("/ttgjurusan/karir", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			// table header
+			
 			`<h1> Prospek Karir </h1>
         <h2>${req.query.namjur}</h2>
         <a href="http://localhost:6969/ttgjurusan">Kembali ke Tentang Jurusan</a>
@@ -564,7 +564,7 @@ router.post("/getkegjur", (req, res) => {
 		res.status(200)
 
 		res.write(
-			// table header
+			
 			`<table id=najur align="center">
                 <tr>
                     <th>Nama Departemen</th>
@@ -615,7 +615,7 @@ router.post("/getorganisasi", (req, res) => {
 			return res.status(500).end()
 		}
 		res.status(200).write(
-			// table header
+			
 			`
             <table id=takor>
                 <tr>
@@ -705,7 +705,7 @@ router.get("/organisasi_kegiatan", (req, res) => {
             transform: translateX(-50%) translateY(-50%);">`)
 
 		res.write(
-			// table header
+			
 			`<h1> Organisasi dan Kegiatan </h1>
             <a href="/menu">Kembali ke Menu</a>
             <h2> </h2>
@@ -750,7 +750,7 @@ router.get("/organisasi_kegiatan/organisasi", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			// table header
+			
 			`<h1> Organisasi </h1>
         <h2>${req.query.namjur}</h2>
         <a href="http://localhost:6969/organisasi_kegiatan">Kembali ke Tentang Jurusan</a>
@@ -788,7 +788,7 @@ router.get("/organisasi_kegiatan/kegiatan", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			// table header
+			
 			`<h1> Kegiatan </h1>
         <h2>${req.query.namjur}</h2>
         <a href="http://localhost:6969/organisasi_kegiatan">Kembali ke Tentang Jurusan</a>
@@ -850,7 +850,7 @@ router.post("/getcompare", (req, res) => {
 		res.status(200)
 
 		res.write(
-			// table header
+			
 			`<table id=tacom align="center">
                 <tr>
                     <th>Nama Departemen</th>
@@ -914,7 +914,7 @@ router.get("/displaycomp", (req, res) => {
       ">`);
         
         res.write(
-            // table header
+            
             `<h1> Compare Jurusan </h1>
         <a href="http://localhost:6969/pejuang_PTN">Kembali Pejuang PTN</a>
         <table id=tacom>
@@ -976,7 +976,7 @@ router.post("/getcomp", (req, res) => {
 		res.status(200)
 
 		res.write(
-			// table header
+			
 			`<table id=compjur align="center">
                 <tr>
 					<th>Nama Jurusan</th>
@@ -1038,7 +1038,7 @@ router.get("/compare", (req, res) => {
             transform: translateX(-50%) translateY(-50%);">`)
 
 		res.write(
-			// table header
+			
 			`<h1> Compare Jurusan </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> Silahkan pilih 2 jurusan yang ingin dibandingkan </h2>
@@ -1177,13 +1177,8 @@ if (user_status) {
 			
 			
 			res.send()
-<<<<<<< HEAD
-			id = `${req.params.jawaban_id}`
-			console.log(id)
-=======
 			id = `${req.params.pertanyaan_id}`
 			
->>>>>>> 58f853b6ea05c9b0e185aaadb879f304a190680f
 		})
 
 	}
@@ -1347,7 +1342,7 @@ router.post("/getwishlist", (req, res) => {
 		res.status(200)
 
 		res.write(
-			// table header
+			
 			`<table id=wishlistjur align="center">
 					<tr>
 						<th>Nama Jurusan</th>
@@ -1397,7 +1392,7 @@ router.get("/wishlist", (req, res) => {
             transform: translateX(-50%) translateY(-50%);">`)
 
 		res.write(
-			// table header
+			
 			`<h1> Wishlist Anda </h1>
             <a href="http://localhost:6969/menu">Kembali ke Menu</a>
             <h2> </h2>
@@ -1484,7 +1479,7 @@ router.get("/wishlist/kurikulum", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			// table header
+			
 			`<h1> Kurikulum </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/wishlist">Kembali ke Wishlist</a>
@@ -1568,7 +1563,7 @@ router.get("/wishlist/karir", (req, res) => {
         </head>
         <body style="background-color: #29C5F6; text-align: center;">`)
 		res.write(
-			// table header
+			
 			`<h1> Prospek Karir </h1>
             <h2>${req.query.namjur}</h2>
             <a href="http://localhost:6969/wishlist">Kembali ke Tentang Wishlist</a>
