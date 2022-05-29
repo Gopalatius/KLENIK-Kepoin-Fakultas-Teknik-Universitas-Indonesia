@@ -88,6 +88,7 @@ router.post("/login", (req, res) => {
 					req.session.user_id = results.rows[0].user_id
 					req.session.username = results.rows[0].username
 					req.session.role = results.rows[0].role
+					req.session.password = results.rows[0].password
 					return res.status(200).end("done")
 				}
 			})
@@ -199,6 +200,44 @@ router.post("/pejuang_ptn", (req, res) => {
 	//mendapatkan data dari database
 	//temp = req.session;
 })
+router.get("/user_profile", (req, res) => {
+	const file_html = req.session.authenticated
+		? "html/user_profile.html"
+		: "html/illegal_access.html"
+
+	fs.readFile(file_html, null, (error, data) => {
+		if (error) return res.status(404).end("fail")
+		return res.end(minify(data))
+	})
+})
+router.post("/get_profile", (req, res) => {
+	res.json({
+		username: req.session.username,
+		role: req.session.role
+	}).status(200).end()
+})
+router.put('/ganti_profile', (req, res) => {
+	bcrypt.compare(req.body.password_sekarang, req.session.password)
+	.then((match,noMatch) =>{
+		if (!match) return res.status(400).end('Wrong Password')
+		else{
+			const query = `
+			UPDATE user_reg
+			SET ${req.body.tipe_data} = '${req.body.data_baru}'
+			WHERE user_id = ${req.session.user_id}
+			RETURNING username, password;
+			`
+			db.query(query, (err, results) => {
+				if (err) return console.log(err)
+				req.session.username = results.rows[0].username
+				req.session.password = results.rows[0].password
+				return res.status(200).end('done')
+				//hehe
+			})
+		}
+	})
+})
+	
 //--------------------Kawasan Teritori Azhari muehehehhe ----------------------------------------------------------
 router.post("/getjurusan", (req, res) => {
 	id_user = req.session.user_id
